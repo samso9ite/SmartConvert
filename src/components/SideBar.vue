@@ -26,7 +26,7 @@
                                 <div class="profile_log dropdown">
                                     <div class="user" data-toggle="dropdown">
                                         <span class="thumb"><i class="la la-user"></i></span>
-                                        <span class="name">Maria Pascle</span>
+                                        <span class="name">{{this.first_name}}</span>
                                         <span class="arrow"><i class="la la-angle-down"></i></span>
                                     </div>
                                     <div class="dropdown-menu dropdown-menu-right">
@@ -59,21 +59,31 @@
         <div class="menu">
             <ul>
                 <li>
-                    <a href="index-2.html" data-toggle="tooltip" data-placement="right" title="Home">
-                        <span><i class="la la-igloo"></i></span>
-                    </a>
+                    <router-link :to="'/'">
+                        <a  data-placement="right" title="Home">
+                            <span><i class="la la-igloo"></i></span>
+                        </a>
+                    </router-link>
                 </li>
-                <li><a href="buy-sell.html" data-toggle="tooltip" data-placement="right" title="Exchange">
-                        <span><i class="la la-exchange-alt"></i></span>
-                    </a>
+                <li><router-link :to="''">
+                        <a data-placement="right" title="Exchange">
+                            <span><i class="la la-exchange-alt"></i></span>
+                        </a>
+                    </router-link>
                 </li>
-                <li><a href="history.html" data-toggle="tooltip" data-placement="right" title="Transaction History">
-                    <span><i class="la la-exchange-alt"></i></span>
-                </a>
+                <li>
+                    <router-link :to="'/transaction-history'">
+                        <a data-toggle="tooltip" data-placement="right" title="Transaction History">
+                            <span><i class="la la-history"></i></span>
+                        </a>
+                    </router-link>
             </li>
-                <li><a href="accounts.html" data-toggle="tooltip" data-placement="right" title="Account">
-                        <span><i class="la la-user"></i></span>
-                    </a>
+                <li>
+                    <router-link :to="'/settings'">
+                        <a data-toggle="tooltip" data-placement="right" title="Account">
+                            <span><i class="la la-user"></i></span>
+                        </a>
+                    </router-link>
                 </li>
                 <li><a href="settings.html" data-toggle="tooltip" data-placement="right" title="Setting">
                         <span><i class="la la-tools"></i></span>
@@ -86,7 +96,11 @@
 </template>
 
 <script>
-export default{
-
-}
+    export default{
+        data(){
+            return{
+                first_name: localStorage.getItem('first_name')
+            }
+        }
+    }
 </script>

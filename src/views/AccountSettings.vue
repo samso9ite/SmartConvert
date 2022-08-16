@@ -2,7 +2,7 @@
 <div>
 <SideBar />
         <div class="page_title">
-            <div class="container-fluid">
+            <!-- <div class="container-fluid">
                 <div class="row">
                     <div class="col-6">
                         <div class="page_title-content">
@@ -18,7 +18,7 @@
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="content-body">
@@ -32,28 +32,21 @@
                             <div class="card-body">
                                 <ul>
                                     <li class="nav-item">
-                                        <a href="settings.html" class="nav-link">
-                                            <i class="la la-user"></i>
-                                            <span>Edit Profile</span>
-                                        </a>
+                                       <router-link :to="'/settings'">
+                                            <a class="nav-link" style="color:white">
+                                                <i class="la la-user"></i>
+                                                <span>Edit Profile</span>
+                                            </a>
+                                        </router-link>
                                     </li>
+                                  
                                     <li class="nav-item">
-                                        <a href="settings-preferences.html" class="nav-link">
-                                            <i class="la la-cog"></i>
-                                            <span>Preferences</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="settings-security.html" class="nav-link">
-                                            <i class="la la-lock"></i>
-                                            <span>Security</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="settings-account.html" class="nav-link active">
-                                            <i class="la la-university"></i>
-                                            <span>Linked Account</span>
-                                        </a>
+                                        <router-link :to="'/account-settings'">
+                                            <a class="nav-link active" style="color:white">
+                                                <i class="la la-university"></i>
+                                                <span>Linked Account</span>
+                                            </a>
+                                        </router-link>
                                     </li>
                                 </ul>
                             </div>
@@ -62,7 +55,7 @@
                     <div class="col-xl-9 col-md-8">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Linked Account or Card</h4>
+                                <h4 class="card-title">Verified Bank Account</h4>
                             </div>
                             <div class="card-body">
                                 <div class="form">
@@ -119,7 +112,7 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li>
+                                        <!-- <li>
                                             <div class="row">
                                                 <div class="col-9">
                                                     <div class="d-flex">
@@ -144,13 +137,25 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li> -->
                                     </ul>
 
                                     <div class="mt-5">
-                                        <a href="verify-step-5.html" class="btn btn-primary px-4 me-3">Add Bank
-                                            Account</a>
-                                        <a href="verify-step-1.html" class="btn btn-success px-4">Add Debit
+                                       <div class="row">
+                                         <form action="#">
+                                                <div class="row">
+                                                    <div class="mb-3 col-xl-4">
+                                                        <label class="me-sm-2">Bank Account Number</label>
+                                                        <input type="text" class="form-control" placeholder="Name">
+                                                    </div>
+                                                    <div class="mb-3 col-xl-4">
+                                                        <label class="me-sm-2">Bank Name</label>
+                                                        <input type="text" class="form-control" placeholder="Name">
+                                                    </div>
+                                                </div>
+                                                </form>
+                                       </div>
+                                        <a class="btn btn-success px-4">Add Bank
                                             Account</a>
                                     </div>
                                 </div>

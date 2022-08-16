@@ -13,7 +13,8 @@
                         </div>
                         <div class="auth-form card">
                             <div class="card-header justify-content-center">
-                                <h4 class="card-title">Sign up your account</h4>
+                                <h4 class="card-title" v-if="registered">Verification Email Sent</h4>
+                                <h4 class="card-title" v-else>Sign up your account</h4>
                             </div>
                             <div class="card-body">
                                <div class="alert alert-danger fade in" v-if="errors.length">
@@ -21,7 +22,12 @@
                                        {{error}}
                                     </p>
                                 </div>
-                                <form method="post" name="myform" class="signup_validate" @submit.prevent="submitForm">
+                                <div style="background-color:white;  border-radius: 10px;" v-if="registered">
+                                    <h4 style="color:black; padding: 10%; text-align: center;"> 
+                                        An activation link has been sent to the registered email, open your email to verify your account.
+                                    </h4>
+                                </div>
+                                <form method="post" class="signup_validate" @submit.prevent="submitForm" v-else>
                                     <div class="mb-3">
                                         <label>Email</label>
                                         <input type="email" class="form-control" placeholder="hello@example.com"
@@ -75,7 +81,8 @@ import Api from './Api.js'
                 last_name:'',
                 errors: [],
                 password:'',
-                loading: false
+                loading: false,
+                registered: false
             }
         },
 
@@ -93,12 +100,12 @@ import Api from './Api.js'
                 this.loading = true
                 await   Api.axios_instance.post(Api.baseUrl+'auth/users/', formData,  {mode: 'no-cors'})
                 .then(res => {
-                    console.log(res.data);
-                    this.$toast.success({
+                      this.$toast.success({
                         title:'Welldone!',
                         message:'Account Created Successfully '
                     })
-                    this.$router.push('/signin')
+                    this.registered = true
+                    // this.$router.push('/signin')
                 })
                 .catch(error => {
                     if (error.response){

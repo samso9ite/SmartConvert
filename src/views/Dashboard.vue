@@ -97,28 +97,30 @@
                         <ul class="list-unstyled">
                             <div class="div col-lg-12">
                                 <div class="row" >
+                                    <!-- <h4>BUY / SELL Rate</h4> -->
                                     <div class="col-xl-3 col-lg-3 col-xxl-4" style="">
                                          <div class="card-body pt-0">
                                 <div class="balance-widget">
                                     <ul class="list-unstyled">
                                         <li class="d-flex">
-                                            <i class="cc BTC me-3"></i>
+                                            <!-- <i class="cc BTC me-3"></i> -->
+                                            <img src="../../public/assets/images/perfect-money-logo.png" width="11%"/>
                                             <div class="flex-grow-1">
-                                                <h5 class="m-0">Digital Currency</h5>
+                                                <h5 class="m-0" style="padding-left:5px">Perfect Money</h5>
                                             </div>
                                             <div class="text-end">
-                                                <h5>0.000242 BTC</h5>
-                                                <span>0.125 USD</span>
+                                                <h5>₦{{PM.buy_rate}} BUY </h5>
+                                                <span>₦{{PM.sell_rate}} SELL</span>
                                             </div>
                                         </li>
                                         <li class="d-flex">
-                                            <i class="cc LTC me-3"></i>
+                                            <i class="cc BTC me-3"></i>
                                             <div class="flex-grow-1">
-                                                <h5 class="m-0">Perfect Money</h5>
+                                                <h5 class="m-0">Bitcoin</h5>
                                             </div>
                                             <div class="text-end">
-                                                <h5>0.000242 LTC</h5>
-                                                <span>0.125 USD</span>
+                                                <h5>₦{{bitcoin.buy_rate}} BUY</h5>
+                                                <span>₦{{bitcoin.sell_rate}} SELL</span>
                                             </div>
                                         </li>
                                        
@@ -131,66 +133,61 @@
                                             <h4 class="card-title">Current Rate</h4>
                                             <a href="#">View More Rate </a>
                                         </div>
-                                        <div class="row" style="margin-top:4.6rem">
+                                        <marquee><i class="cc BTC me-3"></i> Bitcoin ${{this.btc_rate}} / 1<i class="cc ETH" style="color:#5968ba; padding-left: 2rem;"></i> Ethereum ${{this.eth_rate}} / 1  <i class="cc LTC me-3" style="padding-left: 2rem;"></i> Litecoin ${{this.ltc_rate}} / 1 <i class="cc DOGE me-3" style="padding-left: 2rem;"></i> DOGE ${{this.doge_rate}} / 1 <i class="cc USDT me-3" style="padding-left: 2rem;"></i> USDT ${{this.usdt_rate}} / 1 <i class="cc XRP me-3" style="padding-left: 2rem;"></i> Ripple ${{this.xrp_rate}} / 1 <i class="cc TX me-3" style="padding-left: 2rem;"></i> TRON ${{this.trx_rate}} / 1</marquee>
+                                        <div class="row" style="margin-top:2.7rem">
                                             <li class="d-flex col-lg-2" style="margin-right:25px">
-                                                <i class="cc BTC me-3"></i>
+                                                <i class="cc ETH" me-3 style="color:#5968ba"></i>
                                                 <div class="flex-grow-1">
-                                                    <h5 class="m-0">Bitcoin</h5>
+                                                    <h5 class="m-0" style="padding-left:7px">ETH</h5>
                                                 </div>
                                                 <div class="text-end">
-                                                    <h5>0.022 BTC</h5>
-                                                    <span>0.125 USD</span>
+                                                    <h5>₦{{ETH.buy_rate}} BUY</h5>
+                                                    <span>₦{{ETH.sell_rate}} SELL</span>
                                                 </div>
                                             </li>
                                             <li class="d-flex col-lg-2" style="margin-right:25px">
                                                 <i class="cc LTC me-3"></i>
                                                 <div class="flex-grow-1">
-                                                    <h5 class="m-0">Litecoin</h5>
+                                                    <h5 class="m-0">LTH</h5>
                                                 </div>
                                                 <div class="text-end">
-                                                    <h5>0.242 LTC</h5>
-                                                    <span>0.125 USD</span>
+                                                    <h5>₦{{LTH.buy_rate}} BUY</h5>
+                                                    <span>₦{{LTH.sell_rate}} SELL</span>
                                                 </div>
                                             </li>
                                             <li class="d-flex col-lg-2" style="margin-right:25px">
+                                                <i class="cc DOGE me-3"></i>
+                                                <div class="flex-grow-1">
+                                                    <h5 class="m-0">DOGE </h5>
+                                                </div>
+                                                <div class="text-end">
+                                                    <h5>₦{{doge.buy_rate}} BUY</h5>
+                                                    <span>₦{{doge.sell_rate}} SELL</span>
+                                                </div>
+                                            </li>
+                                            <li class="d-flex col-lg-2" style="margin-right:25px">
+                                                <i class="cc USDT me-3"></i>
+                                                <div class="flex-grow-1">
+                                                    <h5 class="m-0">USDT</h5>
+                                                </div>
+                                                <div class="text-end">
+                                                    <h5>₦{{USDT.buy_rate}} BUY</h5>
+                                                    <span>₦{{USDT.sell_rate}} SELL</span>
+                                                </div>
+                                            </li>
+                                            <li class="d-flex col-lg-2">
                                                 <i class="cc XRP me-3"></i>
                                                 <div class="flex-grow-1">
                                                     <h5 class="m-0">Ripple</h5>
                                                 </div>
                                                 <div class="text-end">
-                                                    <h5>0.22 XRP</h5>
-                                                    <span>0.125 USD</span>
+                                                    <h5>₦{{ripple.buy_rate}} BUY</h5>
+                                                    <span>₦{{ripple.sell_rate}} SELL</span>
                                                 </div>
                                             </li>
-                                            <li class="d-flex col-lg-2" style="margin-right:25px">
-                                                <i class="cc DASH me-3"></i>
-                                                <div class="flex-grow-1">
-                                                    <h5 class="m-0">Dash</h5>
-                                                </div>
-                                                <div class="text-end">
-                                                    <h5>0.042 XRP</h5>
-                                                    <span>0.125 USD</span>
-                                                </div>
-                                            </li>
-                                            <li class="d-flex col-lg-2">
-                                                <i class="cc DASH me-3"></i>
-                                                <div class="flex-grow-1">
-                                                    <h5 class="m-0">Dash</h5>
-                                                </div>
-                                                <div class="text-end">
-                                                    <h5>0.042 XRP</h5>
-                                                    <span>0.125 USD</span>
-                                                </div>
-                                            </li>
-                                            
-                                        
-
-                                            
                                         </div>
                                     </div>
                                 </div>
-                               
-                                
                             </div>
                         </ul>
                     </div>
@@ -200,16 +197,12 @@
                         <div class="card">
                              <div class="buy-sell-widget">
                                     <ul class="nav nav-tabs">
-                                        <li class="nav-item" v-show="currentPhase==='SellFirstPhase'"><a class="nav-link active" style="background-color:white; color:brown" data-toggle="tab"
-                                                href="#buy">Buy</a>
+                                        <li class="nav-item" v-if="trade_not_active">
+                                            <a class="nav-link" :class="{'makeActive':buy_transaction_in_progress}" style="background-color:white; color:brown" @click="buyFunction()">Buy</a>
                                         </li>
-                                        <li class="nav-item" v-show="currentPhase==='SellFirstPhase'"><a class="nav-link" data-toggle="tab" href="#sell" style="background-color:white; color:brown">Sell</a>
-                                        </li>
-                                        <li class="nav-item" v-if="buy_transaction_in_progress"><a class="nav-link active" :disabled="buy_transaction_in_progress" style="background-color:white; color:brown" data-toggle="tab"
-                                                    href="#buy">Buy</a>
-                                        </li>
-                                        <li class="nav-item" v-if="sell_transaction_in_progress"><a class="nav-link" :disabled="sell_transaction_in_progress" data-toggle="tab" href="#sell" style="background-color:white; color:brown">Sell</a>
-                                        </li>
+                                        <li class="nav-item"  v-if="trade_not_active"><a class="nav-link" :class="{'makeActive':sell_transaction_in_progress}" style="background-color:white; color:brown" @click="sellFunction()">Sell</a> </li>
+                                        <li class="nav-item" v-if="buy_transaction_in_progress"><a class="nav-link active" :disabled="buy_transaction_in_progress" :class="{'makeActive' :buy_transaction_in_progress}" style="background-color:white; color:brown" data-toggle="tab" href="#buy">Buy</a></li>
+                                        <li class="nav-item" v-if="sell_transaction_in_progress"><a class="nav-link" :class="{'makeActive':sell_transaction_in_progress}" :disabled="sell_transaction_in_progress" style="background-color:white; color:brown">Sell</a> </li>
                                     </ul>
                                 </div>
 
@@ -354,7 +347,6 @@
             </div>
         </div>
     </div>
-<!-- </div> -->
 </template>
 
 
@@ -378,12 +370,47 @@ import VueMomentsAgo from 'vue-moments-ago'
                 naira_value: '',
                 amount_in_dollar: '',
                 coin_amount: '',
+                coin_type: '',
+                trade_not_active: true,
                 trade_not_in_progress: true,
                 sell_transaction_in_progress: false,
-                buy_transaction_in_progress: false
+                buy_transaction_in_progress: false, 
+                coins: '',
+                LTH: '',
+                solana: '',
+                ripple: '',
+                bitcoin: '',
+                ETH: '',
+                PM: '',
+                USDT: '',
+                url: "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,DOGE,USDT,TRX,Solana,XRP,ETH,LTC&tsyms=USD",
+                timer: '',
+                eth_rate: '',
+                btc_rate: '',
+                usdt_rate: '',
+                lth_rate: '',
+                doge_rate: '',
+                solana_rate: '',
+                trx_rate: ''
             }
         },
         methods: {
+            getUser(){
+                Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
+                .then(response => {
+                    console.log(response.data);
+                    this.first_name = response.data.first_name  
+                    this.last_name = response.data.last_name  
+                    this.phone_number = response.data.phone_number 
+                    this.address = response.data.address  
+                    this.email = response.data.email  
+                    window.localStorage.setItem('first_name', this.first_name)
+                    window.localStorage.setItem('last_name', this.last_name)
+                    window.localStorage.setItem('phone_number', this.phone_number)
+                    window.localStorage.setItem('address', this.address)
+                    window.localStorage.setItem('email', this.email)
+                })
+            },
             getTransactions(){
                 Api.axios_instance.get(Api.baseUrl+'api/v1/list-transaction',  {mode: 'no-cors'})
                 .then(response => {
@@ -394,7 +421,43 @@ import VueMomentsAgo from 'vue-moments-ago'
                     })
                     this.total_transacted = transacted_amount
                     this.$store.commit('transactions', {all_transactions:response.data})
+                 })
+            },
+            getCoins(){
+                Api.axios_instance.get(Api.baseUrl+'api/v1/list-coin')
+                .then(response => {
+                    this.coins = response.data
+                    this.bitcoin = this.coins[0]; 
+                    this.ETH = this.coins[1];
+                    this.doge = this.coins[2];
+                    this.PM = this.coins[8];
+                    this.USDT = this.coins[4];
+                    this.LTH = this.coins[5];
+                    this.ripple = this.coins[6];
+                    this.solana = this.coins[7]
+                }
+                )
+            },
+            update(){
+                Api.axios_instance.get(this.url)
+                .then(response  => {
+                    var results = response.data
+                    this.btc_rate = results.BTC.USD
+                    this.eth_rate = results.ETH.USD
+                    this.usdt_rate = results.USDT.USD
+                    this.ltc_rate = results.LTC.USD
+                    this.doge_rate = results.DOGE.USD
+                    this.xrp_rate = results.XRP.USD
+                    this.trx_rate = results.TRX.USD
                 })
+            },
+            sellFunction(){
+                this.sell_transaction_in_progress = true
+                this.trade_not_active = false
+            },
+            buyFunction(){
+                this.buy_transaction_in_progress = true
+                this.trade_not_active = false
             },
             switchPhase(currentPhase){
                 this.sell_transaction_in_progress = true
@@ -403,7 +466,11 @@ import VueMomentsAgo from 'vue-moments-ago'
             }
         },
         mounted(){
+            this.getUser()
             this.getTransactions()
+            this.getCoins()
+            this.update();
+            this.timer = setInterval(this.update, 3000)
         },
         computed: {
             pending_transactions: function (){
@@ -415,3 +482,9 @@ import VueMomentsAgo from 'vue-moments-ago'
         }
     }
 </script>
+
+<style scoped>
+    .makeActive{
+        background-color:grey !important;
+    }
+</style>

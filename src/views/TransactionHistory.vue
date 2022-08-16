@@ -4,13 +4,6 @@
         <div class="page_title">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-xl-12">
-                        <div class="page_title-content">
-                            <p>Welcome Back,
-                                <span> Maria Pascle</span>
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -27,24 +20,52 @@
                                 <div class="transaction-table">
                                     <div class="table-responsive">
                                         <table class="table mb-0 table-responsive-sm">
+                                            <tr style="">
+                                                <td></td>
+                                                <td>Reference</td>
+                                                <td>Type</td>
+                                                <td>Status</td>
+                                                <td>Product</td>
+                                                <td>Bank</td>
+                                                <td>Dollar Amount</td>
+                                                <td>Naira Amount</td>
+                                                <td>Date</td>
+                                                <td>Acc/Addr</td>
+                                            </tr>
                                             <tbody>
-                                                <tr>
-                                                    <td><span class="sold-thumb"><i class="la la-arrow-down"></i></span>
+                                                <tr v-for="transaction in transactions" :key="transaction">
+                                                   <td v-if="transaction.transaction_status == 1"><span class="sold-thumb"><i class="la la-arrow-down"></i></span> </td>
+                                                    <td v-if="transaction.transaction_status == 3"><span class="sold-thumb"><i class="la la-arrow-down"></i></span> </td>
+                                                    <td v-else-if="transaction.transaction_status == 2"><span class="buy-thumb"><i class="la la-arrow-up"></i></span></td>
+                                                    <td>
+                                                        <span class="badge badge-danger">{{transaction.transaction_reference}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-danger">{{transaction.trade_type}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-danger" v-if="transaction.transaction_status == 1">Pending</span>
+                                                        <span class="badge badge-danger" v-else-if="transaction.transaction_status == 2">Successfull</span>
+                                                        <span class="badge badge-danger" v-if="transaction.transaction_status == 3">Failed</span>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <i class="cc BTC"></i> -->
+                                                        Bitcoin
+                                                        <!-- {{transaction.}} -->
                                                     </td>
 
                                                     <td>
-                                                        <span class="badge badge-danger">Sold</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc BTC"></i> BTC
-                                                    </td>
-                                                    <td>
                                                         Using - Bank *******5264
                                                     </td>
-                                                    <td class="text-danger">-0.000242 BTC</td>
-                                                    <td>-0.125 USD</td>
+                                                    <!-- <td class="text-warning"  v-if="transaction.transaction_status == 1">{{transaction.transaction_amount_btc}} BTC</td>
+                                                    <td class="text-danger"  v-else-if="transaction.transaction_status == 3">{{transaction.transaction_amount_btc}} BTC</td>
+                                                    <td class="text-success"  v-else="transaction.transaction_status == 2">{{transaction.transaction_amount_btc}} BTC</td> -->
+                                                    <td>${{transaction.transaction_amount_usd}}</td>
+                                                    <td>₦{{transaction.transaction_amount_naira}}</td>
+                                                    <td> {{transaction.date}}</td>
+                                                    <td>{{transaction.hash_key}}</td>
                                                 </tr>
-                                                <tr>
+                                                <!-- <tr>
                                                     <td><span class="buy-thumb"><i class="la la-arrow-up"></i></span>
                                                     </td>
                                                     <td>
@@ -179,7 +200,7 @@
                                                     </td>
                                                     <td class="text-danger">-0.000242 BTC</td>
                                                     <td>-0.125 USD</td>
-                                                </tr>
+                                                </tr> -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -199,6 +220,19 @@ import SideBar from '../components/SideBar.vue'
 import Footer from '../components/Footer.vue'
     export default {
         name: 'TransactionHistory',
-        components: {SideBar, Footer}
-    }
+        components: {SideBar, Footer},
+        data(){
+            return{
+                transactions: this.$store.state.all_transactions
+            }
+        },
+        methods: {
+            //  getTransactions(){
+            //     Api.axios_instance.get(Api.baseUrl+'api/v1/list-transaction')
+            //     .then(response => {
+            //         this.transactions = response.data
+            //         this.$store.commit('transactions', {all_transactions:response.data})
+            //     })
+            },
+        }
 </script>

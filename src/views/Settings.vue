@@ -4,13 +4,7 @@
             <div class="page_title">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-xl-12">
-                            <div class="page_title-content">
-                                <p>Welcome Back,
-                                    <span> Maria Pascle</span>
-                                </p>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -24,25 +18,23 @@
                                     <h4 class="card-title">Settings</h4>
                                 </div>
                                 <div class="card-body">
-                                    <ul>
+                                    <ul style="color:white">
                                         <li class="nav-item">
-                                            <a href="settings.html" class="nav-link active">
-                                                <i class="la la-user"></i>
-                                                <span>Edit Profile</span>
-                                            </a>
+                                            <router-link :to="'/settings'">
+                                                <a  class="nav-link active" style="color:white">
+                                                    <i class="la la-user"  ></i>
+                                                    <span> Edit Profile</span>
+                                                </a>
+                                            </router-link>
                                         </li>
                                 
                                         <li class="nav-item">
-                                            <a href="settings-security.html" class="nav-link">
-                                                <i class="la la-lock"></i>
-                                                <span>Change Password</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="settings-account.html" class="nav-link">
-                                                <i class="la la-university"></i>
-                                                <span>Linked Account</span>
-                                            </a>
+                                            <router-link :to="'/account-settings'">
+                                                <a class="nav-link" style="color:white">
+                                                    <i class="la la-university"></i>
+                                                    <span >Bank Accounts</span>
+                                                </a>
+                                            </router-link>
                                         </li>
                                     </ul>
                                 </div>
@@ -56,29 +48,36 @@
                                             <h4 class="card-title">User Profile</h4>
                                         </div>
                                         <div class="card-body">
-                                            <form action="#">
+                                            <form @submit.prevent="updateAccountDetails">
                                                 <div class="row">
                                                     <div class="mb-3 col-xl-12">
-                                                        <label class="me-sm-2">Your Name</label>
-                                                        <input type="text" class="form-control" placeholder="Name">
+                                                        <label class="me-sm-2"> First Name</label>
+                                                        <input type="text" class="form-control" v-model="first_name" >
+                                                    </div>
+                                                      <div class="mb-3 col-xl-12">
+                                                        <label class="me-sm-2">Last Name</label>
+                                                        <input type="text" class="form-control" v-model="last_name" >
                                                     </div>
                                                     <div class="mb-3 col-xl-12">
-                                                        <div class="d-flex align-items-center mb-3">
-                                                            <img class="me-3 rounded-circle me-0 me-sm-3"
-                                                                src="images/profile/2.png" width="55" height="55" alt="">
-                                                            <div class="flex-grow-1">
-                                                                <h4 class="mb-0">John Doe</h4>
-                                                                <p class="mb-0">Max file size is 20mb
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="file-upload-wrapper" data-text="Change Photo">
+                                                        <label class="me-sm-2">Email</label>
+                                                        <input type="text" class="form-control" v-model="email" >
+                                                    </div>
+                                                    <div class="mb-3 col-xl-12">
+                                                        <label class="me-sm-2">Phone Number</label>
+                                                        <input type="text" class="form-control" v-model="phone_number" >
+                                                    </div>
+                                                     <div class="mb-3 col-xl-12">
+                                                        <label class="me-sm-2">Address</label>
+                                                        <input type="text" class="form-control" v-model="address" >
+                                                    </div>
+                                                    <div class="mb-3 col-xl-12">
+                                                        <!-- <div class="file-upload-wrapper" data-text="Change Photo">
                                                             <input name="file-upload-field" type="file"
                                                                 class="file-upload-field" value="">
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                     <div class="col-12">
-                                                        <button class="btn btn-success waves-effect">Save</button>
+                                                        <button type="submit" class="btn btn-success waves-effect">Update</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -88,22 +87,24 @@
                                 <div class="col-xl-6">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h4 class="card-title">User Profile</h4>
+                                            <h4 class="card-title">Change Password</h4>
                                         </div>
                                         <div class="card-body">
                                             <form action="#">
                                                 <div class="row">
                                                     <div class="mb-3 col-xl-12">
-                                                        <label class="me-sm-2">New Email</label>
-                                                        <input type="email" class="form-control" placeholder="Email">
+                                                        <label class="me-sm-2">Current Password</label>
+                                                        <input type="password" class="form-control">
                                                     </div>
                                                     <div class="mb-3 col-xl-12">
                                                         <label class="me-sm-2">New Password</label>
                                                         <input type="password" class="form-control"
                                                             placeholder="**********">
-                                                        <p class="mt-2 mb-0">Enable two factor authencation on the security
-                                                            page
-                                                        </p>
+                                                    </div>
+                                                     <div class="mb-3 col-xl-12">
+                                                        <label class="me-sm-2">Confirm New Password</label>
+                                                        <input type="password" class="form-control"
+                                                            placeholder="**********">
                                                     </div>
                                                     <div class="col-12">
                                                         <button class="btn btn-success waves-effect">Save</button>
@@ -113,62 +114,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h4 class="card-title">Personal Information</h4>
-                                        </div>
-                                        <div class="card-body">
-                                            <form method="post" name="myform" class="personal_validate">
-                                                <div class="row">
-                                                    <div class="mb-3 col-xl-6">
-                                                        <label class="me-sm-2">Your Name</label>
-                                                        <input type="text" class="form-control" placeholder="Maria Pascle"
-                                                            name="fullname">
-                                                    </div>
-                                                    <div class="mb-3 col-xl-6">
-                                                        <label class="me-sm-2">Email</label>
-                                                        <input type="email" class="form-control"
-                                                            placeholder="Hello@example.com" name="email">
-                                                    </div>
-                                                    <div class="mb-3 col-xl-6">
-                                                        <label class="me-sm-2">Date of birth</label>
-                                                        <input type="text" class="form-control" placeholder="" id="datepicker" autocomplete="off" name="dob">
-                                                    </div>
-                                                    <div class="mb-3 col-xl-6">
-                                                        <label class="me-sm-2">Present Address</label>
-                                                        <input type="text" class="form-control"
-                                                            placeholder="56, Old Street, Brooklyn" name="presentaddress">
-                                                    </div>
-                                                    <div class="mb-3 col-xl-6">
-                                                        <label class="me-sm-2">Permanent Address</label>
-                                                        <input type="text" class="form-control"
-                                                            placeholder="123, Central Square, Brooklyn"
-                                                            name="permanentaddress">
-                                                    </div>
-                                                    <div class="mb-3 col-xl-6">
-                                                        <label class="me-sm-2">City</label>
-                                                        <input type="text" class="form-control" placeholder="New York"
-                                                            name="city">
-                                                    </div>
-                                                    <div class="mb-3 col-xl-6">
-                                                        <label class="me-sm-2">Postal Code</label>
-                                                        <input type="text" class="form-control" placeholder="25481"
-                                                            name="postal">
-                                                    </div>
-                                                    <div class="mb-3 col-xl-6">
-                                                        <label class="me-sm-2">Country</label>
-                                                       
-                                                    </div>
-
-                                                    <div class="mb-3 col-12">
-                                                        <button class="btn btn-success ps-5 pe-5">Save</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                              
                             </div>
                         </div>
                     </div>
@@ -182,8 +128,51 @@
 <script>
 import SideBar from '../components/SideBar.vue'
 import Footer from '../components/Footer.vue'
+import Api from './Api.js';
 export default {
     name: 'Settings',
-    components: {SideBar, Footer}
+    components: {SideBar, Footer},
+    data(){
+        return{
+            first_name: '',
+            last_name: '',
+            address: '',
+            phone_number: '',
+            address: '',
+            email: '',
+            current_password: '',
+            new_password: '',
+            confirm_new_password: ''
+        }
+    },
+    methods: {
+        getUser(){
+                Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
+                .then(response => {
+                    console.log(response.data);
+                    this.first_name = response.data.first_name  
+                    this.last_name = response.data.last_name  
+                    this.phone_number = response.data.phone_number 
+                    this.address = response.data.address  
+                    this.email = response.data.email  
+                })
+        },
+        updateAccountDetails(){
+            let formData = {
+                first_name: this.first_name,
+                last_name: this.last_name,
+                address: this.address
+            }
+            console.log(formData);
+            Api.axios_instance.put(Api.baseUrl+'api/v1/profile/update', formData)
+            .then(response => {
+                this.$toast.success({
+                        title:'Welldone!',
+                        message:'Account Updated Successfully '
+                })
+                this.getUser()
+            })
+        }
+    }
 }
 </script>

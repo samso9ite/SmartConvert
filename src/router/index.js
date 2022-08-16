@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 const routes = [
 
   {
-    path: '/dashboard',
+    path: '/',
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue')
   },
@@ -54,6 +54,12 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: () => import('../views/Signup.vue')
+  },
+  {
+    path: '/activate/:id/:reference/',
+    name: 'Activation',
+    props: true,
+    component: () => import('../views/Activation.vue')
   },
 ]
 

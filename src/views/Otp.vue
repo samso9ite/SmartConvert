@@ -21,29 +21,14 @@
                                     </p>
                                 </div>
                             <div class="card-body">
-                                <form method="post" name="myform" class="signin_validate" @submit.prevent="submitForm">
-                                    <div class="mb-3">
-                                        <label>Email</label>
-                                        <input type="email" class="form-control" placeholder="" v-model="email">
-                                            
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Password</label>
-                                        <input type="password" class="form-control" placeholder="Password"
-                                            name="password" v-model="password">
-                                    </div>
-                                    <div class="row d-flex justify-content-between mt-4 mb-2">
-                                        <div class="mb-3 mb-0">
-                                            <a href="reset.html">Forgot Password?</a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-success btn-block" style="background-color:rgb(122 21 61); border: none;" :disabled="loading">Sign in</button>
-                                    </div>
-                                </form>
-                                <div class="new-account mt-3">
-                                    <p>Don't have an account?  <a class="text-primary" ><router-link to="/signup" > Sign up </router-link></a></p>
-                                </div>
+                               <vue-otp-2
+                                    length="6"
+                                    join-character="-"
+                                    inputmode="numeric"
+                                    pattern="[0-9]*"
+                                    @onChange="console.log"
+                                    @onComplete="console.log" 
+                                    />
                             </div>
                         </div>
                     </div>
@@ -77,7 +62,7 @@ import Api from './Api.js';
                     console.log(res.data);
                     const access = res.data.access
                     sessionStorage.setItem('access', access)
-                    this.$router.push("/")
+                    this.$router.push("/dashboard")
                 })
                 .catch(error => {
                     if (error.response){
@@ -96,6 +81,28 @@ import Api from './Api.js';
                     this.loading = false
                 })          
             },
+            getUserProfile(){
+                Api.axios_instance.get(Api.baseUrl+'api/v1/user_data',  {mode: 'no-cors'})
+                .then(response => {
+                    console.log(response.data);
+                    const first_name = response.data.first_name
+                    const last_name = response.data.last_name
+                    const email = response.data.email
+                    const phone_number = response.data.phone_number
+                    sessionStorage.setItem("first_name", first_name)
+                    sessionStorage.setItem("last_name", last_name)
+                    sessionStorage.setItem("email", email)
+                    sessionStorage.setItem("phone", phone_number)
+                })
+            }
         },
     }
 </script>
+
+<style scoped>
+.vue-otp-2 {
+  display: flex;
+  justify-content: space-between;
+}
+.vue-otp-2 div input{max-width:50px !important;}
+</style>
