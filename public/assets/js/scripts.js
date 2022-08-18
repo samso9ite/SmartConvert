@@ -1,3 +1,4 @@
+import jQuery from 'jquery'
 //  Preloader
 jQuery(window).on("load", function () {
     $('#preloader').fadeOut(500);

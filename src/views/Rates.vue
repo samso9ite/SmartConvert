@@ -1,0 +1,71 @@
+<template>
+    <div>
+        <SideBar />
+        <div class="page_title">
+            <div class="container-fluid">
+                <div class="row">
+                </div>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <h4 class="card-title">Rates</h4>
+                            </div>
+                            <div class="card-body pt-0">
+                                 <div class="balance-widget">
+                                    <ul class="list-unstyled">
+                                        <div class="row">
+                                             <li class="d-flex" v-for="rate in rates" :key="rate">
+                                            <i class="cc BTC me-3" v-if="rate.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" class="me-3" width="35px" v-if="rate.coin_name === 'Perfect Money'"/><i class="cc ETH me-3" style="color:#5968ba" v-if="rate.coin_name == 'Etherium'"></i><i class="cc LTC me-3"  v-if="rate.coin_name == 'LiteCoin'"></i><i class="cc DOGE me-3"  v-if="rate.coin_name == 'Doge Coin'"></i><i class="cc USDT me-3" v-if="rate.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="rate.coin_name == 'Ripple'"></i><i class="cc TX me-3" v-if="rate.coin_name == 'TRON'"></i> <img src="../../public/assets/images/cryptocurrency.jpg" class="me-3" width="35px" v-if="rate.coin_name == 'Solana'"/>
+                                            <div class="flex-grow-1">
+                                                <h5 class="m-0">{{rate.coin_name}}</h5>
+                                            </div>
+                                            <div class="text-end">
+                                                <h5>₦{{rate.buy_rate}} BUY</h5>
+                                                <span>₦{{rate.sell_rate}} SELL</span>
+                                            </div>
+                                        </li>
+                                        </div>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <Footer />
+    </div>
+</template>
+
+<script>
+import SideBar from '../components/SideBar.vue'
+import Footer from '../components/Footer.vue'
+import Api from './Api.js'
+    export default {
+        name: 'Rates',
+        components: {SideBar, Footer},
+        data(){
+            return{
+                rates: []
+            }
+        },
+        methods: {
+            getRates(){
+                Api.axios_instance.get(Api.baseUrl+'api/v1/list-coin')
+                .then(response => {
+                    console.log(response.data)
+                    this.rates = response.data
+                })
+            }
+            },
+        mounted(){
+            this.getRates()
+        }
+        }
+</script>

@@ -61,6 +61,12 @@ const routes = [
     props: true,
     component: () => import('../views/Activation.vue')
   },
+  {
+    path: '/rates',
+    name: 'Rates',
+    props: true,
+    component: () => import('../views/Rates.vue')
+  }
 ]
 
 const router = new VueRouter({

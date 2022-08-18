@@ -12,17 +12,7 @@
 
                         <div class="dashboard_log my-2">
                             <div class="d-flex align-items-center">
-                                <div class="account_money">
-                                    <ul>
-                                        <li class="crypto">
-                                            <span>0.0025</span>
-                                            <i class="cc BTC-alt"></i>
-                                        </li>
-                                        <li class="usd">
-                                            <span>19.93 USD</span>
-                                        </li>
-                                    </ul>
-                                </div>
+                         
                                 <div class="profile_log dropdown">
                                     <div class="user" data-toggle="dropdown">
                                         <span class="thumb"><i class="la la-user"></i></span>
@@ -71,6 +61,12 @@
                         </a>
                     </router-link>
                 </li>
+                <li><router-link :to="'/rates'">
+                        <a data-placement="right" title="All Rates">
+                            <span><i class="las la-stream"></i></span>
+                        </a>
+                    </router-link>
+                </li>
                 <li>
                     <router-link :to="'/transaction-history'">
                         <a data-toggle="tooltip" data-placement="right" title="Transaction History">
@@ -85,8 +81,10 @@
                         </a>
                     </router-link>
                 </li>
-                <li><a href="settings.html" data-toggle="tooltip" data-placement="right" title="Setting">
-                        <span><i class="la la-tools"></i></span>
+
+                <li>
+                    <a  data-toggle="tooltip" data-placement="right" title="Logout" @click="logout()">
+                            <span><i class="las la-power-off"></i></span>
                     </a>
                 </li>
             </ul>
@@ -100,6 +98,13 @@
         data(){
             return{
                 first_name: localStorage.getItem('first_name')
+            }
+        },
+        methods: {
+            logout(){
+                sessionStorage.clear();
+                window.localStorage.clear();
+                this.$router.push({path:'/signin'})
             }
         }
     }

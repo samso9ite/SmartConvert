@@ -82,8 +82,7 @@
                                             <h5 class="d-inline-block ms-2 mb-3">Completed Trades
                                             </h5>
                                         </div>
-                                        <h4 style="margin-left: 40px;"> {{succesful_transactions}} <span class="badge badge-success ms-2"></span>
-                                        </h4>
+                                        <h4 style="margin-left: 40px;"> {{succesful_transactions}} <span class="badge badge-success ms-2"></span> </h4>
                                     </div>
                                     <div id="btcChart"></div>
                                 <!-- </div> -->
@@ -97,13 +96,11 @@
                         <ul class="list-unstyled">
                             <div class="div col-lg-12">
                                 <div class="row" >
-                                    <!-- <h4>BUY / SELL Rate</h4> -->
                                     <div class="col-xl-3 col-lg-3 col-xxl-4" style="">
                                          <div class="card-body pt-0">
                                 <div class="balance-widget">
                                     <ul class="list-unstyled">
                                         <li class="d-flex">
-                                            <!-- <i class="cc BTC me-3"></i> -->
                                             <img src="../../public/assets/images/perfect-money-logo.png" width="11%"/>
                                             <div class="flex-grow-1">
                                                 <h5 class="m-0" style="padding-left:5px">Perfect Money</h5>
@@ -131,7 +128,7 @@
                                      <div class="col-xl-9 col-lg-10" >
                                          <div class="card-header border-0 py-0">
                                             <h4 class="card-title">Current Rate</h4>
-                                            <a href="#">View More Rate </a>
+                                            <router-link :to="'/rates'"> View More Rate </router-link>
                                         </div>
                                         <marquee><i class="cc BTC me-3"></i> Bitcoin ${{this.btc_rate}} / 1<i class="cc ETH" style="color:#5968ba; padding-left: 2rem;"></i> Ethereum ${{this.eth_rate}} / 1  <i class="cc LTC me-3" style="padding-left: 2rem;"></i> Litecoin ${{this.ltc_rate}} / 1 <i class="cc DOGE me-3" style="padding-left: 2rem;"></i> DOGE ${{this.doge_rate}} / 1 <i class="cc USDT me-3" style="padding-left: 2rem;"></i> USDT ${{this.usdt_rate}} / 1 <i class="cc XRP me-3" style="padding-left: 2rem;"></i> Ripple ${{this.xrp_rate}} / 1 <i class="cc TX me-3" style="padding-left: 2rem;"></i> TRON ${{this.trx_rate}} / 1</marquee>
                                         <div class="row" style="margin-top:2.7rem">
@@ -243,81 +240,18 @@
                                                         <span class="badge badge-danger" v-if="transaction.transaction_status == 3">Failed</span>
                                                     </td>
                                                     <td>
-                                                        <i class="cc BTC"></i> Bitcoin
+                                                        <i class="cc BTC me-3" v-if="transaction.coin.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" width="11%" v-if="transaction.coin.coin_name === 'Perfect Money'"/><i class="cc ETH" me-3 style="color:#5968ba" v-if="transaction.coin.coin_name == 'Ethereum'"></i><i class="cc LTC me-3"  v-if="transaction.coin.coin_name == 'Litecoin'"></i><i class="cc DOGE me-3"  v-if="transaction.coin.coin_name == 'DOGE'"></i><i class="cc USDT me-3" v-if="transaction.coin.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="transaction.coin.coin_name == 'Ripple'"></i>{{transaction.coin.coin_name}}
                                                     </td>
                                                     <td>
-                                                        Using - Bank *******5264
+                                                          {{transaction.bank.account_number}}
                                                     </td>
-                                                    <td class="text-warning"  v-if="transaction.transaction_status == 1">{{transaction.transaction_amount}} BTC</td>
-                                                    <td class="text-danger"  v-else-if="transaction.transaction_status == 3">{{transaction.transaction_amount}} BTC</td>
-                                                    <td class="text-success"  v-else="transaction.transaction_status == 2">{{transaction.transaction_amount}} BTC</td>
-                                                    <td>₦50,000</td>
-                                                    <td> <vue-moments-ago prefix="transacted" suffix="ago" date="2018-05-02T20:22:22.285Z" lang="en" /></td>
+                                                    <td class="text-warning"  v-if="transaction.transaction_status == 1">{{transaction.coin_amount}}{{transaction.coin.coin_name}}</td>
+                                                    <td class="text-danger"  v-else-if="transaction.transaction_status == 3">{{transaction.coin_amount}}{{transaction.coin.coin_name}}</td>
+                                                    <td class="text-success"  v-else-if="transaction.transaction_status == 2">{{transaction.coin_amount}}{{transaction.coin.coin_name}}</td>
+                                                    <td>₦{{transaction.transaction_amount_naira}}</td>
+                                                    <td> {{transaction.date}}</td>
                                                 </tr>
-                                                <tr>
-                                                    <td><span class="buy-thumb"><i class="la la-arrow-up"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-success">Buy</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc LTC"></i> Litecoin
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******8475
-                                                    </td>
-                                                    <td class="text-success">-0.000242 BTC</td>
-                                                    <td>₦100,000 </td>
-                                                    <td>transacted 10days ago</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span class="buy-thumb"><i class="la la-arrow-up"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-success">Buy</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc LTC"></i> Litecoin
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******8475
-                                                    </td>
-                                                    <td class="text-success">-0.000242 BTC</td>
-                                                    <td>₦100,000 </td>
-                                                    <td>transacted 10days ago</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span class="buy-thumb"><i class="la la-arrow-up"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-success">Buy</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc LTC"></i> Litecoin
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******8475
-                                                    </td>
-                                                    <td class="text-success">-0.000242 BTC</td>
-                                                    <td>₦100,000 </td>
-                                                    <td>transacted 10days ago</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span class="buy-thumb"><i class="la la-arrow-up"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-success">Buy</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc LTC"></i> Litecoin
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******8475
-                                                    </td>
-                                                    <td class="text-success">-0.000242 BTC</td>
-                                                    <td>₦100,000 </td>
-                                                    <td>transacted 10days ago</td>
-                                                </tr>
+                                            
                                             </tbody>
                                         </table>
                                     </div>
@@ -328,24 +262,7 @@
                 </div>
             </div>
         </div>
-        <div class="footer">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-xl-6 col-md-6">
-                        <div class="copy_right">
-                            Copyright ©
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-md-6 text-lg-right text-center">
-                        <div class="social">
-                            <a href="#"><i class="fa fa-instagram"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+       <Footer />
     </div>
 </template>
 
@@ -353,13 +270,14 @@
 <script>
 import Api from './Api.js'
 import SideBar from '../components/SideBar.vue'
+import Footer from '../components/Footer.vue'
 import QRPage from '../components/QRPage.vue'
 import SellFirstPhase from '../components/SellFirstPhase.vue'
 import SuccessPage from '../components/SuccessPage.vue'
 import VueMomentsAgo from 'vue-moments-ago'
     export default {
         name: 'Dashboard',
-        components: {SideBar, SuccessPage, QRPage, SellFirstPhase, VueMomentsAgo},
+        components: {SideBar, SuccessPage, QRPage, SellFirstPhase, VueMomentsAgo, Footer},
         data(){
             return{
                 first_name: sessionStorage.getItem('first_name'),
@@ -383,7 +301,7 @@ import VueMomentsAgo from 'vue-moments-ago'
                 ETH: '',
                 PM: '',
                 USDT: '',
-                url: "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,DOGE,USDT,TRX,Solana,XRP,ETH,LTC&tsyms=USD",
+                url: "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,DOGE,USDT,TRX,Solana,XRP,ETH,LTC&tsyms=USD&api_key=f72b59432fb04a56c30fee2cc24adfdca9cda19c8a50b49c7bddba4cc0a469b6",
                 timer: '',
                 eth_rate: '',
                 btc_rate: '',
@@ -398,7 +316,6 @@ import VueMomentsAgo from 'vue-moments-ago'
             getUser(){
                 Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
                 .then(response => {
-                    console.log(response.data);
                     this.first_name = response.data.first_name  
                     this.last_name = response.data.last_name  
                     this.phone_number = response.data.phone_number 
@@ -417,7 +334,7 @@ import VueMomentsAgo from 'vue-moments-ago'
                     this.transactions = response.data
                     var transacted_amount = 0;
                     this.transactions.forEach(transaction => {
-                        transacted_amount += transaction.transaction_amount
+                        transacted_amount += transaction.transaction_amount_naira
                     })
                     this.total_transacted = transacted_amount
                     this.$store.commit('transactions', {all_transactions:response.data})
@@ -439,6 +356,7 @@ import VueMomentsAgo from 'vue-moments-ago'
                 )
             },
             update(){
+                console.log(this.url);
                 Api.axios_instance.get(this.url)
                 .then(response  => {
                     var results = response.data

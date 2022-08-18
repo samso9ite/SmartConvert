@@ -1,6 +1,6 @@
 <template>
 <div>
-<SideBar />
+    <SideBar />
         <div class="page_title">
         </div>
 
@@ -102,6 +102,7 @@
                 </div>
             </div>
         </div>
+    <Footer />
     </div>
 </template>
 
@@ -143,7 +144,7 @@ import axios from 'axios';
            async verifyAccount(){
             this.bank_code = this.bank_details[0].bank_code
             this.bank_name = this.bank_details[0].bank_name
-            let token = 'sk_live_8897fa0d728dd8a313165ba6c18c3b67c1bc0fca'
+            let token = ''
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
             await axios.get('https://api.paystack.co/bank/resolve?account_number='+this.account_number+'&bank_code='+this.bank_code, {
                 }) 
