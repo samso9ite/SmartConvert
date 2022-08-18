@@ -49,18 +49,13 @@
                                                         <span class="badge badge-danger" v-if="transaction.transaction_status == 3">Failed</span>
                                                     </td>
                                                     <td>
-                                                        <!-- <i class="cc BTC"></i> -->
-                                                        Bitcoin
-                                                        <!-- {{transaction.}} -->
+                                                      {{transaction.coin.coin_name}}
                                                     </td>
 
                                                     <td>
-                                                        Using - Bank *******5264
+                                                       {{transaction.bank.account_number}}
                                                     </td>
-                                                    <!-- <td class="text-warning"  v-if="transaction.transaction_status == 1">{{transaction.transaction_amount_btc}} BTC</td>
-                                                    <td class="text-danger"  v-else-if="transaction.transaction_status == 3">{{transaction.transaction_amount_btc}} BTC</td>
-                                                    <td class="text-success"  v-else="transaction.transaction_status == 2">{{transaction.transaction_amount_btc}} BTC</td> -->
-                                                    <td>${{transaction.transaction_amount_usd}}</td>
+                                                    <td>{{transaction.coin_amount}}{{transaction.coin.coin_name}}</td>
                                                     <td>₦{{transaction.transaction_amount_naira}}</td>
                                                     <td> {{transaction.date}}</td>
                                                     <td>{{transaction.hash_key}}</td>

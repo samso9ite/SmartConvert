@@ -66,19 +66,19 @@
                                                         <label class="me-sm-2">Phone Number</label>
                                                         <input type="text" class="form-control" v-model="phone_number" >
                                                     </div>
-                                                     <div class="mb-3 col-xl-12">
+                                                     <!-- <div class="mb-3 col-xl-12">
                                                         <label class="me-sm-2">Address</label>
                                                         <input type="text" class="form-control" v-model="address" >
-                                                    </div>
+                                                    </div> -->
                                                     <div class="mb-3 col-xl-12">
                                                         <!-- <div class="file-upload-wrapper" data-text="Change Photo">
                                                             <input name="file-upload-field" type="file"
                                                                 class="file-upload-field" value="">
                                                         </div> -->
                                                     </div>
-                                                    <div class="col-12">
+                                                    <!-- <div class="col-12">
                                                         <button type="submit" class="btn btn-success waves-effect">Update</button>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                             </form>
                                         </div>
@@ -90,21 +90,21 @@
                                             <h4 class="card-title">Change Password</h4>
                                         </div>
                                         <div class="card-body">
-                                            <form action="#">
+                                            <form @submit.prevent="changePassword">
                                                 <div class="row">
                                                     <div class="mb-3 col-xl-12">
                                                         <label class="me-sm-2">Current Password</label>
-                                                        <input type="password" class="form-control">
+                                                        <input type="password" class="form-control" v-model="current_password">
                                                     </div>
                                                     <div class="mb-3 col-xl-12">
                                                         <label class="me-sm-2">New Password</label>
                                                         <input type="password" class="form-control"
-                                                            placeholder="**********">
+                                                            placeholder="**********" v-model="new_password">
                                                     </div>
                                                      <div class="mb-3 col-xl-12">
                                                         <label class="me-sm-2">Confirm New Password</label>
                                                         <input type="password" class="form-control"
-                                                            placeholder="**********">
+                                                            placeholder="**********" v-model="confirm_new_password">
                                                     </div>
                                                     <div class="col-12">
                                                         <button class="btn btn-success waves-effect">Save</button>
@@ -170,9 +170,32 @@ export default {
                         title:'Welldone!',
                         message:'Account Updated Successfully '
                 })
-                this.getUser()
+                // this.getUser()
+            })
+            .catch(error => {
+                console.log(error.data);
+            })
+        },
+        changePassword(){
+            let formData = {
+                new_password: this.new_password,
+                re_new_password: this.confirm_new_password,
+                current_password: this.current_password
+            }
+            Api.axios_instance.post(Api.baseUrl+'auth/users/set_password/', formData)
+            .then(response => {
+                this.$toast.success({
+                        title:'Welldone!',
+                        message:'Password Changed Successfully '
+                })
+            })
+            .catch(error => {
+                console.log(error.data);
             })
         }
+    },
+    mounted(){
+        this.getUser()
     }
 }
 </script>
