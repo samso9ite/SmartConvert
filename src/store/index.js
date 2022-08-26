@@ -7,6 +7,14 @@ export default new Vuex.Store({
   state: {
     isAuthenticated: '',
     token: '',
+    currentTrade: {
+      dollar_amount: '',
+      coin_amount: '',
+      naira_amount: '',
+      coin_name: '',
+      trade_type: '',
+      bank_account: ''
+    },
     user :{
       username: '',
       id : ''
@@ -28,6 +36,14 @@ export default new Vuex.Store({
         state.user.username = '',
         state.user.id = ''
       }
+    },
+    currentTrade(state, payload){
+      state.currentTrade.bank_account = payload.bank_account
+      state.currentTrade.coin_amount = payload.coin_amount
+      state.currentTrade.coin_name = payload.coin_name
+      state.currentTrade.dollar_amount = payload.dollar_amount
+      state.currentTrade.naira_amount = payload.naira_amount
+      state.currentTrade.trade_type = payload.trade_type
     },
     setToken(state, payload){
       state.token = payload.token,

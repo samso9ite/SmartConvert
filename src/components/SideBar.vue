@@ -55,9 +55,10 @@
                         </a>
                     </router-link>
                 </li>
-                <li><router-link :to="''">
-                        <a data-placement="right" title="Exchange">
-                            <span><i class="la la-exchange-alt"></i></span>
+                <li>
+                    <router-link :to="'/settings'">
+                        <a data-toggle="tooltip" data-placement="right" title="Account">
+                            <span><i class="la la-user"></i></span>
                         </a>
                     </router-link>
                 </li>
@@ -73,19 +74,19 @@
                             <span><i class="la la-history"></i></span>
                         </a>
                     </router-link>
-            </li>
-                <li>
-                    <router-link :to="'/settings'">
-                        <a data-toggle="tooltip" data-placement="right" title="Account">
-                            <span><i class="la la-user"></i></span>
+                </li>
+                 <li>
+                    <router-link :to="''">
+                        <a data-placement="right" title="Connect on WhatsApp">
+                            <span><i class="lab la-whatsapp"></i></span>
                         </a>
                     </router-link>
                 </li>
 
-                <li>
-                    <a  data-toggle="tooltip" data-placement="right" title="Logout" @click="logout()">
-                            <span><i class="las la-power-off"></i></span>
-                    </a>
+                <li style="margin-top:7px; margin-left:4px">
+                        <a  data-toggle="tooltip" data-placement="right" title="Logout" @click="logout()">
+                                <span><i class="las la-power-off"></i></span>
+                        </a>
                 </li>
             </ul>
         </div>

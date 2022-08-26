@@ -8,9 +8,6 @@
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="page_title-content">
-                            <!-- <p>Welcome Back,
-                                <span> Maria Pascle</span>
-                            </p> -->
                         </div>
                     </div>
                 </div>
@@ -195,10 +192,10 @@
                              <div class="buy-sell-widget">
                                     <ul class="nav nav-tabs">
                                         <li class="nav-item" v-if="trade_not_active">
-                                            <a class="nav-link" :class="{'makeActive':buy_transaction_in_progress}" style="background-color:white; color:brown" @click="buyFunction()">Buy</a>
+                                            <a class="nav-link"  style="background-color:white; color:brown" @click="buyFunction()">Buy</a>
                                         </li>
-                                        <li class="nav-item"  v-if="trade_not_active"><a class="nav-link" :class="{'makeActive':sell_transaction_in_progress}" style="background-color:white; color:brown" @click="sellFunction()">Sell</a> </li>
-                                        <li class="nav-item" v-if="buy_transaction_in_progress"><a class="nav-link active" :disabled="buy_transaction_in_progress" :class="{'makeActive' :buy_transaction_in_progress}" style="background-color:white; color:brown" data-toggle="tab" href="#buy">Buy</a></li>
+                                        <li class="nav-item"  v-if="trade_not_active"><a class="nav-link" style="background-color:white; color:brown" @click="sellFunction()">Sell</a> </li>
+                                        <li class="nav-item" v-if="buy_transaction_in_progress"><a class="nav-link active" :disabled="buy_transaction_in_progress" :class="{'makeActive' :buy_transaction_in_progress}" style="background-color:white; color:brown">Buy</a></li>
                                         <li class="nav-item" v-if="sell_transaction_in_progress"><a class="nav-link" :class="{'makeActive':sell_transaction_in_progress}" :disabled="sell_transaction_in_progress" style="background-color:white; color:brown">Sell</a> </li>
                                     </ul>
                                 </div>
@@ -206,7 +203,7 @@
                             <div class="card-body">
                                 <div class="buy-sell-widget">
                                     <div v-show="currentPhase==='SellFirstPhase'" >
-                                        <SellFirstPhase @firstPhase="switchPhase" />
+                                        <SellFirstPhase @firstPhase="switchPhase" @getTransactions="getTransactions" :coins="coins" :trade_type="trade_type" :trade_not_active="trade_not_active"  :savedAccounts="savedAccounts" :coinCurrentValue="coinCurrentValue"/>
                                     </div>
                                     <div v-show="currentPhase==='SellSecondPhase'">
                                         <QRPage  @secondPhase="switchPhase" />
@@ -222,7 +219,7 @@
                         <div class="card">
                             <div class="card-header border-0 py-0">
                                 <h4 class="card-title">Recent Activities</h4>
-                                <a href="#">View More </a>
+                                <router-link :to="'/transaction-history'"> View All Transactions </router-link>
                             </div>
                             <div class="card-body">
                                 <div class="transaction-table">
@@ -233,25 +230,21 @@
                                                     <td v-if="transaction.transaction_status == 1"><span class="sold-thumb"><i class="la la-arrow-down"></i></span> </td>
                                                     <td v-if="transaction.transaction_status == 3"><span class="sold-thumb"><i class="la la-arrow-down"></i></span> </td>
                                                     <td v-else-if="transaction.transaction_status == 2"><span class="buy-thumb"><i class="la la-arrow-up"></i></span></td>
-                                                    
                                                     <td>
                                                         <span class="badge badge-danger" v-if="transaction.transaction_status == 1">Pending</span>
                                                         <span class="badge badge-danger" v-else-if="transaction.transaction_status == 2">Successfull</span>
                                                         <span class="badge badge-danger" v-if="transaction.transaction_status == 3">Failed</span>
                                                     </td>
                                                     <td>
-                                                        <i class="cc BTC me-3" v-if="transaction.coin.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" width="11%" v-if="transaction.coin.coin_name === 'Perfect Money'"/><i class="cc ETH" me-3 style="color:#5968ba" v-if="transaction.coin.coin_name == 'Ethereum'"></i><i class="cc LTC me-3"  v-if="transaction.coin.coin_name == 'Litecoin'"></i><i class="cc DOGE me-3"  v-if="transaction.coin.coin_name == 'DOGE'"></i><i class="cc USDT me-3" v-if="transaction.coin.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="transaction.coin.coin_name == 'Ripple'"></i>{{transaction.coin.coin_name}}
+                                                        <i class="cc TX me-3" v-if="transaction.coin.coin_name == 'TRON'"></i><i class="cc BTC me-3" v-if="transaction.coin.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" class="me-3" width="6%" v-if="transaction.coin.coin_name === 'Perfect Money'"/><i class="cc ETH" me-3 style="color:#5968ba" v-if="transaction.coin.coin_name == 'Ethereum'"></i><i class="cc LTC me-3"  v-if="transaction.coin.coin_name == 'LiteCoin'"></i><i class="cc DOGE me-3"  v-if="transaction.coin.coin_name == 'DOGE'"></i><i class="cc USDT me-3" v-if="transaction.coin.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="transaction.coin.coin_name == 'Ripple'"></i>{{transaction.coin.coin_name}}
                                                     </td>
-                                                    <td>
-                                                          {{transaction.bank.account_number}}
-                                                    </td>
-                                                    <td class="text-warning"  v-if="transaction.transaction_status == 1">{{transaction.coin_amount}}{{transaction.coin.coin_name}}</td>
-                                                    <td class="text-danger"  v-else-if="transaction.transaction_status == 3">{{transaction.coin_amount}}{{transaction.coin.coin_name}}</td>
-                                                    <td class="text-success"  v-else-if="transaction.transaction_status == 2">{{transaction.coin_amount}}{{transaction.coin.coin_name}}</td>
-                                                    <td>₦{{transaction.transaction_amount_naira}}</td>
+                                                    <td> {{transaction.trade_type}} </td>
+                                                    <td class="text-warning"  v-if="transaction.transaction_status == 1">{{transaction.coin_amount}} {{transaction.coin.coin_name}}</td>
+                                                    <td class="text-danger"  v-else-if="transaction.transaction_status == 3">{{transaction.coin_amount}} {{transaction.coin.coin_name}}</td>
+                                                    <td class="text-success"  v-else-if="transaction.transaction_status == 2">{{transaction.coin_amount}} {{transaction.coin.coin_name}}</td>
+                                                    <td>₦{{transaction.naira_amount}}</td>
                                                     <td> {{transaction.date}}</td>
                                                 </tr>
-                                            
                                             </tbody>
                                         </table>
                                     </div>
@@ -275,6 +268,7 @@ import QRPage from '../components/QRPage.vue'
 import SellFirstPhase from '../components/SellFirstPhase.vue'
 import SuccessPage from '../components/SuccessPage.vue'
 import VueMomentsAgo from 'vue-moments-ago'
+import  BtcXpubAddress from 'btc-xpub-address'
     export default {
         name: 'Dashboard',
         components: {SideBar, SuccessPage, QRPage, SellFirstPhase, VueMomentsAgo, Footer},
@@ -283,7 +277,6 @@ import VueMomentsAgo from 'vue-moments-ago'
                 first_name: sessionStorage.getItem('first_name'),
                 transactions: [],
                 total_transacted: '',
-                send_hash_key: '324kjfkd8779292',
                 currentPhase: 'SellFirstPhase',
                 naira_value: '',
                 amount_in_dollar: '',
@@ -293,7 +286,7 @@ import VueMomentsAgo from 'vue-moments-ago'
                 trade_not_in_progress: true,
                 sell_transaction_in_progress: false,
                 buy_transaction_in_progress: false, 
-                coins: '',
+                coins: [],
                 LTH: '',
                 solana: '',
                 ripple: '',
@@ -306,16 +299,24 @@ import VueMomentsAgo from 'vue-moments-ago'
                 eth_rate: '',
                 btc_rate: '',
                 usdt_rate: '',
-                lth_rate: '',
+                ltc_rate: '',
                 doge_rate: '',
                 solana_rate: '',
-                trx_rate: ''
+                trx_rate: '',
+                savedAccounts: [],
+                coinCurrentValue: [],
+                selected_trade_type: false,
+                trade_type: ''
             }
         },
         methods: {
-            getUser(){
+            async getUser(){
+                const xpub = 'xpub6C9XWiHJHq3ugBVeo16ixAErjdDWBQpk7TbqSWtXhuL2GBoJ9EnqxuShdW3zH44jn4fE5F5ne1xDrZawwVDQ4sWQSPzRHqTZ8F9e7MFoqK8';
+                const address = await BtcXpubAddress.getAddress(xpub);
+                console.log(address);
                 Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
                 .then(response => {
+                    console.log("sdfghjkj");
                     this.first_name = response.data.first_name  
                     this.last_name = response.data.last_name  
                     this.phone_number = response.data.phone_number 
@@ -334,7 +335,7 @@ import VueMomentsAgo from 'vue-moments-ago'
                     this.transactions = response.data
                     var transacted_amount = 0;
                     this.transactions.forEach(transaction => {
-                        transacted_amount += transaction.transaction_amount_naira
+                        transacted_amount += transaction.naira_amount
                     })
                     this.total_transacted = transacted_amount
                     this.$store.commit('transactions', {all_transactions:response.data})
@@ -356,9 +357,9 @@ import VueMomentsAgo from 'vue-moments-ago'
                 )
             },
             update(){
-                console.log(this.url);
                 Api.axios_instance.get(this.url)
                 .then(response  => {
+                    this.coin_current_value = response.data
                     var results = response.data
                     this.btc_rate = results.BTC.USD
                     this.eth_rate = results.ETH.USD
@@ -368,12 +369,17 @@ import VueMomentsAgo from 'vue-moments-ago'
                     this.xrp_rate = results.XRP.USD
                     this.trx_rate = results.TRX.USD
                 })
+                .catch(error => {
+                    console.log(error.data);
+                })
             },
             sellFunction(){
+                this.trade_type = "SELL"
                 this.sell_transaction_in_progress = true
                 this.trade_not_active = false
             },
             buyFunction(){
+                this.trade_type = "BUY"
                 this.buy_transaction_in_progress = true
                 this.trade_not_active = false
             },
@@ -381,12 +387,22 @@ import VueMomentsAgo from 'vue-moments-ago'
                 this.sell_transaction_in_progress = true
                 this.trade_not_in_progress = false
                 this.currentPhase = currentPhase
-            }
+                if(this.currentPhase === "SellFirstPhase"){
+                    location.reload()
+                }
+             },
+            getSavedAccounts(){
+              Api.axios_instance.get(Api.baseUrl+'api/v1/list-bank')
+              .then(response => {
+                this.savedAccounts = response.data
+              })  
+           },
         },
         mounted(){
             this.getUser()
             this.getTransactions()
             this.getCoins()
+            this.getSavedAccounts()
             this.update();
             this.timer = setInterval(this.update, 3000)
         },
@@ -404,5 +420,8 @@ import VueMomentsAgo from 'vue-moments-ago'
 <style scoped>
     .makeActive{
         background-color:grey !important;
+    }
+    .remove{
+        display: none !important;
     }
 </style>

@@ -49,153 +49,17 @@
                                                         <span class="badge badge-danger" v-if="transaction.transaction_status == 3">Failed</span>
                                                     </td>
                                                     <td>
-                                                        <i class="cc BTC me-3" v-if="transaction.coin.coin_name == 'Bitcoin'"></i>  <img src="../../public/assets/images/perfect-money-logo.png" width="11%" v-if="transaction.coin.coin_name === 'Perfect Money'"  />  <i class="cc ETH" me-3 style="color:#5968ba" v-if="transaction.coin.coin_name == 'Ethereum'"></i>  <i class="cc LTC me-3"  v-if="transaction.coin.coin_name == 'Litecoin'"></i> <i class="cc DOGE me-3"  v-if="transaction.coin.coin_name == 'DOGE'"></i> <i class="cc USDT me-3" v-if="transaction.coin.coin_name == 'USDT' "></i> <i class="cc XRP me-3" v-if="transaction.coin.coin_name == 'Ripple'"></i>{{transaction.coin.coin_name}}
+                                                        <i class="cc BTC me-3" v-if="transaction.coin.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" width="11%" v-if="transaction.coin.coin_name === 'Perfect Money'"/><i class="cc ETH" me-3 style="color:#5968ba" v-if="transaction.coin.coin_name == 'Ethereum'"></i><i class="cc LTC me-3"  v-if="transaction.coin.coin_name == 'Litecoin'"></i><i class="cc DOGE me-3"  v-if="transaction.coin.coin_name == 'DOGE'"></i><i class="cc USDT me-3" v-if="transaction.coin.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="transaction.coin.coin_name == 'Ripple'"></i>{{transaction.coin.coin_name}}
                                                     </td>
 
-                                                    <td>
+                                                    <!-- <td>
                                                        {{transaction.bank.account_number}}
-                                                    </td>
+                                                    </td> -->
                                                     <td>{{transaction.coin_amount}}{{transaction.coin.coin_name}}</td>
-                                                    <td>₦{{transaction.transaction_amount_naira}}</td>
+                                                    <td>₦{{transaction.naira_amount}}</td>
                                                     <td> {{transaction.date}}</td>
                                                     <td>{{transaction.hash_key}}</td>
                                                 </tr>
-                                                <!-- <tr>
-                                                    <td><span class="buy-thumb"><i class="la la-arrow-up"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-success">Buy</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc LTC"></i> LTC
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******8475
-                                                    </td>
-                                                    <td class="text-success">-0.000242 BTC</td>
-                                                    <td>-0.125 USD</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span class="sold-thumb"><i class="la la-arrow-down"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-danger">Sold</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc XRP"></i> XRP
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******8475
-                                                    </td>
-                                                    <td class="text-danger">-0.000242 BTC</td>
-                                                    <td>-0.125 USD</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span class="buy-thumb"><i class="la la-arrow-up"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-success">Buy</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc DASH"></i> DASH
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******2321
-                                                    </td>
-                                                    <td class="text-success">-0.000242 BTC</td>
-                                                    <td>-0.125 USD</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span class="sold-thumb"><i class="la la-arrow-down"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-danger">Sold</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc BTC"></i> BTC
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******2321
-                                                    </td>
-                                                    <td class="text-danger">-0.000242 BTC</td>
-                                                    <td>-0.125 USD</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span class="sold-thumb"><i class="la la-arrow-down"></i></span>
-                                                    </td>
-
-                                                    <td>
-                                                        <span class="badge badge-danger">Sold</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc BTC"></i> BTC
-                                                    </td>
-                                                    <td>
-                                                        Using - Bank *******5264
-                                                    </td>
-                                                    <td class="text-danger">-0.000242 BTC</td>
-                                                    <td>-0.125 USD</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span class="buy-thumb"><i class="la la-arrow-up"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-success">Buy</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc LTC"></i> LTC
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******8475
-                                                    </td>
-                                                    <td class="text-success">-0.000242 BTC</td>
-                                                    <td>-0.125 USD</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span class="sold-thumb"><i class="la la-arrow-down"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-danger">Sold</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc XRP"></i> XRP
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******8475
-                                                    </td>
-                                                    <td class="text-danger">-0.000242 BTC</td>
-                                                    <td>-0.125 USD</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span class="buy-thumb"><i class="la la-arrow-up"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-success">Buy</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc DASH"></i> DASH
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******2321
-                                                    </td>
-                                                    <td class="text-success">-0.000242 BTC</td>
-                                                    <td>-0.125 USD</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span class="sold-thumb"><i class="la la-arrow-down"></i></span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-danger">Sold</span>
-                                                    </td>
-                                                    <td>
-                                                        <i class="cc BTC"></i> BTC
-                                                    </td>
-                                                    <td>
-                                                        Using - Card *******2321
-                                                    </td>
-                                                    <td class="text-danger">-0.000242 BTC</td>
-                                                    <td>-0.125 USD</td>
-                                                </tr> -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -222,12 +86,7 @@ import Footer from '../components/Footer.vue'
             }
         },
         methods: {
-            //  getTransactions(){
-            //     Api.axios_instance.get(Api.baseUrl+'api/v1/list-transaction')
-            //     .then(response => {
-            //         this.transactions = response.data
-            //         this.$store.commit('transactions', {all_transactions:response.data})
-            //     })
+          
             },
         }
 </script>

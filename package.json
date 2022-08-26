@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.25.0",
+    "btc-xpub-address": "^0.2.0",
     "core-js": "^3.6.5",
     "cxlt-vue2-toastr": "^1.1.1",
     "vue": "^2.6.11",
