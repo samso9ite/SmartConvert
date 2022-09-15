@@ -19,7 +19,7 @@ let access = await sessionStorage.getItem('access')
   return config;
 });
 const baseUrl = 'http://localhost:8000/'
-export default {
+export default { 
   axios_instance,
   baseUrl,
 }               

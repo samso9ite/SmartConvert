@@ -4,7 +4,7 @@
         <div class="page_title">
         </div>
 
-        <div class="content-body">
+        <div class="content-body" :class="{'mobileStyle': showMobileStyle}">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xl-3 col-md-4">
@@ -44,8 +44,8 @@
                                 <div class="form">
                                     <ul class="linked_account">
                                         <li>
-                                            <div class="row">
-                                                <div class="col-9" v-for="account in savedAccounts" :key="account">
+                                            <div class="row" v-for="account in savedAccounts" :key="account">
+                                                <div class="col-9" >
                                                     <div class="d-flex">
                                                         <span class="me-3"><i class="fa fa-bank"></i></span>
                                                         <div class="flex-grow-1">
@@ -122,7 +122,8 @@ import axios from 'axios';
                 account_number: '',
                 account_name: '',
                 bank_name: '',
-                savedAccounts: []
+                savedAccounts: [],
+                showMobileStyle: false
             }
         },
         methods: {
@@ -141,10 +142,11 @@ import axios from 'axios';
                 this.savedAccounts = response.data
               })  
            },
-           async verifyAccount(){
+           async verifyAccount(){   
             this.bank_code = this.bank_details[0].bank_code
             this.bank_name = this.bank_details[0].bank_name
-            let token = ''
+            // let token = process.env.VUE_APP_NOT_SECRET_KEY
+            let token = 'sk_live_8897fa0d728dd8a313165ba6c18c3b67c1bc0fca'
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
             await axios.get('https://api.paystack.co/bank/resolve?account_number='+this.account_number+'&bank_code='+this.bank_code, {
                 }) 
@@ -152,19 +154,26 @@ import axios from 'axios';
                     this.account_name = response.data.data.account_name
                     this.account_number = response.data.data.account_number
                    })
+                .catch(() => {
+                    this.$toast.error({
+                    title:'Oops!',
+                    message:'Bank Details Incorrect'
+                    })
+                })
                 const bankData = {
                     account_name: this.account_name,
                     account_number: this.account_number,
                     bank_code: this.bank_code,
                     bank_name: this.bank_name
                 }
-                console.log(bankData);
-               await Api.axios_instance.post(Api.baseUrl+'api/v1/add-bank', bankData) 
+            await Api.axios_instance.post(Api.baseUrl+'api/v1/add-bank', bankData) 
                 .then(response => {
                     this.$toast.success({
                     title:'Welldone!',
-                    message:'Bank Details Added '
+                    message:'Bank Details Added'
                     })
+                    this.account_name = ""
+                    this.account_number = ""
                     this.getSavedAccounts()
                     } 
                 )
@@ -181,11 +190,19 @@ import axios from 'axios';
                     })
                     this.getSavedAccounts()
                 })
-           }
+           },
+           screenSize(){
+            if(screen.width < 800){
+                console.log("Mobile Size")
+                this.showMobileStyle = true
+            }
+            }
         },
         mounted(){
             this.getAllBanks()
             this.getSavedAccounts()
+            this.screenSize()
         }
     }
 </script>
+

@@ -5,17 +5,16 @@ import store from './store'
 import axios from 'axios'
 import CxltToastr from 'cxlt-vue2-toastr'
 import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css'
-
-// axios.defaults.baseURL ='http://127.0.0.1:8000/'
-// const auth_token = localStorage.getItem('token')
-// axios.defaults.headers.common['Authorization'] = auth_token;
+import VueOtp2 from 'vue-otp-2';
+import PerfectScrollbar from 'vue2-perfect-scrollbar'
+import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 
 var toastrConfigs = {
   position: 'top right',
   showDuration: 2000
 }
 
-Vue.use(CxltToastr, toastrConfigs)
+Vue.use(CxltToastr, toastrConfigs).use(VueOtp2).use(PerfectScrollbar)
 Vue.config.productionTip = false
 Vue.prototype.$http = axios;
 

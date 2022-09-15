@@ -105,7 +105,6 @@ import Api from './Api.js'
                         message:'Account Created Successfully '
                     })
                     this.registered = true
-                    // this.$router.push('/signin')
                 })
                 .catch(error => {
                     if (error.response){

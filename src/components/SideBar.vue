@@ -1,51 +1,41 @@
-<template>
-    
+<template>   
 <div>
-    <div class="header">
+    <div class="header" :class="{'mobileHeader':activeBar}">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xl-12">
                     <nav class="navbar navbar-expand-lg navbar-light px-0 justify-content-between">
-                        <a class="navbar-brand" href="index-2.html"><img src="images/w_logo.png" alt="">
-                            <span>SmartConvert</span></a>
+                        <div class="row">
+                            <div class="col-lg-12" style="font-size:24px; font-weight: 600; padding:0.5rem; color:white">
+                                <router-link :to="'/'" class=""> 
+                                    <span>SmartConvert </span>
+                                </router-link>  <span style="padding-left:2rem" @click="toggleActive"><i class="las la-bars"></i> </span>
 
+
+                            </div>
+                            
+                        </div>
+                      
 
                         <div class="dashboard_log my-2">
                             <div class="d-flex align-items-center">
                          
-                                <div class="profile_log dropdown">
+                                <div class="profile_log dropdown" :class="{'mobileSideBar': activeBar}">
                                     <div class="user" data-toggle="dropdown">
                                         <span class="thumb"><i class="la la-user"></i></span>
                                         <span class="name">{{this.first_name}}</span>
-                                        <span class="arrow"><i class="la la-angle-down"></i></span>
                                     </div>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="accounts.html" class="dropdown-item">
-                                            <i class="la la-user"></i> Account
-                                        </a>
-                                        <a href="history.html" class="dropdown-item">
-                                            <i class="la la-book"></i> History
-                                        </a>
-                                        <a href="settings.html" class="dropdown-item">
-                                            <i class="la la-cog"></i> Setting
-                                        </a>
-                                        <a href="lock.html" class="dropdown-item">
-                                            <i class="la la-lock"></i> Lock
-                                        </a>
-                                        <a href="signin.html" class="dropdown-item logout">
-                                            <i class="la la-sign-out"></i> Logout
-                                        </a>
-                                    </div>
-                                </div>
+                                </div>  
                             </div>
                         </div>
                     </nav>
+                    
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="sidebar">
+    <div class="sidebar" :class="{'mobileSideBar': activeMobileSideBar}">
         <div class="menu">
             <ul>
                 <li>
@@ -57,8 +47,8 @@
                 </li>
                 <li>
                     <router-link :to="'/settings'">
-                        <a data-toggle="tooltip" data-placement="right" title="Account">
-                            <span><i class="la la-user"></i></span>
+                        <a data-toggle="tooltip" data-placement="right" title="Bank Account">
+                            <span><i class="las la-university"></i></span>
                         </a>
                     </router-link>
                 </li>
@@ -77,8 +67,8 @@
                 </li>
                  <li>
                     <router-link :to="''">
-                        <a data-placement="right" title="Connect on WhatsApp">
-                            <span><i class="lab la-whatsapp"></i></span>
+                        <a data-placement="right" title="Contact Us">
+                            <span><i class="las la-phone-volume"></i></span>
                         </a>
                     </router-link>
                 </li>
@@ -95,10 +85,13 @@
 </template>
 
 <script>
+import { computed } from 'vue';
     export default{
         data(){
             return{
-                first_name: localStorage.getItem('first_name')
+                first_name: localStorage.getItem('first_name'),
+                activeSideBar: false,
+                toggleActiveDropdown: true
             }
         },
         methods: {
@@ -106,7 +99,37 @@
                 sessionStorage.clear();
                 window.localStorage.clear();
                 this.$router.push({path:'/signin'})
+            },
+            toggleActive(){
+                this.toggleActiveDropdown = !this.toggleActiveDropdown
+            }
+        },
+        computed: {
+            activeMobileSideBar: function (){
+                if(this.toggleActiveDropdown){
+                    if (screen.width < 800){
+                        return this.activeSideBar = true
+                    }else{
+                        return this.activeSideBar = false
+                    }  
+                }
+            },
+            activeBar: function(){
+                if (screen.width < 800){
+                        return this.activeSideBar = true
+                    }else{
+                        return this.activeSideBar = false
+                }  
             }
         }
     }
 </script>
+
+<style>
+    .mobileSideBar{
+        display:none;
+    }
+    .mobileHeader{
+        position: block;
+    }
+</style>

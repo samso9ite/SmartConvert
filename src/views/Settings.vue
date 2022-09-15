@@ -9,7 +9,7 @@
                 </div>
             </div>
 
-            <div class="content-body">
+            <div class="content-body" :class="{'mobileStyle': showMobileStyle}">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-3 col-md-4">
@@ -192,10 +192,17 @@ export default {
             .catch(error => {
                 console.log(error.data);
             })
-        }
+        },
+        screenSize(){
+            if(screen.width < 800){
+                console.log("Mobile Size")
+                this.showMobileStyle = true
+            }
+            }
     },
     mounted(){
         this.getUser()
+        this.screenSize()
     }
 }
 </script>

@@ -21,6 +21,13 @@ export default new Vuex.Store({
     },
     all_transactions: [],
     currentPhase: 'SellFirstPhase',
+    addressInfo: {
+      coin_name: '',
+      coin_amount: '',
+      dollar_amount: '',
+      address: '',
+      network:''
+    }
   },
   mutations: {
     initializeStore(){
@@ -58,6 +65,13 @@ export default new Vuex.Store({
     },
     Phase(state, payload){
       state.currentPhase = payload.currentPhase
+    },
+    uniqueAddressStore(state, payload){
+      state.addressInfo.coin_name = payload.coin_name
+      state.addressInfo.address = payload.address
+      state.addressInfo.dollar_amount = payload.dollar_amount
+      state.addressInfo.coin_amount = payload.coin_amount
+      state.addressInfo.network = payload.network
     }
   },
   actions: {

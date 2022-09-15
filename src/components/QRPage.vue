@@ -1,13 +1,12 @@
 <template>
     <div style="margin-top:-0.7rem">
-        <h5>Please transfer the 25 Bitcoin($4379.9) you want to sell to:</h5> <br>
+        <h4>Please transfer the {{walletCoinAmount}} {{walletCoinName}} (${{walletDollarAmount}}) you want to sell to:</h4> <br>
         <div class="row">
-            <b style="color:white">1NNVg8xaud1UYvmmGNZPSEnKYQEWwFd5S8 <span @click="getHashKey()" style="background-color:white;border-radius: 50px; padding-left:0.5rem; padding-right:0.5rem; color:brown; cursor: pointer;">Copy</span></b>
+            <b style="color:white">{{walletAddress}} <span @click="getHashKey()" style="background-color:white;border-radius: 50px; padding-left:0.5rem; padding-right:0.5rem; color:brown; cursor: pointer;">Copy</span></b>
         </div> 
         <div class="mt-4">
             <center> 
-                <!-- <qrcode :background="background" :size="250" :cls="qrCls" :value="qrText"></qrcode>  -->
-                <img src="https://www.bitcoinqrcodemaker.com/api/?style=bitcoin&fiat=USD&amount=100&address=1NNVg8xaud1UYvmmGNZPSEnKYQEWwFd5S8" height="150" width="150" />
+                <img :src="'https://www.bitcoinqrcodemaker.com/api/?style='+walletNetwork+'&fiat=USD&amount='+walletCoinAmount+'&address='+walletAddress" height="150" width="150" />
                 <h5 class="mt-4"><b>Important!: Only send to the address only once, if you need to send another, create a new trade.</b></h5>
                 <button type="submit" name="submit" class="btn btn-success btn-block mt-3" @click="secondPhase()">Completed</button>
             </center>
@@ -17,15 +16,19 @@
 
 <script>
 import Qrcode from 'v-qrcode/src/index'
+import Api from '../views/Api';
+import { onMounted } from 'vue';
 export default{
     components: {Qrcode},
+    props: ['walletAddress', 'walletCoinName', 'walletDollarAmount', 'walletCoinAmount', 'walletNetwork'],
     data(){
         return{
             qrCls: 'qrcode',
-            qrText: '1NNVg8xaud1UYvmmGNZPSEnKYQEWwFd5S8',
+            // url: https://www.bitcoinqrcodemaker.com/api/?style=bitcoin&fiat=USD&amount=100&address=369ADvD1AiNaYRghucpbReMy53rYmBo6ya,
+            qrText: this.$store.state.addressInfo.address,
             background: '#FFF',
             currentPhase: 'SuccessPhase',
-            hash_key: '43454543fdg'
+            hash_key: '43454543fdg',
         }
     },
 
@@ -38,9 +41,17 @@ export default{
             })
         },
         secondPhase(){
-				this.$emit('secondPhase', this.currentPhase)
-                console.log("This Emmitted");
-			},
+            this.$emit('secondPhase', this.currentPhase)
+            console.log("This Emmitted");
+        },
+
+        getAddressInfo(){
+            console.log("Checking if this works");
         }
+        
+    },
+    mounted(){
+        this.getAddressInfo()
+    }
 }
 </script>

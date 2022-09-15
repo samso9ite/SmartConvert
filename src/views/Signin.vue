@@ -81,14 +81,19 @@ import Api from './Api.js';
                 })
                 .catch(error => {
                     if (error.response){
-                        for(const property in error.response.data){
-                            this.errors.push(`${property}:${error.response.data[property]}`)
-                        }
-                        console.log(JSON.stringify(error.message));
-                        } else if (error.message){
-                            console.log(JSON.stringify(error.message));
-                        } else{
-                            console.log(JSON.stringify(error));
+                        this.$toast.error({
+                        title:'Oops!',
+                        message:'Incorrect Email or Password  '
+                })
+                        console.log(error.data);
+                        // for(const property in error.response.data){
+                        //     this.errors.push(`${property}:${error.response.data[property]}`)
+                        // }
+                        // console.log(JSON.stringify(error.message));
+                        // } else if (error.message){
+                        //     console.log(JSON.stringify(error.message));
+                        // } else{
+                        //     console.log(JSON.stringify(error));
                         }
                     }
                 )  

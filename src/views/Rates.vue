@@ -8,7 +8,7 @@
             </div>
         </div>
 
-        <div class="content-body">
+        <div class="content-body" :class="{'mobileStyle': showMobileStyle}">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xl-12">
@@ -20,9 +20,9 @@
                                  <div class="balance-widget">
                                     <ul class="list-unstyled">
                                         <div class="row">
-                                            <div class="col-lg-4">
-                                                <li class="d-flex" v-for="rate in rates" :key="rate">
-                                                    <i class="cc BTC me-3" v-if="rate.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" class="me-3" width="35px" v-if="rate.coin_name === 'Perfect Money'"/><i class="cc ETH me-3" style="color:#5968ba" v-if="rate.coin_name == 'Etherium'"></i><i class="cc LTC me-3"  v-if="rate.coin_name == 'LiteCoin'"></i><i class="cc DOGE me-3"  v-if="rate.coin_name == 'Doge Coin'"></i><i class="cc USDT me-3" v-if="rate.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="rate.coin_name == 'Ripple'"></i><i class="cc TX me-3" v-if="rate.coin_name == 'TRON'"></i> <img src="../../public/assets/images/cryptocurrency.jpg" class="me-3" width="35px" v-if="rate.coin_name == 'Solana'"/>
+                                            <div class="col-lg-4" v-for="rate in rates" :key="rate">
+                                                <li class="d-flex" >
+                                                    <i class="cc BTC me-3" v-if="rate.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" class="me-3" width="35px" v-if="rate.coin_name === 'Perfect Money'"/><i class="cc ETH me-3" style="color:#5968ba" v-if="rate.coin_name == 'Ethereum'"></i><i class="cc LTC me-3"  v-if="rate.coin_name == 'LiteCoin'"></i><i class="cc DOGE me-3"  v-if="rate.coin_name == 'Doge Coin'"></i><i class="cc USDT me-3" v-if="rate.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="rate.coin_name == 'Ripple'"></i><i class="cc TX me-3" v-if="rate.coin_name == 'TRON'"></i> <img src="../../public/assets/images/cryptocurrency.jpg" class="me-3" width="35px" v-if="rate.coin_name == 'Solana'"/>
                                                     <div class="flex-grow-1">
                                                         <h5 class="m-0">{{rate.coin_name}}</h5>
                                                     </div>
@@ -55,7 +55,8 @@ import Api from './Api.js'
         components: {SideBar, Footer},
         data(){
             return{
-                rates: []
+                rates: [],
+                showMobileStyle: false
             }
         },
         methods: {
@@ -65,10 +66,17 @@ import Api from './Api.js'
                     console.log(response.data)
                     this.rates = response.data
                 })
-            }
+            },
+            screenSize(){
+                if(screen.width < 800){
+                    console.log("Mobile Size")
+                    this.showMobileStyle = true
+                }
+                }
             },
         mounted(){
             this.getRates()
+            this.screenSize()
         }
         }
 </script>

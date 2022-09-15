@@ -81,20 +81,6 @@ import Api from './Api.js';
                     this.loading = false
                 })          
             },
-            getUserProfile(){
-                Api.axios_instance.get(Api.baseUrl+'api/v1/user_data',  {mode: 'no-cors'})
-                .then(response => {
-                    console.log(response.data);
-                    const first_name = response.data.first_name
-                    const last_name = response.data.last_name
-                    const email = response.data.email
-                    const phone_number = response.data.phone_number
-                    sessionStorage.setItem("first_name", first_name)
-                    sessionStorage.setItem("last_name", last_name)
-                    sessionStorage.setItem("email", email)
-                    sessionStorage.setItem("phone", phone_number)
-                })
-            }
         },
     }
 </script>

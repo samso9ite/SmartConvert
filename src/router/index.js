@@ -10,20 +10,15 @@ const routes = [
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue')
   },
-  {
-    path: '/account',
-    name: 'Account',
-    component: () => import('../views/Account.vue')
-  },
+  // {
+  //   path: '/account',
+  //   name: 'Account',
+  //   component: () => import('../views/Account.vue')
+  // },
   {
     path: '/change-pwd',
     name: 'ChangePwd',
     component: () => import('../views/ChangePwd.vue')
-  },
-  {
-    path: '/add-bank',
-    name: 'AddBank',
-    component: () => import('../views/AddBank.vue')
   },
   {
     path: '/transaction-history',
