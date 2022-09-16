@@ -86,7 +86,6 @@ import Footer from '../components/Footer.vue'
         methods: {
             screenSize(){
             if(screen.width < 800){
-                console.log("Mobile Size")
                 this.showMobileStyle = true
             }
             }

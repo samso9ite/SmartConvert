@@ -5,7 +5,6 @@ import store from './store'
 import axios from 'axios'
 import CxltToastr from 'cxlt-vue2-toastr'
 import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css'
-import VueOtp2 from 'vue-otp-2';
 import PerfectScrollbar from 'vue2-perfect-scrollbar'
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 
@@ -14,7 +13,7 @@ var toastrConfigs = {
   showDuration: 2000
 }
 
-Vue.use(CxltToastr, toastrConfigs).use(VueOtp2).use(PerfectScrollbar)
+Vue.use(CxltToastr, toastrConfigs).use(PerfectScrollbar)
 Vue.config.productionTip = false
 Vue.prototype.$http = axios;
 

@@ -17,7 +17,7 @@
         <div class="content-body" :class="{'mobileStyle': showMobileStyle}">
             <div class="container-fluid">   
                 <div class="row">
-                    <div class="col-xl-3 col-lg-4 col-xxl-4">
+                    <div class="col-xl-3 col-lg-3 col-xxl-3">
                         <div class="card balance-widget">
                             <div class="card-header border-0 py-0">
                                 <h4 class="card-title">Welcome Back {{first_name}} </h4>
@@ -33,7 +33,7 @@
                         </div>
                     </div>
 
-                    <div class="col-xl-3 col-lg-3 col-xxl-4">
+                    <div class="col-xl-3 col-lg-3 col-xxl-3">
                             <div class="widget-card">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="widget-stat">
@@ -50,7 +50,7 @@
 
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-3 col-xxl-4">
+                    <div class="col-xl-3 col-lg-3 col-xxl-3">
                         <!-- <div class="col-xl-12 col-lg-6 col-xxl-6"> -->
                             <div class="widget-card">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -69,7 +69,7 @@
                             
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-3 col-xxl-4">
+                    <div class="col-xl-3 col-lg-3 col-xxl-3">
                         <!-- <div class="col-xl-12 col-lg-6 col-xxl-6"> -->
                             <div class="widget-card">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -88,47 +88,28 @@
                         </div>
                     </div>
                 </div>
-                 <div class="card-body pt-0">
+                 <div class="card-body" style="margin-top:-2rem">
                     <div class="balance-widget">
                         <ul class="list-unstyled">
                             <div class="div col-lg-12">
-                                <div class="row" >
-                                    <div class="col-xl-3 col-lg-3 col-xxl-4" style="">
-                                         <div class="card-body pt-0">
-                                <div class="balance-widget">
-                                    <ul class="list-unstyled">
-                                        <li class="d-flex">
-                                            <img src="../../public/assets/images/perfect-money-logo.png" width="11%"/>
-                                            <div class="flex-grow-1">
-                                                <h5 class="m-0" style="padding-left:5px">Perfect Money</h5>
-                                            </div>
-                                            <div class="text-end">
-                                                <h5>₦{{PM.buy_rate}} BUY </h5>
-                                                <span>₦{{PM.sell_rate}} SELL</span>
-                                            </div>
-                                        </li>
-                                        <li class="d-flex">
-                                            <i class="cc BTC me-3"></i>
-                                            <div class="flex-grow-1">
-                                                <h5 class="m-0">Bitcoin</h5>
-                                            </div>
-                                            <div class="text-end">
-                                                <h5>₦{{bitcoin.buy_rate}} BUY</h5>
-                                                <span>₦{{bitcoin.sell_rate}} SELL</span>
-                                            </div>
-                                        </li>
-                                       
-                                    </ul>
-                                </div>
-                            </div>
-                                    </div>
-                                     <div class="col-xl-9 col-lg-10" >
+                                <div class="row">
+                                     <div class="col-xl-12 col-lg-12" >
                                          <div class="card-header border-0 py-0">
                                             <h4 class="card-title">Current Rate</h4>
                                             <router-link :to="'/rates'"> View More Rate </router-link>
                                         </div>
                                         <marquee><i class="cc BTC me-3"></i> Bitcoin ${{this.btc_rate}} / 1<i class="cc ETH" style="color:#5968ba; padding-left: 2rem;"></i> Ethereum ${{this.eth_rate}} / 1  <i class="cc LTC me-3" style="padding-left: 2rem;"></i> Litecoin ${{this.ltc_rate}} / 1 <i class="cc DOGE me-3" style="padding-left: 2rem;"></i> DOGE ${{this.doge_rate}} / 1 <i class="cc USDT me-3" style="padding-left: 2rem;"></i> USDT ${{this.usdt_rate}} / 1 <i class="cc XRP me-3" style="padding-left: 2rem;"></i> Ripple ${{this.xrp_rate}} / 1 <i class="cc TX me-3" style="padding-left: 2rem;"></i> TRON ${{this.trx_rate}} / 1</marquee>
                                         <div class="row" style="margin-top:2.7rem">
+                                            <li class="d-flex col-lg-2" style="margin-right:25px">
+                                                <i class="cc BTC me-3"></i>
+                                                <div class="flex-grow-1">
+                                                    <h5 class="m-0" style="padding-left:7px">BTC</h5>
+                                                </div>
+                                                <div class="text-end">
+                                                    <h5>₦{{bitcoin.buy_rate}} BUY</h5>
+                                                    <span>₦{{bitcoin.sell_rate}} SELL</span>
+                                                </div>
+                                            </li>
                                             <li class="d-flex col-lg-2" style="margin-right:25px">
                                                 <i class="cc ETH" me-3 style="color:#5968ba"></i>
                                                 <div class="flex-grow-1">
@@ -140,13 +121,13 @@
                                                 </div>
                                             </li>
                                             <li class="d-flex col-lg-2" style="margin-right:25px">
-                                                <i class="cc LTC me-3"></i>
+                                                <img src="../../public/assets/images/perfect-money-logo.png" width="18%"/>
                                                 <div class="flex-grow-1">
-                                                    <h5 class="m-0">LTH</h5>
+                                                    <h5 class="m-0" style="padding-left:15px"> PM</h5>
                                                 </div>
                                                 <div class="text-end">
-                                                    <h5>₦{{LTH.buy_rate}} BUY</h5>
-                                                    <span>₦{{LTH.sell_rate}} SELL</span>
+                                                    <h5>₦{{PM.buy_rate}} BUY </h5>
+                                                    <span>₦{{PM.sell_rate}} SELL</span>
                                                 </div>
                                             </li>
                                             <li class="d-flex col-lg-2" style="margin-right:25px">
@@ -169,16 +150,7 @@
                                                     <span>₦{{USDT.sell_rate}} SELL</span>
                                                 </div>
                                             </li>
-                                            <li class="d-flex col-lg-2">
-                                                <i class="cc XRP me-3"></i>
-                                                <div class="flex-grow-1">
-                                                    <h5 class="m-0">Ripple</h5>
-                                                </div>
-                                                <div class="text-end">
-                                                    <h5>₦{{ripple.buy_rate}} BUY</h5>
-                                                    <span>₦{{ripple.sell_rate}} SELL</span>
-                                                </div>
-                                            </li>
+                                          
                                         </div>
                                     </div>
                                 </div>
@@ -187,7 +159,7 @@
                     </div>
                 </div>
                 <div class="row" style="margin-top:2rem">
-                    <div class="col-xl-3 col-lg-4 col-xxl-4">
+                    <div class="col-xl-4 col-lg-4 col-xxl-4">
                         <div class="card">
                              <div class="buy-sell-widget">
                                     <ul class="nav nav-tabs">
@@ -209,6 +181,9 @@
                                 <div class="buy-sell-widget">
                                     <div v-show="currentPhase==='SellFirstPhase'" >
                                         <SellFirstPhase @secondPhase="switchPhase" @firstPhase="switchPhase" @getTransactions="getTransactions" :coins="coins" :trade_type="trade_type" :trade_not_active="trade_not_active"  :savedAccounts="savedAccounts" :coinCurrentValue="coinCurrentValue"/>
+                                    </div>
+                                    <div v-show="currentPhase==='BuyPreviewPhase'" >
+                                        <BuyPreviewPhase @successPhase="switchPhase" @getTransactions="getTransactions" :trade_type="trade_type" :trade_not_active="trade_not_active" :coin_amount="current_coin_amount" :coin_name="current_coin_name" :naira_amount="current_naira_amount" :dollar_amount="current_dollar_amount"/>
                                     </div>
                                     <div v-show="currentPhase==='SellSecondPhase'">
                                         <QRPage  @secondPhase="switchPhase"  :walletAddress="wallet_address" :walletDollarAmount="wallet_dollar_amount" :walletCoinName="wallet_coin_name" :walletCoinAmount="wallet_coin_amount" :walletNetwork="wallet_network"/>
@@ -289,11 +264,12 @@ import Footer from '../components/Footer.vue'
 import QRPage from '../components/QRPage.vue'
 import SellFirstPhase from '../components/SellFirstPhase.vue'
 import SuccessPage from '../components/SuccessPage.vue'
+import BuyPreviewPhase from '../components/BuyPreviewPhase.vue'
 import VueMomentsAgo from 'vue-moments-ago'
 
     export default {
         name: 'Dashboard',
-        components: {SideBar, SuccessPage, QRPage, SellFirstPhase, VueMomentsAgo, Footer},
+        components: {SideBar, SuccessPage, QRPage, SellFirstPhase, VueMomentsAgo, BuyPreviewPhase, Footer},
         data(){
             return{
                 first_name: sessionStorage.getItem('first_name'),
@@ -334,7 +310,11 @@ import VueMomentsAgo from 'vue-moments-ago'
                 wallet_coin_name: '',
                 wallet_coin_amount: '',
                 wallet_network: '',
-                showMobileStyle: false
+                showMobileStyle: false,
+                current_coin_name: '',
+                current_coin_amount: '',
+                current_naira_amount: '',
+                current_dollar_amount: ''
             }
         },
         methods: {
@@ -366,7 +346,6 @@ import VueMomentsAgo from 'vue-moments-ago'
                     })
                     this.total_transacted = transacted_amount
                     this.$store.commit('transactions', {all_transactions:response.data})
-                    console.log(this.$store.state.all_transactions);
                  })
             },
             getCoins(){
@@ -387,7 +366,6 @@ import VueMomentsAgo from 'vue-moments-ago'
             update(){
                 Api.axios_instance.get(this.url)
                 .then(response  => {
-                    console.log(response.data);
                     this.coin_current_value = response.data
                     var results = response.data
                     this.btc_rate = results.BTC.USD
@@ -426,7 +404,13 @@ import VueMomentsAgo from 'vue-moments-ago'
                     this.wallet_coin_name = this.$store.state.addressInfo.coin_name
                     this.wallet_coin_amount = this.$store.state.addressInfo.coin_amount
                     this.wallet_network = this.$store.state.addressInfo.network
+                } else if(this.currentPhase === "BuyPreviewPhase"){
+                    this.current_coin_name = this.$store.state.currentTrade.coin_name
+                    this.current_coin_amount = this.$store.state.currentTrade.coin_amount
+                    this.current_dollar_amount = this.$store.state.currentTrade.dollar_amount
+                    this.current_naira_amount = this.$store.state.currentTrade.naira_amount
                 }
+                
              },
             getSavedAccounts(){
               Api.axios_instance.get(Api.baseUrl+'api/v1/list-bank')

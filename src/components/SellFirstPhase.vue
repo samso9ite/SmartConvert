@@ -10,13 +10,13 @@
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
                         <option value="">Select Coin</option>
-                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_limit:coin.minimum_limit, shortcode:coin.coin_short_code}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
+                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
             </div>
 
             <div class="mb-3">
-                <label class="me-sm-2">Payment Method {{bank}}</label>
+                <label class="me-sm-2">Payment Method</label>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label class="input-group-text" ><i class="fa fa-bank" style="margin-top:7px !important; margin-bottom:7px"></i></label>
@@ -33,18 +33,15 @@
                 <div class="mb-3">
                     <label class="me-sm-2">Enter Your Amount </label>
                     <div class="input-group">
+                        <label class="input-group-text">$</label><input type="number"  step="0.01"  class="form-control"  v-model="dollar_amount" name="PAYMENT_AMOUNT" 
+                            placeholder="Amount in USD" @input="dollarBasedCalculation(trade_type)">
                         <label class="input-group-text">₦</label><input type="text"   v-model="naira_amount" class="form-control"
-                            placeholder="Naira Value" @input="nairaBasedCalculation()">
-                        <label class="input-group-text">$</label><input type="text"  class="form-control"  v-model="dollar_amount" name="PAYMENT_AMOUNT" 
-                            placeholder="Amount in USD" @input="dollarBasedCalculation()">
+                            placeholder="Naira Value" @input="nairaBasedCalculation(trade_type)">
+                       
                     </div>
                     <div class="input-group mt-2" v-if="coin_shortcode === 'PM'">
-                        <input type="text"   class="form-control" v-model="pm_account" 
-                            placeholder="Enter your PM Account">
-                        <!-- Hidden Fields -->
                         <input type="hidden" name="PAYEE_ACCOUNT" value="U37368280" />
                         <input type="hidden" name="PAYEE_NAME" value="Smart Convert" />
-                        <!-- <input type="hidden" name="PAYEE_ACCOUNT" value="U37368280" /> -->
                         <input type="hidden" name="PAYMENT_UNITS" value="USD" />
                         <input type="hidden" name="PAYMENT_URL" value="https://ponpar.com" />
                         <input type="hidden" name="NOPAYMENT_URL" value="https://ponpar.com" />
@@ -53,7 +50,7 @@
                     </div>
                     <div class="input-group mt-2" v-else>
                         <input type="text"   class="form-control" v-model="coin_amount" 
-                            placeholder="Amount of Coin" @input="coinBasedCalculation()">
+                            placeholder="Amount of Coin" @input="coinBasedCalculation(trade_type)">
                     </div>
 
                     <div class="input-group mt-2" v-if="coin_shortcode !== 'PM' && trade_type === 'BUY'">
@@ -62,7 +59,7 @@
                     </div>
                     <div class="d-flex justify-content-between mt-3">
                         <p class="mb-0">Minimum Limit</p>
-                        <h4 class="mb-0">₦{{minimum_limit}} </h4>
+                        <h4 class="mb-0">₦{{minimum_sell_limit}} </h4>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -78,25 +75,26 @@
             <!--End of Perfect MOney Sell Form Section  -->
 
             <!-- Other Coins Form Section -->
+            
                 <div class="mb-3" v-else>
                     <label class="me-sm-2">Enter Your Amount </label>
                     <div class="input-group">
+                    <label class="input-group-text">$</label><input type="text"  class="form-control" v-model="dollar_amount" 
+                        placeholder="Amount in USD" @input="dollarBasedCalculation(trade_type)" required>
                     <label class="input-group-text">₦</label><input type="text"   v-model="naira_amount" class="form-control"
-                            placeholder="Naira Value" @input="nairaBasedCalculation()">
-                        <label class="input-group-text">$</label><input type="text"  class="form-control" v-model="dollar_amount" 
-                            placeholder="Amount in USD" @input="dollarBasedCalculation()">
+                        placeholder="Naira Value" @input="nairaBasedCalculation(trade_type)" required>
                     </div>
                     <div class="input-group mt-2" v-if="coin_shortcode === 'PM'">
                         <input type="text"   class="form-control" v-model="pm_account" 
-                            placeholder="Enter your PM Account">
+                            placeholder="Enter your PM Account" required>
                     </div>
                     <div class="input-group mt-2" v-else>
                         <input type="text"   class="form-control" v-model="coin_amount" 
-                            placeholder="Amount of Coin" @input="coinBasedCalculation()">
+                            placeholder="Amount of Coin" @input="coinBasedCalculation(trade_type)" required>
                     </div>
                     <div class="d-flex justify-content-between mt-3">
                         <p class="mb-0">Minimum Limit</p>
-                        <h4 class="mb-0">₦{{minimum_limit}} </h4>
+                        <h4 class="mb-0">₦{{minimum_sell_limit}} </h4>
                     </div>
                     <div class="row mt-3">
                     <div class="col-lg-6" v-if="loading">
@@ -105,8 +103,12 @@
                     <div class="col-lg-6" v-else>
                         <button type="submit" @click="firstPhase(trade_not_active, trade_type)" class="btn btn-success btn-block" >Proceed</button>
                     </div>
+                    <div class="col-lg-6" @click="reloadPage">
+                        <span style="color:white; font-size: 22px; float: right; cursor: pointer;" > <i class="las la-arrow-left"></i> Back</span>
+                    </div>
                     </div>
                 </div>
+           
             <!--End of Other Coins Form Section  -->
         </div>
 
@@ -123,7 +125,7 @@
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
                         <option value="">Select Coin</option>
-                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_limit:coin.minimum_limit, shortcode:coin.coin_short_code}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
+                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
             </div>
@@ -145,27 +147,28 @@
             <div class="mb-3">
                     <label class="me-sm-2">Enter Your Amount </label>
                     <div class="input-group">
+                    <label class="input-group-text">$</label><input type="text"  class="form-control" v-model="dollar_amount" 
+                            placeholder="Amount in USD" @input="dollarBasedCalculation(trade_type)" required>
+                   
                     <label class="input-group-text">₦</label><input type="text"   v-model="naira_amount" class="form-control"
-                            placeholder="Naira Value" @input="nairaBasedCalculation()">
-                        <label class="input-group-text">$</label><input type="text"  class="form-control" v-model="dollar_amount" 
-                            placeholder="Amount in USD" @input="dollarBasedCalculation()">
+                            placeholder="Naira Value" @input="nairaBasedCalculation(trade_type)" required>
                     </div>
                     <div class="input-group mt-2" v-if="coin_shortcode === 'PM'">
                         <input type="text"   class="form-control" v-model="pm_account" 
-                            placeholder="Enter your PM Account">
+                            placeholder="Enter your PM Account" required>
                     </div>
                     <div class="input-group mt-2" v-else>
                         <input type="text"   class="form-control" v-model="coin_amount" 
-                            placeholder="Amount of Coin" @input="coinBasedCalculation()">
+                            placeholder="Amount of Coin" @input="coinBasedCalculation(trade_type)" required>
                     </div>
 
                     <div class="input-group mt-2" v-if="coin_shortcode !== 'PM'">
                         <input type="text"   class="form-control" v-model="coin_address" 
-                            placeholder="Enter Your Coin  Address" >
+                            placeholder="Enter Your Coin  Address" required>
                     </div>
                     <div class="d-flex justify-content-between mt-3">
                         <p class="mb-0">Minimum Limit</p>
-                        <h4 class="mb-0">₦{{minimum_limit}} </h4>
+                        <h4 class="mb-0">₦{{minimum_buy_limit}} </h4>
                     </div>
                
                 <div class="row mt-3">
@@ -202,7 +205,8 @@ import Api from '../views/Api'
                 coin_type: [],
                 bank: '',
                 selected_coin_name:'',
-                minimum_limit: '',
+                minimum_buy_limit: '',
+                minimum_sell_limit: '',
                 coin_sell_rate: '',
                 coin_buy_rate: '',
                 btc_rate: '',
@@ -220,7 +224,7 @@ import Api from '../views/Api'
                 pm_account: '',
                 buy_payment_mode: '',
                 coin_address: '',
-                buy_Phase: 'SuccessPhase',
+                buy_Phase: 'BuyPreviewPhase',
                 address_check: this.$store.state.addressInfo.address,
                 loading: false
             }
@@ -228,12 +232,13 @@ import Api from '../views/Api'
         methods: {
             async firstPhase(trade_not_active, trade_type){
                 this.loading = true
-                if (trade_not_active === true){
+                if (this.dollar_amount === '' || this.naira_amount === '' || this.coin_name === ''){
                     this.$toast.error({
                     title:'Oops!',
                     position: 'bottom left',
                     showDuration: 100,
-                    message:'Chief! Please select either to BUY or SELL before proceeding'})
+                    message:'Chief! Please fill in all details'})
+                    this.loading = false
                 
                 }else{
                 let tradeData = {
@@ -259,7 +264,6 @@ import Api from '../views/Api'
                     if(this.selected_coin_name === "Perfect Money"){
                         console.log("Perfect Money");
                     }else{
-                        console.log("Coin Section");
                         await Api.axios_instance.get(Api.baseUrl+'api/v1/create-address/'+this.selected_coin_name)
                         .then(response => {
                             let storeData = {
@@ -285,18 +289,18 @@ import Api from '../views/Api'
                 }
                 else{
                     formData = {
-                    dollar_amount: parseFloat(this.dollar_amount),
-                    naira_amount: parseFloat(this.naira_amount),
-                    coin_amount: parseFloat(this.coin_amount),
-                    coin: this.coin_id,
-                    trade_type: trade_type,
-                    buy_payment_mode: this.buy_payment_mode,
-                    pm_account: this.pm_account,
-                    coin_address: this.coin_address
+                        dollar_amount: parseFloat(this.dollar_amount),
+                        naira_amount: parseFloat(this.naira_amount),
+                        coin_amount: parseFloat(this.coin_amount),
+                        coin: this.coin_id,
+                        trade_type: trade_type,
+                        buy_payment_mode: this.buy_payment_mode,
+                        pm_account: this.pm_account,
+                        coin_address: this.coin_address
                     }
                 }
                 this.$store.commit('currentTrade', tradeData)
-                await   Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
+                await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
                     this.$emit('getTransactions')
                     this.$toast.success({
@@ -309,7 +313,6 @@ import Api from '../views/Api'
                 if(trade_type === 'SELL'){
                     this.$emit('firstPhase', this.currentPhase)
                 }else{
-                    console.log("I am here");
                     this.$emit('secondPhase', this.buy_Phase)
                 } 
             }
@@ -319,7 +322,8 @@ import Api from '../views/Api'
                 this.naira_amount = ""
                 this.coin_amount = ""
                 this.selected_coin_name = this.coin_type[0].coin_name
-                this.minimum_limit = this.coin_type[0].minimum_limit
+                this.minimum_sell_limit = this.coin_type[0].minimum_sell_limit
+                this.minimum_buy_limit = this.coin_type[0].minimum_buy_limit
                 this.coin_buy_rate = this.coin_type[0].buy_rate
                 this.coin_sell_rate = this.coin_type[0].sell_rate
                 this.coin_shortcode = this.coin_type[0].shortcode
@@ -359,23 +363,36 @@ import Api from '../views/Api'
                 location.reload()
             },
             
-            /* Calculate Coin and Naira Value based on Dollar input value*/
-            dollarBasedCalculation(){
-               this.naira_amount = this.dollar_amount*this.coin_sell_rate
-               this.coin_amount = this.dollar_amount/this.current_coin_value
-              },
+                /* Calculate Coin and Naira Value based on Dollar input value*/
+                dollarBasedCalculation(trade_type){
+                    if(trade_type === 'SELL'){
+                        this.naira_amount = this.dollar_amount*this.coin_sell_rate
+                    }else{
+                        this.naira_amount = this.dollar_amount*this.coin_buy_rate
+                    }
+                    this.coin_amount = this.dollar_amount/this.current_coin_value
+                },
 
-            /* Calculate Dollar Value and Naira Value based on Coin Input Value  */
-            coinBasedCalculation(){
-                this.dollar_amount = this.coin_amount*this.current_coin_value
-                this.naira_amount = this.dollar_amount*this.coin_sell_rate
-            },
-            /* Calculate Dollar Value and Coin Value based on Naira Input Value */
-            nairaBasedCalculation(){
-                this.dollar_amount = this.naira_amount/this.coin_sell_rate
-                this.coin_amount = this.dollar_amount/this.current_coin_value
-            },
-          
+                /* Calculate Dollar Value and Naira Value based on Coin Input Value  */
+                coinBasedCalculation(trade_type){
+                    if(trade_type === 'SELL'){
+                        this.naira_amount = this.dollar_amount*this.coin_sell_rate
+                        }else{
+                            this.naira_amount = this.dollar_amount*this.coin_buy_rate
+                            }
+                    this.dollar_amount = this.coin_amount*this.current_coin_value
+                },
+
+                nairaBasedCalculation(trade_type){
+                    if(trade_type === 'SELL'){
+                        this.dollar_amount = this.naira_amount/this.coin_sell_rate
+                    }else{
+                        this.dollar_amount = this.naira_amount/this.coin_buy_rate
+                    }
+                    this.coin_amount = this.dollar_amount/this.current_coin_value
+                },
+            
+           
         }
     }
 </script>

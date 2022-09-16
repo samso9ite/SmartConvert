@@ -42,16 +42,8 @@ export default{
         },
         secondPhase(){
             this.$emit('secondPhase', this.currentPhase)
-            console.log("This Emmitted");
         },
-
-        getAddressInfo(){
-            console.log("Checking if this works");
-        }
         
-    },
-    mounted(){
-        this.getAddressInfo()
     }
 }
 </script>
