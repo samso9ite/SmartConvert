@@ -73,7 +73,7 @@
                                        <div class="row">
                                             <form @submit.prevent="verifyAccount">
                                                 <div class="row">
-                                                    
+                                                    <h5>Ensure your bank account name is the same as your registered name.<br><b> Payment wouldn't be made to third party account.</b></h5>
                                                     <div class="mb-3 col-xl-4">
                                                         <label class="me-sm-2">Bank Name</label>
                                                         <select class="form-control" v-model="bank_details">

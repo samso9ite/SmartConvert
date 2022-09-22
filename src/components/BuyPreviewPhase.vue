@@ -20,21 +20,20 @@
             </tr>
             <tr>
                 <td>Account Number</td>
-                <td>0424576647</td>
+                <td>0124587202</td>
             </tr>
             <tr>
                 <td>Account Name</td>
-                <td>Ajayi Samson Aduragbemi</td>
+                <td>AWOLUSI DAMILOLA SOLOMON </td>
             </tr>
             <tr>
                 <td>Bank</td>
-                <td>Kuda Microfinance Bank</td>
+                <td>GTBank</td>
             </tr>
             </tbody>
             </table>
 
-          
-            <button type="submit" @click="successPhase()" class="btn btn-success btn-block">Confirm Payment</button>
+            <button type="submit" @click="successPhase()" class="btn btn-success btn-block">Click After Payment</button>
         </center>
     </div>
 </template>

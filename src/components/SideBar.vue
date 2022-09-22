@@ -42,6 +42,7 @@
                     <router-link :to="'/'">
                         <a  data-placement="right" title="Home">
                             <span><i class="la la-igloo"></i></span>
+                            Home
                         </a>
                     </router-link>
                 </li>
@@ -55,6 +56,7 @@
                 <li><router-link :to="'/rates'">
                         <a data-placement="right" title="All Rates">
                             <span><i class="las la-stream"></i></span>
+                            Rates
                         </a>
                     </router-link>
                 </li>

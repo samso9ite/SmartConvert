@@ -226,7 +226,9 @@ import Api from '../views/Api'
                 coin_address: '',
                 buy_Phase: 'BuyPreviewPhase',
                 address_check: this.$store.state.addressInfo.address,
-                loading: false
+                loading: false,
+                wallet_address_id: '',
+                address_account_id: ''
             }
         },
         methods: {
@@ -250,7 +252,36 @@ import Api from '../views/Api'
                     trade_type: trade_type
                 }
                 let formData = {}
-                if (trade_type === 'SELL'){
+                    if (trade_type === 'SELL'){
+                        
+                        if(this.selected_coin_name === "Perfect Money"){
+                            console.log("Perfect Money");
+                        }else{
+                            await Api.axios_instance.get(Api.baseUrl+'api/v1/create-address/'+this.selected_coin_name)
+                            .then(response => {
+                                console.log(response.data);
+                                this.address_account_id = response.data.id
+                                this.coin_address = response.data.address
+                                console.log(this.address_account_id);
+                                let storeData = {
+                                    address: response.data.address,
+                                    network: response.data.network,
+                                    dollar_amount: this.dollar_amount,
+                                    coin_amount: this.coin_amount,
+                                    coin_name: this.selected_coin_name,
+                                }
+                                this.$store.commit('uniqueAddressStore', storeData)
+                            })
+                    }
+                    if(this.coin_shortcode === "BTC"){
+                            this.wallet_address_id = '4d074ea2-7a20-57b1-8df5-0f07a8103881'
+                        }
+                        else if(this.coin_shortcode === "ETH"){
+                            this.wallet_address_id = '84965879-ba0f-5fe2-8638-53d071c54efc'
+                        }
+                        else if(this.coin_shortcode === "DOGE"){
+                            this.wallet_address_id = '451a85b2-67db-56f6-a301-951f39ca420a'
+                        }
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
                         naira_amount: parseFloat(this.naira_amount),
@@ -259,23 +290,12 @@ import Api from '../views/Api'
                         bank: this.bank,
                         trade_type: trade_type,
                         buy_payment_mode: this.buy_payment_mode,
-                        pm_account: this.pm_account
+                        pm_account: this.pm_account,
+                        wallet_address_id: this.wallet_address_id,
+                        address_account_id: this.address_account_id,
+                        coin_address: this.coin_address
+                        
                     }
-                    if(this.selected_coin_name === "Perfect Money"){
-                        console.log("Perfect Money");
-                    }else{
-                        await Api.axios_instance.get(Api.baseUrl+'api/v1/create-address/'+this.selected_coin_name)
-                        .then(response => {
-                            let storeData = {
-                                address: response.data.address,
-                                network: response.data.network,
-                                dollar_amount: this.dollar_amount,
-                                coin_amount: this.coin_amount,
-                                coin_name: this.selected_coin_name,
-                            }
-                            this.$store.commit('uniqueAddressStore', storeData)
-                        })
-                }
                 }else if (this.coin_shortcode === "PM"){
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
@@ -331,15 +351,15 @@ import Api from '../views/Api'
                 await Api.axios_instance.get("https://min-api.cryptocompare.com/data/pricemulti?fsyms="+this.coin_shortcode+"&tsyms=USD&api_key=f72b59432fb04a56c30fee2cc24adfdca9cda19c8a50b49c7bddba4cc0a469b6")
                 .then(response  => {
                     var results = response.data
-                    if(this.coin_shortcode === "BTC"){
-                        this.current_coin_value = results.BTC.USD
-                    }
-                    else if(this.coin_shortcode === "ETH"){
-                        this.current_coin_value = results.ETH.USD
-                    }
-                    else if(this.coin_shortcode === "USDT"){
-                        this.current_coin_value = results.USDT.USD
-                    }
+                        if(this.coin_shortcode === "BTC"){
+                            this.current_coin_value = results.BTC.USD
+                        }
+                        else if(this.coin_shortcode === "ETH"){
+                            this.current_coin_value = results.ETH.USD
+                        }
+                        else if(this.coin_shortcode === "USDT"){
+                            this.current_coin_value = results.USDT.USD
+                        }
                     else if(this.coin_shortcode === "LTC"){
                         this.current_coin_value = results.LTC.USD
                     }

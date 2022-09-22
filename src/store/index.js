@@ -26,7 +26,9 @@ export default new Vuex.Store({
       coin_amount: '',
       dollar_amount: '',
       address: '',
-      network:''
+      network:'',
+      address_account_id: '',
+      wallet_address_id: ''
     }
   },
   mutations: {
@@ -72,6 +74,8 @@ export default new Vuex.Store({
       state.addressInfo.dollar_amount = payload.dollar_amount
       state.addressInfo.coin_amount = payload.coin_amount
       state.addressInfo.network = payload.network
+      state.addressInfo.address_account_id = payload.address_account_id
+      state.addressInfo.wallet_address_id = payload.wallet_address_id
     }
   },
   actions: {

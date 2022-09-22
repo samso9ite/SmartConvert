@@ -25,31 +25,15 @@
                             <div class="card-body pt-0">
                                 <div class="balance-widget">
                                     <div class="total-balance">
-                                        <h3>₦{{total_transacted}}</h3>
-                                        <h6>Total Amount Transacted</h6>
+                                        <h3>{{transactions.length}}</h3>
+                                        <h6>Total Trades Transacted</h6>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-xl-3 col-lg-3 col-xxl-3">
-                            <div class="widget-card">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="widget-stat">
-                                        <div class="coin-title">
-                                            <span><i class="cc BTC-alt"></i></span>
-                                            <h5 class="d-inline-block ms-2 mb-3">Total  Trades
-                                            </h5>
-                                        </div>
-                                        <h4 style="margin-left: 40px;"> {{transactions.length}} <span class="badge badge-success ms-2"></span>
-                                        </h4>
-                                    </div>
-                                    <!-- <div id="btcChart"></div> -->
-                            </div>
-
-                        </div>
-                    </div>
+                   
                     <div class="col-xl-3 col-lg-3 col-xxl-3">
                         <!-- <div class="col-xl-12 col-lg-6 col-xxl-6"> -->
                             <div class="widget-card">
@@ -87,6 +71,24 @@
                             
                         </div>
                     </div>
+
+                    <div class="col-xl-3 col-lg-3 col-xxl-3">
+                            <div class="widget-card">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="widget-stat">
+                                        <div class="coin-title">
+                                            <span><i class="cc BTC-alt"></i></span>
+                                            <h5 class="d-inline-block ms-2 mb-3">Failed  Trades
+                                            </h5>
+                                        </div>
+                                        <h4 style="margin-left: 40px;"> {{failed_transactions}} <span class="badge badge-success ms-2"></span>
+                                        </h4>
+                                    </div>
+                                    <!-- <div id="btcChart"></div> -->
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
                  <div class="card-body" style="margin-top:-2rem">
                     <div class="balance-widget">
@@ -98,7 +100,7 @@
                                             <h4 class="card-title">Current Rate</h4>
                                             <router-link :to="'/rates'"> View More Rate </router-link>
                                         </div>
-                                        <marquee><i class="cc BTC me-3"></i> Bitcoin ${{this.btc_rate}} / 1<i class="cc ETH" style="color:#5968ba; padding-left: 2rem;"></i> Ethereum ${{this.eth_rate}} / 1  <i class="cc LTC me-3" style="padding-left: 2rem;"></i> Litecoin ${{this.ltc_rate}} / 1 <i class="cc DOGE me-3" style="padding-left: 2rem;"></i> DOGE ${{this.doge_rate}} / 1 <i class="cc USDT me-3" style="padding-left: 2rem;"></i> USDT ${{this.usdt_rate}} / 1 <i class="cc XRP me-3" style="padding-left: 2rem;"></i> Ripple ${{this.xrp_rate}} / 1 <i class="cc TX me-3" style="padding-left: 2rem;"></i> TRON ${{this.trx_rate}} / 1</marquee>
+                                        <marquee><i class="cc BTC me-3"></i> Bitcoin ${{this.btc_rate}} <i class="cc ETH" style="color:#5968ba; padding-left: 2rem;"></i> Ethereum ${{this.eth_rate}} <i class="cc LTC me-3" style="padding-left: 2rem;"></i> Litecoin ${{this.ltc_rate}} <i class="cc DOGE me-3" style="padding-left: 2rem;"></i> DOGE ${{this.doge_rate}} <i class="cc USDT me-3" style="padding-left: 2rem;"></i> USDT ${{this.usdt_rate}} <i class="cc XRP me-3" style="padding-left: 2rem;"></i> Ripple ${{this.xrp_rate}} <i class="cc TX me-3" style="padding-left: 2rem;"></i> TRON ${{this.trx_rate}} </marquee>
                                         <div class="row" style="margin-top:2.7rem">
                                             <li class="d-flex col-lg-2" style="margin-right:25px">
                                                 <i class="cc BTC me-3"></i>
@@ -314,7 +316,8 @@ import VueMomentsAgo from 'vue-moments-ago'
                 current_coin_name: '',
                 current_coin_amount: '',
                 current_naira_amount: '',
-                current_dollar_amount: ''
+                current_dollar_amount: '',
+                coinbase_transaction: {},
             }
         },
         methods: {
@@ -333,8 +336,8 @@ import VueMomentsAgo from 'vue-moments-ago'
                     window.localStorage.setItem('email', this.email)
                 })
             },
-            getTransactions(){
-                Api.axios_instance.get(Api.baseUrl+'api/v1/list-transaction',  {mode: 'no-cors'})
+            async getTransactions(){
+                await Api.axios_instance.get(Api.baseUrl+'api/v1/list-transaction',  {mode: 'no-cors'})
                 .then(response => {
                     this.transactions = response.data
                     this.transactions = this.transactions.reverse()
@@ -403,7 +406,6 @@ import VueMomentsAgo from 'vue-moments-ago'
                     this.wallet_dollar_amount = this.$store.state.addressInfo.dollar_amount
                     this.wallet_coin_name = this.$store.state.addressInfo.coin_name
                     this.wallet_coin_amount = this.$store.state.addressInfo.coin_amount
-                    this.wallet_network = this.$store.state.addressInfo.network
                 } else if(this.currentPhase === "BuyPreviewPhase"){
                     this.current_coin_name = this.$store.state.currentTrade.coin_name
                     this.current_coin_amount = this.$store.state.currentTrade.coin_amount
@@ -420,18 +422,38 @@ import VueMomentsAgo from 'vue-moments-ago'
            },
            screenSize(){
             if(screen.width < 800){
-                console.log("Mobile Size")
                 this.showMobileStyle = true
             }
-           }
+           },
+           async coinbaseTransactionStatusUpdate(){
+            await this.getTransactions()
+            let pending_transactions = this.transactions.filter(transaction => transaction.transaction_status=='1')
+            if(pending_transactions){
+            for (let i =0; i <= pending_transactions.length; i++){
+                    let transaction = pending_transactions[i];
+                    console.log(transaction.wallet_address_id);
+                    Api.axios_instance.get(Api.baseUrl+'api/v1/get-coinbase-transaction-detail/'+transaction.wallet_address_id+'/'+transaction.address_account_id)
+                        .then(
+                            response => {
+                                console.log(response.data);
+                                
+                            }
+                        )
+                    }
+                }
+            }
+          
         },
         mounted(){
             this.getUser()
+            this.timer = setInterval(this.update, 300000)
+           
             this.screenSize()
             this.getTransactions()
             this.getCoins()
             this.getSavedAccounts()
             this.update();
+            this.coinbaseTransactionStatusUpdate()
             this.timer = setInterval(this.update, 3000)
         },
         computed: {
@@ -440,6 +462,9 @@ import VueMomentsAgo from 'vue-moments-ago'
             },
             succesful_transactions: function(){
                 return this.transactions.filter(transaction => transaction.transaction_status == '2').length
+            },
+            failed_transactions: function(){
+                return this.transactions.filter(transaction => transaction.transaction_status == '4').length
             }
         }
     }
