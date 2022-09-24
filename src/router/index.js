@@ -61,6 +61,21 @@ const routes = [
     name: 'Rates',
     props: true,
     component: () => import('../views/Rates.vue')
+  },
+  {
+    path: '/account-verification',
+    name: 'Verification',
+    component: () => import('../views/Verification.vue')
+  },
+  {
+    path: '/upload-verification',
+    name: 'IdVerification',
+    component: () => import('../views/IdVerification.vue')
+  },
+  {
+    path: '/upload-identification',
+    name: 'IDUpload',
+    component: () => import('../views/IDUpload.vue')
   }
 ]
 

@@ -31,6 +31,15 @@
                                             </a>
                                         </router-link>
                                     </li>
+
+                                    <li class="nav-item">
+                                        <router-link :to="'/account-verification'">
+                                            <a class="nav-link active" style="color:white">
+                                                <i class="las la-user-check"></i>
+                                                <span>Account Verification</span>
+                                            </a>
+                                        </router-link>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

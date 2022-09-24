@@ -7,6 +7,10 @@
             <table class="table table-striped" style="font-size:14px; font-weight: 500; color: white;">
             <tbody>
             <tr>
+                <td>Reference no</td>
+                <td><b>{{transaction_ref}}</b> </td>
+            </tr>
+            <tr>
                 <td>Coin Amount</td>
                 <td>{{coin_amount}} {{coin_name}}</td>
             </tr>
@@ -32,7 +36,7 @@
             </tr>
             </tbody>
             </table>
-
+            <h5> Copy the reference number on payment remark</h5>
             <button type="submit" @click="successPhase()" class="btn btn-success btn-block">Click After Payment</button>
         </center>
     </div>
@@ -41,7 +45,7 @@
 <script>
 export default({
     name: "buyPreviewPhase",
-    props: ['coin_amount', 'naira_amount', 'dollar_amount', 'coin_name'],
+    props: ['coin_amount', 'naira_amount', 'dollar_amount', 'coin_name', 'transaction_ref'],
     data(){
         return{
             currentPhase: 'SuccessPhase',

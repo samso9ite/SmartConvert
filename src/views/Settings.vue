@@ -13,33 +13,42 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-3 col-md-4">
-                            <div class="card settings_menu">
-                                <div class="card-header">
-                                    <h4 class="card-title">Settings</h4>
-                                </div>
-                                <div class="card-body">
-                                    <ul style="color:white">
-                                        <li class="nav-item">
-                                            <router-link :to="'/settings'">
-                                                <a  class="nav-link active" style="color:white">
-                                                    <i class="la la-user"  ></i>
-                                                    <span> Edit Profile</span>
-                                                </a>
-                                            </router-link>
-                                        </li>
-                                
-                                        <li class="nav-item">
-                                            <router-link :to="'/account-settings'">
-                                                <a class="nav-link" style="color:white">
-                                                    <i class="la la-university"></i>
-                                                    <span >Bank Accounts</span>
-                                                </a>
-                                            </router-link>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <div class="card settings_menu">
+                            <div class="card-header">
+                                <h4 class="card-title">Settings</h4>
+                            </div>
+                            <div class="card-body">
+                                <ul>
+                                    <li class="nav-item">
+                                       <router-link :to="'/settings'">
+                                            <a class="nav-link" style="color:white">
+                                                <i class="la la-user"></i>
+                                                <span>Edit Profile</span>
+                                            </a>
+                                        </router-link>
+                                    </li>
+                                  
+                                    <li class="nav-item">
+                                        <router-link :to="'/account-settings'">
+                                            <a class="nav-link active" style="color:white">
+                                                <i class="la la-university"></i>
+                                                <span>Bank Accounts</span>
+                                            </a>
+                                        </router-link>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <router-link :to="'/account-verification'">
+                                            <a class="nav-link active" style="color:white">
+                                                <i class="las la-user-check"></i>
+                                                <span>Account Verification</span>
+                                            </a>
+                                        </router-link>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
+                    </div>
                         <div class="col-xl-9 col-md-8">
                             <div class="row">
                                 <div class="col-xl-6">

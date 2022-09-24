@@ -185,7 +185,7 @@
                                         <SellFirstPhase @secondPhase="switchPhase" @firstPhase="switchPhase" @getTransactions="getTransactions" :coins="coins" :trade_type="trade_type" :trade_not_active="trade_not_active"  :savedAccounts="savedAccounts" :coinCurrentValue="coinCurrentValue"/>
                                     </div>
                                     <div v-show="currentPhase==='BuyPreviewPhase'" >
-                                        <BuyPreviewPhase @successPhase="switchPhase" @getTransactions="getTransactions" :trade_type="trade_type" :trade_not_active="trade_not_active" :coin_amount="current_coin_amount" :coin_name="current_coin_name" :naira_amount="current_naira_amount" :dollar_amount="current_dollar_amount"/>
+                                        <BuyPreviewPhase @successPhase="switchPhase" @getTransactions="getTransactions" :trade_type="trade_type" :trade_not_active="trade_not_active" :coin_amount="current_coin_amount" :coin_name="current_coin_name" :naira_amount="current_naira_amount" :dollar_amount="current_dollar_amount" :transaction_ref="transaction_ref"/>
                                     </div>
                                     <div v-show="currentPhase==='SellSecondPhase'">
                                         <QRPage  @secondPhase="switchPhase"  :walletAddress="wallet_address" :walletDollarAmount="wallet_dollar_amount" :walletCoinName="wallet_coin_name" :walletCoinAmount="wallet_coin_amount" :walletNetwork="wallet_network"/>
@@ -318,28 +318,37 @@ import VueMomentsAgo from 'vue-moments-ago'
                 current_naira_amount: '',
                 current_dollar_amount: '',
                 coinbase_transaction: {},
+                transaction_ref: '',
+                id: ''
             }
         },
         methods: {
             async getUser(){
-                Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
+               await Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
                 .then(response => {
                     this.first_name = response.data.first_name  
                     this.last_name = response.data.last_name  
                     this.phone_number = response.data.phone_number 
                     this.address = response.data.address  
                     this.email = response.data.email  
+                    this.id = response.data.id
                     window.localStorage.setItem('first_name', this.first_name)
                     window.localStorage.setItem('last_name', this.last_name)
                     window.localStorage.setItem('phone_number', this.phone_number)
                     window.localStorage.setItem('address', this.address)
                     window.localStorage.setItem('email', this.email)
+                    window.localStorage.setItem('id', this.id)
+                })
+               await Api.axios_instance.get(Api.baseUrl+'api/v1/profile/get/'+this.id)
+                .then(res => {
+                    window.localStorage.setItem('userVerificationStatus', res.data.transaction_status)
                 })
             },
             async getTransactions(){
                 await Api.axios_instance.get(Api.baseUrl+'api/v1/list-transaction',  {mode: 'no-cors'})
                 .then(response => {
                     this.transactions = response.data
+                    this.transaction_ref = this.transactions[0].transaction_reference
                     this.transactions = this.transactions.reverse()
                     var transacted_amount = 0;
                     this.transactions.forEach(transaction => {
@@ -425,29 +434,11 @@ import VueMomentsAgo from 'vue-moments-ago'
                 this.showMobileStyle = true
             }
            },
-           async coinbaseTransactionStatusUpdate(){
-            await this.getTransactions()
-            let pending_transactions = this.transactions.filter(transaction => transaction.transaction_status=='1')
-            if(pending_transactions){
-            for (let i =0; i <= pending_transactions.length; i++){
-                    let transaction = pending_transactions[i];
-                    console.log(transaction.wallet_address_id);
-                    Api.axios_instance.get(Api.baseUrl+'api/v1/get-coinbase-transaction-detail/'+transaction.wallet_address_id+'/'+transaction.address_account_id)
-                        .then(
-                            response => {
-                                console.log(response.data);
-                                
-                            }
-                        )
-                    }
-                }
-            }
           
         },
         mounted(){
             this.getUser()
             this.timer = setInterval(this.update, 300000)
-           
             this.screenSize()
             this.getTransactions()
             this.getCoins()

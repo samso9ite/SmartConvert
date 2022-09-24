@@ -41,43 +41,48 @@
                 <li>
                     <router-link :to="'/'">
                         <a  data-placement="right" title="Home">
-                            <span><i class="la la-igloo"></i></span>
-                            Home
+                            <span><i class="la la-igloo"></i>  <span style="color:#3b3261">Home</span></span>
                         </a>
                     </router-link>
                 </li>
                 <li>
                     <router-link :to="'/settings'">
                         <a data-toggle="tooltip" data-placement="right" title="Bank Account">
-                            <span><i class="las la-university"></i></span>
+                            <span><i class="las la-university"></i>  <span style="color:#3b3261">Bank</span></span>
                         </a>
                     </router-link>
                 </li>
                 <li><router-link :to="'/rates'">
                         <a data-placement="right" title="All Rates">
-                            <span><i class="las la-stream"></i></span>
-                            Rates
+                            <span><i class="las la-stream"></i>  <span style="color:#3b3261">Rates</span></span>
+                            
                         </a>
                     </router-link>
                 </li>
-                <li>
-                    <router-link :to="'/transaction-history'">
+                
+                <li><router-link :to="'/transaction-history'">
                         <a data-toggle="tooltip" data-placement="right" title="Transaction History">
-                            <span><i class="la la-history"></i></span>
+                            <span><i class="la la-history"></i>  <span style="color:#3b3261">History</span></span>
                         </a>
                     </router-link>
                 </li>
-                 <li>
+                 <!-- <li>
                     <router-link :to="''">
-                        <a data-placement="right" title="Contact Us">
-                            <span><i class="las la-phone-volume"></i></span>
+                        <a data-toggle="tooltip"  data-placement="right" title="Contact Us">
+                            <span><i class="las la-phone-volume"></i> <span style="color:#3b3261"></span></span>
                         </a>
                     </router-link>
+                </li> -->
+
+                <li style="margin-top:7px;">
+                        <a  data-toggle="tooltip" data-placement="right" title="Contact Us">
+                                <span><i class="las la-phone-volume"></i> <span style="color:#3b3261">Contact</span></span>
+                        </a>
                 </li>
 
-                <li style="margin-top:7px; margin-left:4px">
+                <li style="margin-top:7px;">
                         <a  data-toggle="tooltip" data-placement="right" title="Logout" @click="logout()">
-                                <span><i class="las la-power-off"></i></span>
+                                <span><i class="las la-power-off"></i> <span style="color:#3b3261">Logout</span></span>
                         </a>
                 </li>
             </ul>

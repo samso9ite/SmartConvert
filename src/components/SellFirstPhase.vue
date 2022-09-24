@@ -6,7 +6,7 @@
                 <label class="me-sm-2">Coin Type </label>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text"><i class="cc BTC-alt" v-if="selected_coin_name === 'Bitcoin'"></i> <i class="cc TX-alt" v-if="selected_coin_name === 'TRON'"></i> <img src="../../public/assets/images/pm-64.png" width="38px" v-if="selected_coin_name === 'Perfect Money'"/><i class="cc ETH-alt"  v-if="selected_coin_name == 'Etherium'"></i><i class="cc LTC-alt"  v-if="selected_coin_name == 'LiteCoin'"></i><i class="cc DOGE-alt"  v-if="selected_coin_name == 'Doge Coin'"></i><i class="cc USDT-alt" v-if="selected_coin_name == 'USDT' "></i><i class="cc XRP-alt" v-if="selected_coin_name == 'Ripple'"></i></label>
+                        <label class="input-group-text"><i class="cc BTC-alt" v-if="selected_coin_name === 'Bitcoin'"></i> <i class="cc SOL-alt" v-if="selected_coin_name === 'Solana'"></i> <i class="cc TX-alt" v-if="selected_coin_name === 'TRON'"></i> <img src="../../public/assets/images/pm-64.png" width="38px" v-if="selected_coin_name === 'Perfect Money'"/><i class="cc ETH-alt"  v-if="selected_coin_name == 'Ethereum'"></i><i class="cc LTC-alt"  v-if="selected_coin_name == 'LiteCoin'"></i><i class="cc DOGE-alt"  v-if="selected_coin_name == 'Doge Coin'"></i><i class="cc USDT-alt" v-if="selected_coin_name == 'USDT' "></i><i class="cc XRP-alt" v-if="selected_coin_name == 'Ripple'"></i></label>
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
                         <option value="">Select Coin</option>
@@ -121,7 +121,7 @@
                 <label class="me-sm-2">Coin Type </label>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text"><i class="cc BTC-alt" v-if="selected_coin_name === 'Bitcoin'"></i> <i class="cc TX-alt" v-if="selected_coin_name === 'TRON'"></i> <img src="../../public/assets/images/pm-64.png" width="38px" v-if="selected_coin_name === 'Perfect Money'"/><i class="cc ETH-alt"  v-if="selected_coin_name == 'Etherium'"></i><i class="cc LTC-alt"  v-if="selected_coin_name == 'LiteCoin'"></i><i class="cc DOGE-alt"  v-if="selected_coin_name == 'Doge Coin'"></i><i class="cc USDT-alt" v-if="selected_coin_name == 'USDT' "></i><i class="cc XRP-alt" v-if="selected_coin_name == 'Ripple'"></i></label>
+                        <label class="input-group-text"><i class="cc BTC-alt" v-if="selected_coin_name === 'Bitcoin'"></i> <i class="cc TX-alt" v-if="selected_coin_name === 'TRON'"></i> <img src="../../public/assets/images/pm-64.png" width="38px" v-if="selected_coin_name === 'Perfect Money'"/><i class="cc ETH-alt"  v-if="selected_coin_name == 'Ethereum'"></i><i class="cc LTC-alt"  v-if="selected_coin_name == 'LiteCoin'"></i><i class="cc DOGE-alt"  v-if="selected_coin_name == 'Doge Coin'"></i><i class="cc USDT-alt" v-if="selected_coin_name == 'USDT' "></i><i class="cc XRP-alt" v-if="selected_coin_name == 'Ripple'"></i></label>
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
                         <option value="">Select Coin</option>
@@ -228,12 +228,15 @@ import Api from '../views/Api'
                 address_check: this.$store.state.addressInfo.address,
                 loading: false,
                 wallet_address_id: '',
-                address_account_id: ''
+                address_account_id: '',
+                transaction_ref: '',
             }
         },
         methods: {
             async firstPhase(trade_not_active, trade_type){
                 this.loading = true
+                let verification_status = localStorage.getItem('id')
+                console.log(verification_status);
                 if (this.dollar_amount === '' || this.naira_amount === '' || this.coin_name === ''){
                     this.$toast.error({
                     title:'Oops!',
@@ -241,8 +244,29 @@ import Api from '../views/Api'
                     showDuration: 100,
                     message:'Chief! Please fill in all details'})
                     this.loading = false
-                
-                }else{
+                }else if(trade_type === 'SELL' && this.naira_amount < this.minimum_sell_limit || trade_type === 'BUY' && this.naira_amount < this.minimum_buy_limit){
+                    this.$toast.error({
+                    title:'Oops!',
+                    position: 'bottom left',
+                    showDuration: 200,
+                    message:'Chief! Amount specified is lower than the minimum limit'})
+                    this.loading = false
+                }else if(verification_status === "1" && this.dollar_amount > 200){
+                    this.$toast.error({
+                    title:'Oops!',
+                    position: 'bottom left',
+                    showDuration: 300,
+                    message:'Chief! you can\'t transact more than $200 till you upload your ID for verification'})
+                    this.loading = false
+                }else if(verification_status === "3" &&  this.dollar_amount > 200){
+                    this.$toast.error({
+                    title:'Oops!',
+                    position: 'bottom left',
+                    showDuration: 300,
+                    message:'Chief! Your ID upload is awaiting admin approval'})
+                    this.loading = false
+                }
+                else{
                 let tradeData = {
                     dollar_amount: parseFloat(this.dollar_amount),
                     naira_amount: parseFloat(this.naira_amount),
@@ -259,10 +283,10 @@ import Api from '../views/Api'
                         }else{
                             await Api.axios_instance.get(Api.baseUrl+'api/v1/create-address/'+this.selected_coin_name)
                             .then(response => {
-                                console.log(response.data);
                                 this.address_account_id = response.data.id
                                 this.coin_address = response.data.address
-                                console.log(this.address_account_id);
+                                this.transaction_ref = response.data.transaction_reference
+
                                 let storeData = {
                                     address: response.data.address,
                                     network: response.data.network,
@@ -372,9 +396,6 @@ import Api from '../views/Api'
                     else if(this.coin_shortcode === "TRX"){
                         this.current_coin_value = results.TRX.USD
                     }
-                    // else if(this.coin_shortcode === "SOL"){
-                    //     this.current_coin_value = results.TRX.USD
-                    // }
                     
                 })
                 
@@ -384,7 +405,7 @@ import Api from '../views/Api'
             },
             
                 /* Calculate Coin and Naira Value based on Dollar input value*/
-                dollarBasedCalculation(trade_type){
+                dollarBasedCalculation(trade_type){ 
                     if(trade_type === 'SELL'){
                         this.naira_amount = this.dollar_amount*this.coin_sell_rate
                     }else{
@@ -402,7 +423,7 @@ import Api from '../views/Api'
                             }
                     this.dollar_amount = this.coin_amount*this.current_coin_value
                 },
-
+                /* Calculate Dollar Value and Naira Value based on Coin Input Value  */
                 nairaBasedCalculation(trade_type){
                     if(trade_type === 'SELL'){
                         this.dollar_amount = this.naira_amount/this.coin_sell_rate
@@ -411,8 +432,6 @@ import Api from '../views/Api'
                     }
                     this.coin_amount = this.dollar_amount/this.current_coin_value
                 },
-            
-           
         }
     }
 </script>

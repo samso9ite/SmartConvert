@@ -11224,7 +11224,7 @@
      position: fixed;
      left: 0;
      height: 100%;
-     width: 75px;
+     width: 85px;
      top: 0;
      z-index: 3;
  }
@@ -12682,7 +12682,7 @@
  
  .table {
      border-collapse: separate;
-     border-spacing: 0 1rem;
+     border-spacing: 0 0.5rem;
  }
  .table tr td,
  .table tr th {
@@ -13087,7 +13087,7 @@
  }
  
  .transaction-table td {
-     padding: 1.25rem 0.75rem;
+     padding: 0.2rem 0.75rem;
  }
  
  .transaction-table i.cc {
