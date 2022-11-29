@@ -105,7 +105,7 @@
                                                 <span v-if="status === '2'">VERIFIED</span>
                                                 <span v-if="status === '3'">AWAITING CONFIRMATION</span>
                                             </span></p>
-                                           <router-link :to="'/upload-id'" v-if="status=== '1'"> <a class="btn btn-success mt-3">Upload ID</a> </router-link>
+                                           <router-link :to="'/upload-verification'" v-if="status=== '1'"> <a class="btn btn-success mt-3">Upload ID</a> </router-link>
                                         </div>
                                     </div>
                                 </div>
@@ -149,7 +149,6 @@
                     this.l_name = res.data.user.lasst_name
                     this.email = res.data.user.email
                     this.phone = res.data.user.phone
-                    console.log(res.data);
                 }
                 )   
             },   

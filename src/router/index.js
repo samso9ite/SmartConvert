@@ -72,11 +72,7 @@ const routes = [
     name: 'IdVerification',
     component: () => import('../views/IdVerification.vue')
   },
-  {
-    path: '/upload-identification',
-    name: 'IDUpload',
-    component: () => import('../views/IDUpload.vue')
-  }
+
 ]
 
 const router = new VueRouter({

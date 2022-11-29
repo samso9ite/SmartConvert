@@ -11224,7 +11224,7 @@
      position: fixed;
      left: 0;
      height: 100%;
-     width: 85px;
+     width: 95px;
      top: 0;
      z-index: 3;
  }
@@ -13087,7 +13087,7 @@
  }
  
  .transaction-table td {
-     padding: 0.2rem 0.75rem;
+     padding: 0.7rem 0.75rem;
  }
  
  .transaction-table i.cc {

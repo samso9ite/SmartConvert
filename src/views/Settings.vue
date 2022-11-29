@@ -61,33 +61,40 @@
                                                 <div class="row">
                                                     <div class="mb-3 col-xl-12">
                                                         <label class="me-sm-2"> First Name</label>
-                                                        <input type="text" class="form-control" v-model="first_name" >
+                                                        <input type="text" class="form-control" v-model="first_name" readonly>
                                                     </div>
                                                       <div class="mb-3 col-xl-12">
                                                         <label class="me-sm-2">Last Name</label>
-                                                        <input type="text" class="form-control" v-model="last_name" >
+                                                        <input type="text" class="form-control" v-model="last_name" readonly>
                                                     </div>
                                                     <div class="mb-3 col-xl-12">
                                                         <label class="me-sm-2">Email</label>
-                                                        <input type="text" class="form-control" v-model="email" >
+                                                        <input type="text" class="form-control" v-model="email" readonly>
                                                     </div>
                                                     <div class="mb-3 col-xl-12">
                                                         <label class="me-sm-2">Phone Number</label>
-                                                        <input type="text" class="form-control" v-model="phone_number" >
+                                                        <input type="text" class="form-control" v-model="phone_number" readonly>
+                                                    </div><br>
+                                                   <center> <h4>Other Info</h4></center>
+                                                     <div class="mb-3 col-xl-12">
+                                                        <input type="text" placeholder="Input Address" class="form-control" v-model="address" >
                                                     </div>
-                                                     <!-- <div class="mb-3 col-xl-12">
-                                                        <label class="me-sm-2">Address</label>
-                                                        <input type="text" class="form-control" v-model="address" >
-                                                    </div> -->
                                                     <div class="mb-3 col-xl-12">
-                                                        <!-- <div class="file-upload-wrapper" data-text="Change Photo">
-                                                            <input name="file-upload-field" type="file"
-                                                                class="file-upload-field" value="">
-                                                        </div> -->
+                                                        <input type="text" placeholder="Input City" class="form-control" v-model="city" >
                                                     </div>
-                                                    <!-- <div class="col-12">
-                                                        <button type="submit" class="btn btn-success waves-effect">Update</button>
-                                                    </div> -->
+                                                    <div class="mb-3 col-xl-12">
+                                                        <input type="text" placeholder="Input State" class="form-control" v-model="state" >
+                                                    </div>
+                                                    <div class="mb-3 col-xl-12">
+                                                        <input type="text" class="form-control" placeholder="Input Nationality" v-model="nationality" >
+                                                    </div>
+                                                   
+                                                    <div class="col-12">
+                                                        <button class="btn btn-success waves-effect">Update Profile</button>
+                                                    </div>
+
+                                                    <div class="mb-3 col-xl-12">
+                                                      </div>
                                                 </div>
                                             </form>
                                         </div>
@@ -151,35 +158,42 @@ export default {
             email: '',
             current_password: '',
             new_password: '',
-            confirm_new_password: ''
+            confirm_new_password: '',
+            city: '',
+            nationality: '',
+            state: '',
+            showMobileStyle: false
         }
     },
     methods: {
         getUser(){
                 Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
                 .then(response => {
-                    console.log(response.data);
                     this.first_name = response.data.first_name  
                     this.last_name = response.data.last_name  
                     this.phone_number = response.data.phone_number 
                     this.address = response.data.address  
                     this.email = response.data.email  
+                    this.city = response.data.city
+                    this.nationality = response.data.nationality
+                    this.state = response.data.state
                 })
         },
         updateAccountDetails(){
+            console.log("I am here");
             let formData = {
-                first_name: this.first_name,
-                last_name: this.last_name,
-                address: this.address
+                nationality: this.nationality,
+                state: this.state,
+                address: this.address,
+                city: this.city
             }
-            console.log(formData);
-            Api.axios_instance.put(Api.baseUrl+'api/v1/profile/update', formData)
+            Api.axios_instance.patch(Api.baseUrl+'api/v1/profile/update', formData)
             .then(response => {
                 this.$toast.success({
                         title:'Welldone!',
                         message:'Account Updated Successfully '
                 })
-                // this.getUser()
+                this.getUser()
             })
             .catch(error => {
                 console.log(error.data);
@@ -204,7 +218,6 @@ export default {
         },
         screenSize(){
             if(screen.width < 800){
-                console.log("Mobile Size")
                 this.showMobileStyle = true
             }
             }

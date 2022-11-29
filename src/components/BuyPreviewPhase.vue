@@ -8,7 +8,7 @@
             <tbody>
             <tr>
                 <td>Reference no</td>
-                <td><b>{{transaction_ref}}</b> </td>
+                <td style="color:white"><b>{{transaction_ref}}<br> Copy and paste reference no on remark/narration when making payment</b> </td>
             </tr>
             <tr>
                 <td>Coin Amount</td>
@@ -36,7 +36,6 @@
             </tr>
             </tbody>
             </table>
-            <h5> Copy the reference number on payment remark</h5>
             <button type="submit" @click="successPhase()" class="btn btn-success btn-block">Click After Payment</button>
         </center>
     </div>

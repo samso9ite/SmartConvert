@@ -48,7 +48,7 @@
                 <li>
                     <router-link :to="'/settings'">
                         <a data-toggle="tooltip" data-placement="right" title="Bank Account">
-                            <span><i class="las la-university"></i>  <span style="color:#3b3261">Bank</span></span>
+                            <span><i class="las la-university"></i>  <span style="color:#3b3261">Account </span></span>
                         </a>
                     </router-link>
                 </li>

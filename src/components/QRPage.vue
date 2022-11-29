@@ -1,13 +1,13 @@
 <template>
     <div style="margin-top:-0.7rem">
-        <h4>Please transfer the {{walletCoinAmount}} {{walletCoinName}} (${{walletDollarAmount}}) you want to sell to:</h4> <br>
+        <h4>Please scan or copy the wallet address to transfer  {{walletCoinAmount}} {{walletCoinName}} (${{walletDollarAmount}}) you want to sell to us.</h4> <br>
         <div class="row">
-            <b style="color:white">{{walletAddress}} <span @click="getHashKey(walletAddress)" style="background-color:white;border-radius: 50px; padding-left:0.5rem; padding-right:0.5rem; color:brown; cursor: pointer;">Copy</span></b>
+            <br>
+            <b style="color:white">{{walletAddress}} <span @click="getHashKey(walletAddress)" style="background-color:white;border-radius: 50px; padding-left:0.5rem; padding-right:0.5rem; color:brown; cursor: pointer;">Copy Address</span></b>
         </div> 
         <div class="mt-4">
             <center> 
-                <img :src="'https://www.bitcoinqrcodemaker.com/api/?style='+walletNetwork+'&fiat=USD&amount='+walletDollarAmount+'&address='+walletAddress" height="150" width="150" />
-                <!-- <img src="https://www.bitcoinqrcodemaker.com/api/?style=bitcoin&fiat=USD&amount=100&address=369ADvD1AiNaYRghucpbReMy53rYmBo6ya"/> -->
+                <img :src="'https://www.bitcoinqrcodemaker.com/api/?style='+walletCoinName+'&fiat=USD&amount='+walletDollarAmount+'&address='+walletAddress" height="150" width="150" />
                 <h5 class="mt-4"><b>Important!: Only send to the address only once, if you need to send another, create a new trade.</b></h5>
                 <button type="submit" name="submit" class="btn btn-success btn-block mt-3" @click="secondPhase()">Completed</button>
             </center>
@@ -38,7 +38,7 @@ export default{
             navigator.clipboard.writeText(walletAddress);
                 this.$toast.success({
                 title:'Welldone!',
-                message:'Hash Copied '
+                message:'Address Copied '
             })
         },
         secondPhase(){

@@ -10,7 +10,7 @@
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
                         <option value="">Select Coin</option>
-                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
+                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code, sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
             </div>
@@ -125,7 +125,7 @@
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
                         <option value="">Select Coin</option>
-                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
+                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code, sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
             </div>
@@ -230,13 +230,16 @@ import Api from '../views/Api'
                 wallet_address_id: '',
                 address_account_id: '',
                 transaction_ref: '',
+                sell_active_status: false,
+                buy_active_status: false,
+                send_address: '',
+                mycelium_status: false
             }
         },
         methods: {
             async firstPhase(trade_not_active, trade_type){
                 this.loading = true
                 let verification_status = localStorage.getItem('id')
-                console.log(verification_status);
                 if (this.dollar_amount === '' || this.naira_amount === '' || this.coin_name === ''){
                     this.$toast.error({
                     title:'Oops!',
@@ -256,7 +259,7 @@ import Api from '../views/Api'
                     title:'Oops!',
                     position: 'bottom left',
                     showDuration: 300,
-                    message:'Chief! you can\'t transact more than $200 till you upload your ID for verification'})
+                    message:'Chief! you can\'t transact more than $200. Click Account to upload your ID for verification'})
                     this.loading = false
                 }else if(verification_status === "3" &&  this.dollar_amount > 200){
                     this.$toast.error({
@@ -264,6 +267,20 @@ import Api from '../views/Api'
                     position: 'bottom left',
                     showDuration: 300,
                     message:'Chief! Your ID upload is awaiting admin approval'})
+                    this.loading = false
+                }else if(this.buy_active_status == false){
+                    this.$toast.error({
+                    title:'Oops!',
+                    position: 'bottom left',
+                    showDuration: 300,
+                    message:'The selected coin isn\'t available to buy at the moment.'})
+                    this.loading = false
+                }else if(this.sell_active_status == false){
+                    this.$toast.error({
+                    title:'Oops!',
+                    position: 'bottom left',
+                    showDuration: 300,
+                    message:'The selected coin isn\'t available to sell at the moment.'})
                     this.loading = false
                 }
                 else{
@@ -280,47 +297,77 @@ import Api from '../views/Api'
                         
                         if(this.selected_coin_name === "Perfect Money"){
                             console.log("Perfect Money");
-                        }else{
-                            await Api.axios_instance.get(Api.baseUrl+'api/v1/create-address/'+this.selected_coin_name)
-                            .then(response => {
-                                this.address_account_id = response.data.id
-                                this.coin_address = response.data.address
-                                this.transaction_ref = response.data.transaction_reference
+                        }else if(this.selected_coin_name === "Bitcoin"){
+                            await Api.axios_instance.post("https://gateway.gear.mycelium.com/gateways/b31f6babde01f965c84a3e82e11d4b1c04d06536397cdef303f449565e0caa9b/orders?amount="+this.dollar_amount)
+                            .then((response) => {
+                                    this.coin_address = response.data.address
+                                    this.transaction_ref = response.data.payment_id
+                                    this.address_account_id  = response.data.id
+                                    this.mycelium_status = true
+                                    
+                                    // Trade details in vue  store 
+                                    let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
+                                        lowerCasedCoinName = lowerCasedCoinName.split(" ").join("");
+                                        let storeData = {
+                                            address: this.coin_address,
+                                            network: this.selected_coin_name,
+                                            dollar_amount: this.dollar_amount,
+                                            coin_amount: this.coin_amount,
+                                            coin_name: lowerCasedCoinName,
+                                        }
 
+                                        formData = {
+                                            dollar_amount: parseFloat(this.dollar_amount),
+                                            naira_amount: parseFloat(this.naira_amount),
+                                            coin_amount: parseFloat(this.coin_amount),
+                                            coin: this.coin_id,
+                                            bank: this.bank,
+                                            trade_type: trade_type,
+                                            buy_payment_mode: this.buy_payment_mode,
+                                            pm_account: this.pm_account,
+                                            wallet_address_id: this.transaction_ref,
+                                            address_account_id: this.address_account_id,
+                                            coin_address: this.coin_address
+                                        }
+
+                                        this.$store.commit('uniqueAddressStore', storeData)
+                                })
+                    
+                            .catch((error) => {
+                                console.error(error)
+                            }) 
+                        } else{
+                            if(this.selected_coin_name === "USDT" || this.selected_coin_name === "TRON"){
+                                this.coin_address = "TEu47d6okBh1ouCCcubur9GGQhKWjwthWW"
+                            } else if (this.selected_coin_name === "Solana"){
+                                this.coin_address = "JBJy5KmRnaMRcVKFueW3xFgTFs9mXpckFbRwYdMJ2Tpa"
+                            } else if (this.selected_coin_name === "Doge Coin"){
+                                this.coin_address = "DPbYsEkEqVyBar399sb1TBGENPeUpKZoBS"
+                            } else if (this.selected_coin_name === "LiteCoin"){
+                                this.coin_address = "ltc1qsa89exxyhld2yyr4t0hppzd78ratwg7f8y58yn"
+                            }  else if (this.selected_coin_name === "Ripple"){
+                                this.coin_address = "rPgLfcKCKUCtfRQrrtoXKzTA9zn2bFhmSM"
+                            }  else if (this.selected_coin_name === "Ethereum"){
+                                this.coin_address = "0x9a44f1ae2ECba6ce31b3B824301b230A575A27C3"
+                            }  
+
+                            // Trade details in vue store 
+                            let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
+                                lowerCasedCoinName = lowerCasedCoinName.split(" ").join("");
                                 let storeData = {
-                                    address: response.data.address,
-                                    network: response.data.network,
+                                    address: this.coin_address,
+                                    network: this.selected_coin_name,
                                     dollar_amount: this.dollar_amount,
                                     coin_amount: this.coin_amount,
-                                    coin_name: this.selected_coin_name,
+                                    coin_name: lowerCasedCoinName,
                                 }
                                 this.$store.commit('uniqueAddressStore', storeData)
-                            })
-                    }
+                        }
+           
                     if(this.coin_shortcode === "BTC"){
-                            this.wallet_address_id = '4d074ea2-7a20-57b1-8df5-0f07a8103881'
-                        }
-                        else if(this.coin_shortcode === "ETH"){
-                            this.wallet_address_id = '84965879-ba0f-5fe2-8638-53d071c54efc'
-                        }
-                        else if(this.coin_shortcode === "DOGE"){
-                            this.wallet_address_id = '451a85b2-67db-56f6-a301-951f39ca420a'
-                        }
-                    formData = {
-                        dollar_amount: parseFloat(this.dollar_amount),
-                        naira_amount: parseFloat(this.naira_amount),
-                        coin_amount: parseFloat(this.coin_amount),
-                        coin: this.coin_id,
-                        bank: this.bank,
-                        trade_type: trade_type,
-                        buy_payment_mode: this.buy_payment_mode,
-                        pm_account: this.pm_account,
-                        wallet_address_id: this.wallet_address_id,
-                        address_account_id: this.address_account_id,
-                        coin_address: this.coin_address
-                        
+                       console.log("pass");
                     }
-                }else if (this.coin_shortcode === "PM"){
+                    else if (this.coin_shortcode === "PM"){
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
                         naira_amount: parseFloat(this.naira_amount),
@@ -332,6 +379,7 @@ import Api from '../views/Api'
                     }
                 }
                 else{
+                    console.log(this.dollar_amount);
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
                         naira_amount: parseFloat(this.naira_amount),
@@ -358,9 +406,9 @@ import Api from '../views/Api'
                     this.$emit('firstPhase', this.currentPhase)
                 }else{
                     this.$emit('secondPhase', this.buy_Phase)
-                } 
-            }
-            },
+                }
+            }}
+        },
             async setCoinDetails(){
                 this.dollar_amount = ""
                 this.naira_amount = ""
@@ -368,9 +416,12 @@ import Api from '../views/Api'
                 this.selected_coin_name = this.coin_type[0].coin_name
                 this.minimum_sell_limit = this.coin_type[0].minimum_sell_limit
                 this.minimum_buy_limit = this.coin_type[0].minimum_buy_limit
-                this.coin_buy_rate = this.coin_type[0].buy_rate
+                this.coin_sell_status = this.coin_type[0].sell_active_status
+                this.sell_active_status = this.coin_type[0].sell_active_status
+                this.buy_active_status = this.coin_type[0].buy_active_status
                 this.coin_sell_rate = this.coin_type[0].sell_rate
-                this.coin_shortcode = this.coin_type[0].shortcode
+                this.coin_buy_rate = this.coin_type[0].buy_rate
+                this.coin_shortcode = this.coin_type[0].shortcode 
                 this.coin_id = this.coin_type[0].coin_id
                 await Api.axios_instance.get("https://min-api.cryptocompare.com/data/pricemulti?fsyms="+this.coin_shortcode+"&tsyms=USD&api_key=f72b59432fb04a56c30fee2cc24adfdca9cda19c8a50b49c7bddba4cc0a469b6")
                 .then(response  => {
@@ -404,34 +455,36 @@ import Api from '../views/Api'
                 location.reload()
             },
             
-                /* Calculate Coin and Naira Value based on Dollar input value*/
-                dollarBasedCalculation(trade_type){ 
-                    if(trade_type === 'SELL'){
-                        this.naira_amount = this.dollar_amount*this.coin_sell_rate
-                    }else{
-                        this.naira_amount = this.dollar_amount*this.coin_buy_rate
-                    }
-                    this.coin_amount = this.dollar_amount/this.current_coin_value
-                },
+            /* Calculate Coin and Naira Value based on Dollar input value*/
+            dollarBasedCalculation(trade_type){ 
+                if(trade_type === 'SELL'){
+                    this.naira_amount = this.dollar_amount*this.coin_sell_rate
+                }else{
+                    this.naira_amount = this.dollar_amount*this.coin_buy_rate
+                }
+                this.coin_amount = this.dollar_amount/this.current_coin_value
+            },
 
-                /* Calculate Dollar Value and Naira Value based on Coin Input Value  */
-                coinBasedCalculation(trade_type){
-                    if(trade_type === 'SELL'){
-                        this.naira_amount = this.dollar_amount*this.coin_sell_rate
-                        }else{
-                            this.naira_amount = this.dollar_amount*this.coin_buy_rate
-                            }
-                    this.dollar_amount = this.coin_amount*this.current_coin_value
-                },
-                /* Calculate Dollar Value and Naira Value based on Coin Input Value  */
-                nairaBasedCalculation(trade_type){
-                    if(trade_type === 'SELL'){
-                        this.dollar_amount = this.naira_amount/this.coin_sell_rate
-                    }else{
-                        this.dollar_amount = this.naira_amount/this.coin_buy_rate
-                    }
-                    this.coin_amount = this.dollar_amount/this.current_coin_value
-                },
+            /* Calculate Dollar Value and Naira Value based on Coin Input Value  */
+            coinBasedCalculation(trade_type){
+                if(trade_type === 'SELL'){
+                    this.naira_amount = this.dollar_amount*this.coin_sell_rate
+                }else{
+                    this.naira_amount = this.dollar_amount*this.coin_buy_rate
+                }
+                this.dollar_amount = this.coin_amount*this.current_coin_value
+            },
+            
+            /* Calculate Dollar Value and Coin Value based on Coin Input Value  */
+            nairaBasedCalculation(trade_type){
+                if(trade_type === 'SELL'){
+                    this.dollar_amount = this.naira_amount/this.coin_sell_rate
+                }else{
+                    this.dollar_amount = this.naira_amount/this.coin_buy_rate
+                }
+                this.coin_amount = this.dollar_amount/this.current_coin_value
+            },
+
         }
     }
 </script>

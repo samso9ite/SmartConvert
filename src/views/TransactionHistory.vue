@@ -21,7 +21,6 @@
                                     <div class="table-responsive">
                                         <table class="table mb-0 table-responsive-sm">
                                             <tr style="">
-                                                <td></td>
                                                 <td>Reference</td>
                                                 <td>Type</td>
                                                 <td>Status</td>
@@ -30,14 +29,10 @@
                                                 <td>Dollar Amount</td>
                                                 <td>Naira Amount</td>
                                                 <td>Date</td>
-                                                <td>Acc/Addr</td>
                                             </tr>
                                             <tbody>
                                                 <tr v-for="transaction in transactions" :key="transaction">
-                                                   <td v-if="transaction.transaction_status == 1"><span class="sold-thumb"><i class="la la-arrow-down"></i></span> </td>
-                                                    <td v-if="transaction.transaction_status == 3"><span class="sold-thumb"><i class="la la-arrow-down"></i></span> </td>
-                                                    <td v-else-if="transaction.transaction_status == 2"><span class="buy-thumb"><i class="la la-arrow-up"></i></span></td>
-                                                    <td>
+                                                   <td>
                                                         <span class="badge badge-danger">{{transaction.transaction_reference}}</span>
                                                     </td>
                                                     <td>
@@ -52,10 +47,10 @@
                                                         <i class="cc BTC me-3" v-if="transaction.coin.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" width="11%" v-if="transaction.coin.coin_name === 'Perfect Money'"/><i class="cc ETH" me-3 style="color:#5968ba" v-if="transaction.coin.coin_name == 'Ethereum'"></i><i class="cc LTC me-3"  v-if="transaction.coin.coin_name == 'Litecoin'"></i><i class="cc DOGE me-3"  v-if="transaction.coin.coin_name == 'Doge Coin'"></i><i class="cc USDT me-3" v-if="transaction.coin.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="transaction.coin.coin_name == 'Ripple'"></i>{{transaction.coin.coin_name}}
                                                     </td>
                                                     <td>{{transaction.coin_amount}} {{transaction.coin.coin_short_code}}</td>
-                                                    <td>{{transaction.dollar_amount}}</td>
+                                                    <td>${{transaction.dollar_amount}}</td>
                                                     <td>₦{{transaction.naira_amount}}</td>
                                                     <td> {{transaction.date}}</td>
-                                                    <td>{{transaction.hash_key}}</td>
+                                                  
                                                 </tr>
                                             </tbody>
                                         </table>
