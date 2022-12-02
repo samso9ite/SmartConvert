@@ -45,7 +45,7 @@
                         <input type="hidden" name="PAYMENT_UNITS" value="USD" />
                         <input type="hidden" name="PAYMENT_URL" value="https://ponpar.com" />
                         <input type="hidden" name="NOPAYMENT_URL" value="https://ponpar.com" />
-                        <input value="mailto:samso9ite@gmai..com" type="hidden" name="STATUS_URL" /> 
+                        <input value="mailto:smartconvert@outlook.com" type="hidden" name="STATUS_URL" /> 
                         <!-- End of Hidden Fields -->
                     </div>
                     <div class="input-group mt-2" v-else>
@@ -150,7 +150,7 @@
                     <label class="input-group-text">$</label><input type="text"  class="form-control" v-model="dollar_amount" 
                             placeholder="Amount in USD" @input="dollarBasedCalculation(trade_type)" required>
                    
-                    <label class="input-group-text">₦</label><input type="text"   v-model="naira_amount" class="form-control"
+                    <label class="input-group-text">₦</label><input type="text" v-model="naira_amount" class="form-control"
                             placeholder="Naira Value" @input="nairaBasedCalculation(trade_type)" required>
                     </div>
                     <div class="input-group mt-2" v-if="coin_shortcode === 'PM'">
@@ -158,7 +158,7 @@
                             placeholder="Enter your PM Account" required>
                     </div>
                     <div class="input-group mt-2" v-else>
-                        <input type="text"   class="form-control" v-model="coin_amount" 
+                        <input type="text"class="form-control" v-model="coin_amount" 
                             placeholder="Amount of Coin" @input="coinBasedCalculation(trade_type)" required>
                     </div>
 
@@ -240,6 +240,7 @@ import Api from '../views/Api'
             async firstPhase(trade_not_active, trade_type){
                 this.loading = true
                 let verification_status = localStorage.getItem('id')
+               
                 if (this.dollar_amount === '' || this.naira_amount === '' || this.coin_name === ''){
                     this.$toast.error({
                     title:'Oops!',
@@ -282,6 +283,13 @@ import Api from '../views/Api'
                     showDuration: 300,
                     message:'The selected coin isn\'t available to sell at the moment.'})
                     this.loading = false
+                } else if (this.trade_type == 'SELL' && this.bank == ''){
+                    this.$toast.error({
+                    title:'Oops!',
+                    position: 'bottom left',
+                    showDuration: 100,
+                    message:'Chief! Please select a bank account or create one'})
+                    this.loading = false 
                 }
                 else{
                 let tradeData = {
@@ -290,11 +298,10 @@ import Api from '../views/Api'
                     coin_amount: parseFloat(this.coin_amount),
                     coin_name: this.selected_coin_name,
                     bank_account: this.bank,
-                    trade_type: trade_type
+                    trade_type: trade_type,
                 }
                 let formData = {}
                     if (trade_type === 'SELL'){
-                        
                         if(this.selected_coin_name === "Perfect Money"){
                             console.log("Perfect Money");
                         }else if(this.selected_coin_name === "Bitcoin"){
@@ -329,8 +336,7 @@ import Api from '../views/Api'
                                             address_account_id: this.address_account_id,
                                             coin_address: this.coin_address
                                         }
-
-                                        this.$store.commit('uniqueAddressStore', storeData)
+                                    this.$store.commit('uniqueAddressStore', storeData)
                                 })
                     
                             .catch((error) => {
@@ -350,24 +356,20 @@ import Api from '../views/Api'
                             }  else if (this.selected_coin_name === "Ethereum"){
                                 this.coin_address = "0x9a44f1ae2ECba6ce31b3B824301b230A575A27C3"
                             }  
-
-                            // Trade details in vue store 
-                            let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
-                                lowerCasedCoinName = lowerCasedCoinName.split(" ").join("");
-                                let storeData = {
-                                    address: this.coin_address,
-                                    network: this.selected_coin_name,
-                                    dollar_amount: this.dollar_amount,
-                                    coin_amount: this.coin_amount,
-                                    coin_name: lowerCasedCoinName,
-                                }
-                                this.$store.commit('uniqueAddressStore', storeData)
                         }
-           
-                    if(this.coin_shortcode === "BTC"){
-                       console.log("pass");
+                    }  // Trade details in vue store 
+                let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
+                    lowerCasedCoinName = lowerCasedCoinName.split(" ").join("");
+                    let storeData = {
+                        address: this.coin_address,
+                        network: this.selected_coin_name,
+                        dollar_amount: this.dollar_amount,
+                        coin_amount: this.coin_amount,
+                        coin_name: lowerCasedCoinName,
                     }
-                    else if (this.coin_shortcode === "PM"){
+                    this.$store.commit('uniqueAddressStore', storeData)
+                    
+                if (this.coin_shortcode === "PM"){
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
                         naira_amount: parseFloat(this.naira_amount),
@@ -379,7 +381,6 @@ import Api from '../views/Api'
                     }
                 }
                 else{
-                    console.log(this.dollar_amount);
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
                         naira_amount: parseFloat(this.naira_amount),
@@ -392,6 +393,7 @@ import Api from '../views/Api'
                     }
                 }
                 this.$store.commit('currentTrade', tradeData)
+                console.log(formData);
                 await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
                     this.$emit('getTransactions')
@@ -401,13 +403,15 @@ import Api from '../views/Api'
                     })
                 }).finally(() => {
                     this.loading = true
-                })
-                if(trade_type === 'SELL'){
+                })  
+            
+                if(trade_type == 'SELL'){
                     this.$emit('firstPhase', this.currentPhase)
-                }else{
+                } else{
                     this.$emit('secondPhase', this.buy_Phase)
                 }
-            }}
+            }
+                
         },
             async setCoinDetails(){
                 this.dollar_amount = ""

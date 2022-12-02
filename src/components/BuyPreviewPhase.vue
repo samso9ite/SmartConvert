@@ -8,7 +8,7 @@
             <tbody>
             <tr>
                 <td>Reference no</td>
-                <td style="color:white"><b>{{transaction_ref}}<br> Copy and paste reference no on remark/narration when making payment</b> </td>
+                <td style="color:white"><b><span style="font-size: 21px !important;">{{transaction_ref}}</span><br> Copy and paste reference no on remark/narration when making payment</b> </td>
             </tr>
             <tr>
                 <td>Coin Amount</td>
@@ -20,11 +20,11 @@
             </tr>
             <tr>
                 <td>Naira Value </td>
-                <td>₦{{naira_amount}}</td>
+                <td><span style="font-size: 20px !important;">₦{{naira_amount}}</span></td>
             </tr>
             <tr>
                 <td>Account Number</td>
-                <td>0124587202</td>
+                <td><span style="font-size: 20px !important;">0124587202</span></td>
             </tr>
             <tr>
                 <td>Account Name</td>
@@ -52,9 +52,8 @@ export default({
     },
     methods: {
         successPhase(){
-            console.log("This is here");
             this.$emit('successPhase', this.currentPhase)
-        },
+        }
     }
 })
 </script>

@@ -350,8 +350,8 @@ import VueMomentsAgo from 'vue-moments-ago'
                 await Api.axios_instance.get(Api.baseUrl+'api/v1/list-transaction',  {mode: 'no-cors'})
                 .then(response => {
                     this.transactions = response.data
-                    this.transaction_ref = this.transactions[0].transaction_reference
                     this.transactions = this.transactions.reverse()
+                    this.transaction_ref = this.transactions[0].transaction_reference
                     var transacted_amount = 0;
                     this.transactions.forEach(transaction => {
                         if(transaction.transaction_status == "2"){
@@ -440,14 +440,14 @@ import VueMomentsAgo from 'vue-moments-ago'
         },
         mounted(){
             this.getUser()
-            this.timer = setInterval(this.update, 300000)
+            // this.timer = setInterval(this.update, 300000)
             this.screenSize()
             this.getTransactions()
             this.getCoins()
             this.getSavedAccounts()
             this.update();
-            this.coinbaseTransactionStatusUpdate()
-            this.timer = setInterval(this.update, 3000)
+            // this.coinbaseTransactionStatusUpdate()
+            this.timer = setInterval(this.update, 30000)
         },
         computed: {
             pending_transactions: function (){
