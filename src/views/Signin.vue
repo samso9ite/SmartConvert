@@ -74,7 +74,6 @@ import Api from './Api.js';
                 this.loading = true
                 await   Api.axios_instance.post(Api.baseUrl+'auth/jwt/create/', formData,  {mode: 'no-cors'})
                 .then(res => {
-                    console.log(res.data);
                     const access = res.data.access
                     sessionStorage.setItem('access', access)
                     this.$router.push("/")
@@ -83,7 +82,7 @@ import Api from './Api.js';
                     if (error.response){
                         this.$toast.error({
                         title:'Oops!',
-                        message:'Incorrect Email or Password  '
+                        message:'Incorrect Email or Password'
                 })
                         console.log(error.data);
                         // for(const property in error.response.data){

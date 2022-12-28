@@ -10,7 +10,7 @@
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
                         <option value="">Select Coin</option>
-                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code, sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
+                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code, sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status,first_address:coin.first_address, second_address:coin.second_address, third_address:coin.third_address, fourth_address:coin.fourth_address, fifth_address:coin.fifth_address}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
             </div>
@@ -94,7 +94,7 @@
                     </div>
                     <div class="d-flex justify-content-between mt-3">
                         <p class="mb-0">Minimum Limit</p>
-                        <h4 class="mb-0">₦{{minimum_sell_limit}} </h4>
+                        <h4 class="mb-0">${{minimum_sell_limit}} </h4>
                     </div>
                     <div class="row mt-3">
                     <div class="col-lg-6" v-if="loading">
@@ -168,7 +168,7 @@
                     </div>
                     <div class="d-flex justify-content-between mt-3">
                         <p class="mb-0">Minimum Limit</p>
-                        <h4 class="mb-0">₦{{minimum_buy_limit}} </h4>
+                        <h4 class="mb-0">${{minimum_buy_limit}} </h4>
                     </div>
                
                 <div class="row mt-3">
@@ -233,7 +233,13 @@ import Api from '../views/Api'
                 sell_active_status: false,
                 buy_active_status: false,
                 send_address: '',
-                mycelium_status: false
+                mycelium_status: false,
+                first_address: '',
+                second_address: '',
+                third_address: '',
+                fourth_address: '',
+                fifth_address: ''
+
             }
         },
         methods: {
@@ -248,7 +254,7 @@ import Api from '../views/Api'
                     showDuration: 100,
                     message:'Chief! Please fill in all details'})
                     this.loading = false
-                }else if(trade_type === 'SELL' && this.naira_amount < this.minimum_sell_limit || trade_type === 'BUY' && this.naira_amount < this.minimum_buy_limit){
+                }else if(trade_type === 'SELL' && this.dollar_amount < this.minimum_sell_limit || trade_type === 'BUY' && this.dollar_amount < this.minimum_buy_limit){
                     this.$toast.error({
                     title:'Oops!',
                     position: 'bottom left',
@@ -304,59 +310,66 @@ import Api from '../views/Api'
                     if (trade_type === 'SELL'){
                         if(this.selected_coin_name === "Perfect Money"){
                             console.log("Perfect Money");
-                        }else if(this.selected_coin_name === "Bitcoin"){
-                            await Api.axios_instance.post("https://gateway.gear.mycelium.com/gateways/b31f6babde01f965c84a3e82e11d4b1c04d06536397cdef303f449565e0caa9b/orders?amount="+this.dollar_amount)
-                            .then((response) => {
-                                    this.coin_address = response.data.address
-                                    this.transaction_ref = response.data.payment_id
-                                    this.address_account_id  = response.data.id
-                                    this.mycelium_status = true
-                                    
-                                    // Trade details in vue  store 
-                                    let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
-                                        lowerCasedCoinName = lowerCasedCoinName.split(" ").join("");
-                                        let storeData = {
-                                            address: this.coin_address,
-                                            network: this.selected_coin_name,
-                                            dollar_amount: this.dollar_amount,
-                                            coin_amount: this.coin_amount,
-                                            coin_name: lowerCasedCoinName,
-                                        }
-
-                                        formData = {
-                                            dollar_amount: parseFloat(this.dollar_amount),
-                                            naira_amount: parseFloat(this.naira_amount),
-                                            coin_amount: parseFloat(this.coin_amount),
-                                            coin: this.coin_id,
-                                            bank: this.bank,
-                                            trade_type: trade_type,
-                                            buy_payment_mode: this.buy_payment_mode,
-                                            pm_account: this.pm_account,
-                                            wallet_address_id: this.transaction_ref,
-                                            address_account_id: this.address_account_id,
-                                            coin_address: this.coin_address
-                                        }
-                                    this.$store.commit('uniqueAddressStore', storeData)
-                                })
-                    
-                            .catch((error) => {
-                                console.error(error)
-                            }) 
-                        } else{
-                            if(this.selected_coin_name === "USDT" || this.selected_coin_name === "TRON"){
-                                this.coin_address = "TEu47d6okBh1ouCCcubur9GGQhKWjwthWW"
-                            } else if (this.selected_coin_name === "Solana"){
-                                this.coin_address = "JBJy5KmRnaMRcVKFueW3xFgTFs9mXpckFbRwYdMJ2Tpa"
-                            } else if (this.selected_coin_name === "Doge Coin"){
-                                this.coin_address = "DPbYsEkEqVyBar399sb1TBGENPeUpKZoBS"
-                            } else if (this.selected_coin_name === "LiteCoin"){
-                                this.coin_address = "ltc1qsa89exxyhld2yyr4t0hppzd78ratwg7f8y58yn"
-                            }  else if (this.selected_coin_name === "Ripple"){
-                                this.coin_address = "rPgLfcKCKUCtfRQrrtoXKzTA9zn2bFhmSM"
-                            }  else if (this.selected_coin_name === "Ethereum"){
-                                this.coin_address = "0x9a44f1ae2ECba6ce31b3B824301b230A575A27C3"
-                            }  
+                        }else{
+                            const addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
+                            let randomAddressSelection = Math.floor(Math.random() * addressArray.length) 
+                            let receivingAddress = addressArray[randomAddressSelection]
+                            console.log(addressArray[randomAddressSelection]);
+                            this.coin_address = receivingAddress
                         }
+                        // else if(this.selected_coin_name === "Bitcoin"){
+                        //     await Api.axios_instance.post("https://gateway.gear.mycelium.com/gateways/b31f6babde01f965c84a3e82e11d4b1c04d06536397cdef303f449565e0caa9b/orders?amount="+this.dollar_amount)
+                        //     .then((response) => {
+                        //             this.coin_address = response.data.address
+                        //             this.transaction_ref = response.data.payment_id
+                        //             this.address_account_id  = response.data.id
+                        //             this.mycelium_status = true
+                                    
+                        //             // Trade details in vue  store 
+                        //             let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
+                        //                 lowerCasedCoinName = lowerCasedCoinName.split(" ").join("");
+                        //                 let storeData = {
+                        //                     address: this.coin_address,
+                        //                     network: this.selected_coin_name,
+                        //                     dollar_amount: this.dollar_amount,
+                        //                     coin_amount: this.coin_amount,
+                        //                     coin_name: lowerCasedCoinName,
+                        //                 }
+
+                        //                 formData = {
+                        //                     dollar_amount: parseFloat(this.dollar_amount),
+                        //                     naira_amount: parseFloat(this.naira_amount),
+                        //                     coin_amount: parseFloat(this.coin_amount),
+                        //                     coin: this.coin_id,
+                        //                     bank: this.bank,
+                        //                     trade_type: trade_type,
+                        //                     buy_payment_mode: this.buy_payment_mode,
+                        //                     pm_account: this.pm_account,
+                        //                     wallet_address_id: this.transaction_ref,
+                        //                     address_account_id: this.address_account_id,
+                        //                     coin_address: this.coin_address
+                        //                 }
+                        //             this.$store.commit('uniqueAddressStore', storeData)
+                        //         })
+                    
+                        //     .catch((error) => {
+                        //         console.error(error)
+                        //     }) 
+                        // } else{
+                        //     if(this.selected_coin_name === "USDT" || this.selected_coin_name === "TRON"){
+                        //         this.coin_address = "TEu47d6okBh1ouCCcubur9GGQhKWjwthWW"
+                        //     } else if (this.selected_coin_name === "Solana"){
+                        //         this.coin_address = "JBJy5KmRnaMRcVKFueW3xFgTFs9mXpckFbRwYdMJ2Tpa"
+                        //     } else if (this.selected_coin_name === "Doge Coin"){
+                        //         this.coin_address = "DPbYsEkEqVyBar399sb1TBGENPeUpKZoBS"
+                        //     } else if (this.selected_coin_name === "LiteCoin"){
+                        //         this.coin_address = "ltc1qsa89exxyhld2yyr4t0hppzd78ratwg7f8y58yn"
+                        //     }  else if (this.selected_coin_name === "Ripple"){
+                        //         this.coin_address = "rPgLfcKCKUCtfRQrrtoXKzTA9zn2bFhmSM"
+                        //     }  else if (this.selected_coin_name === "Ethereum"){
+                        //         this.coin_address = "0x9a44f1ae2ECba6ce31b3B824301b230A575A27C3"
+                        //     }  
+                        // }
                     }  // Trade details in vue store 
                 let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
                     lowerCasedCoinName = lowerCasedCoinName.split(" ").join("");
@@ -393,7 +406,6 @@ import Api from '../views/Api'
                     }
                 }
                 this.$store.commit('currentTrade', tradeData)
-                console.log(formData);
                 await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
                     this.$emit('getTransactions')
@@ -417,6 +429,11 @@ import Api from '../views/Api'
                 this.dollar_amount = ""
                 this.naira_amount = ""
                 this.coin_amount = ""
+                const addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
+                let randomAddressSelection = Math.floor(Math.random() * addressArray.length) 
+                let receivingAddress = addressArray[randomAddressSelection]
+                console.log(addressArray[randomAddressSelection]);
+                this.coin_address = receivingAddress
                 this.selected_coin_name = this.coin_type[0].coin_name
                 this.minimum_sell_limit = this.coin_type[0].minimum_sell_limit
                 this.minimum_buy_limit = this.coin_type[0].minimum_buy_limit
