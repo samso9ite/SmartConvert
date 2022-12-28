@@ -76,6 +76,7 @@ import Api from './Api.js';
                 .then(res => {
                     const access = res.data.access
                     sessionStorage.setItem('access', access)
+                    sessionStorage.setItem('isAuthenticated', true)
                     this.$router.push("/")
                 })
                 .catch(error => {

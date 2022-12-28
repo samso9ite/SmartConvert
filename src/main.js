@@ -13,6 +13,18 @@ var toastrConfigs = {
   showDuration: 2000
 }
 
+// axios.defaults.withCredentials = true
+axios.interceptors.response.use(undefined, function (error) {
+  if (error){
+    const originalRequest = error.config;
+    if (error.response.status === 401 && originalRequest._retry){
+      originalRequest._retry = true;
+      sessionStorage.clear();
+      window.localStorage.clear();
+      return router.push('/signin')
+    }
+  }
+})
 Vue.use(CxltToastr, toastrConfigs).use(PerfectScrollbar)
 Vue.config.productionTip = false
 Vue.prototype.$http = axios;

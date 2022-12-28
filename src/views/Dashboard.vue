@@ -326,6 +326,7 @@ import VueMomentsAgo from 'vue-moments-ago'
         },
         methods: {
             async getUser(){
+                console.log(sessionStorage.getItem('isAuthenticated'));
                await Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
                 .then(response => {
                     this.first_name = response.data.first_name  

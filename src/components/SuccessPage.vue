@@ -18,7 +18,6 @@ export default({
     methods: {
         successPhase(){
             this.$emit('successPhase', this.currentPhase)
-            console.log("This Emmitted");
         },
     }
 })

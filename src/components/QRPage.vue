@@ -3,7 +3,7 @@
         <h4>Please scan or copy the wallet address to transfer  {{walletCoinAmount}} {{walletCoinName}} (${{walletDollarAmount}}) you want to sell to us.</h4> <br>
         <div class="row">
             <br>
-            <b style="color:white">{{walletAddress}} <span @click="getHashKey(walletAddress)" style="background-color:white;border-radius: 50px; padding-left:0.5rem; padding-right:0.5rem; color:brown; cursor: pointer;">Copy Address</span></b>
+            <b style="color:white">{{walletAddress}}</b> <br> <b> <span @click="getHashKey(walletAddress)" style="background-color:white;border-radius: 50px; padding-left:0.5rem; padding-right:0.5rem; color:brown; cursor: pointer;">Copy Address</span></b>
         </div> 
         <div class="mt-4">
             <center> 
