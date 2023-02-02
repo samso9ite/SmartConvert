@@ -201,7 +201,7 @@
                         <div class="card">
                             <div class="card-header border-0 py-0">
                                 <h4 class="card-title">Recent Activities</h4>
-                                <router-link :to="'/transaction-history'"> View All Transactions </router-link>
+                                <router-link :to="'/transaction-history'"> Click To View More Details About Transactions </router-link>
                             </div>
                             <div class="card-body">
                                 <div class="transaction-table">
@@ -210,7 +210,7 @@
                                             <table class="table mb-0 table-responsive-sm">
                                                 <tbody>
                                                     <tr>
-                                                        <td><span class="sold-thumb"><i class="la la-arrow-down"></i></span> </td>
+                                                        <!-- <td><span class="sold-thumb"><i class="la la-arrow-down"></i></span> </td> -->
                                                         <td>REFERENCE</td>
                                                         <td>STATUS</td>
                                                         <td> TYPE</td>
@@ -219,31 +219,26 @@
                                                         <td>(₦)AMOUNT</td>
                                                     </tr>
                                                     <tr v-for="transaction in transactions" :key="transaction">
-                                                        <td v-if="transaction.transaction_status == '1'"><span class="sold-thumb"><i class="la la-arrow-down"></i></span> </td>
-                                                        <td v-if="transaction.transaction_status == '3'"><span class="sold-thumb"><i class="la la-arrow-up"></i></span> </td>
-                                                        <td v-else-if="transaction.transaction_status == '2'"><span class="buy-thumb"><i class="la la-arrow-up"></i></span></td>
-                                                        <td v-else-if="transaction.transaction_status == '5'"><span class="buy-thumb"><i class="la la-arrow-down"></i></span></td>
-                                                        <td v-else-if="transaction.transaction_status == '4'"><span class="buy-thumb"><i class="la la-arrow-up"></i></span></td>
-                                                        <td v-else-if="transaction.transaction_status == '6'"><span class="sold-thumb"><i class="la la-arrow-down"></i></span> </td>
                                                         <td>{{transaction.transaction_reference}}</td>
                                                         <td class="text-warning"  v-if="transaction.transaction_status == '1'">PENDING</td>
                                                         <td class="text-danger"  v-else-if="transaction.transaction_status == '3'">RECEIVED</td>
-                                                        <td class="text-success"  v-else-if="transaction.transaction_status == '2'">PAID</td>
+                                                        <td class="text-success"  v-else-if="transaction.transaction_status == '2'">FUNDED</td>
                                                         <td class="text-danger"  v-else-if="transaction.transaction_status == '4'">FAILED</td>
                                                         <td class="text-warning"  v-else-if="transaction.transaction_status == '5'">ON-HOLD</td>
                                                         <td class="text-warning"  v-else-if="transaction.transaction_status == '6'">AWAITING CONFIRMATION</td>
+                                                        <td class="text-success"  v-else-if="transaction.transaction_status == '7'">PAID</td>
                                                         <td> {{transaction.trade_type}} </td>
                                                         <td>
                                                             <i class="cc TX me-3" v-if="transaction.coin.coin_name == 'TRON'"></i><i class="cc BTC me-3" v-if="transaction.coin.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" class="me-3" width="6%" v-if="transaction.coin.coin_name === 'Perfect Money'"/><i class="cc ETH" me-3 style="color:#5968ba" v-if="transaction.coin.coin_name == 'Ethereum'"></i><i class="cc LTC me-3"  v-if="transaction.coin.coin_name == 'LiteCoin'"></i><i class="cc DOGE me-3"  v-if="transaction.coin.coin_name == 'Doge Coin'"></i><i class="cc USDT me-3" v-if="transaction.coin.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="transaction.coin.coin_name == 'Ripple'"></i>{{transaction.coin.coin_name}}
                                                         </td>
-                                                        <td class="text-success"  v-if="transaction.transaction_status == '3'">{{transaction.coin_amount}} {{transaction.coin.coin_short_code}}</td>
-                                                        <td class="text-success"  v-else-if="transaction.transaction_status == '2'">{{transaction.coin_amount}} {{transaction.coin.coin_short_code}}</td>
-                                                        <td class="text-danger"  v-else-if="transaction.transaction_status == '5'">{{transaction.coin_amount}} {{transaction.coin.coin_short_code}}</td>
-                                                        <td class="text-danger"  v-else-if="transaction.transaction_status == '4'">{{transaction.coin_amount}} {{transaction.coin.coin_short_code}}</td>
-                                                        <td class="text-danger"  v-else-if="transaction.transaction_status == '6'">{{transaction.coin_amount}} {{transaction.coin.coin_short_code}}</td>
-                                                        <td class="text-warning"  v-else>{{transaction.coin_amount}} {{transaction.coin.coin_short_code}} </td>
+                                                        <td class="text-success"  v-if="transaction.transaction_status == '3'">{{transaction.coin_amount}} </td>
+                                                        <td class="text-success"  v-else-if="transaction.transaction_status == '2'">{{transaction.coin_amount}} </td>
+                                                        <td class="text-danger"  v-else-if="transaction.transaction_status == '5'">{{transaction.coin_amount}} </td>
+                                                        <td class="text-danger"  v-else-if="transaction.transaction_status == '4'">{{transaction.coin_amount}} </td>
+                                                        <td class="text-danger"  v-else-if="transaction.transaction_status == '6'">{{transaction.coin_amount}} </td>
+                                                        <td class="text-success"  v-else-if="transaction.transaction_status == '7'">{{transaction.coin_amount}} </td>
+                                                        <td class="text-warning"  v-else>{{transaction.coin_amount}}  </td>
                                                         <td>₦{{transaction.naira_amount}}</td>
-                                                        <!-- <td> {{transaction.date}}</td> -->
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -321,12 +316,11 @@ import VueMomentsAgo from 'vue-moments-ago'
                 current_dollar_amount: '',
                 coinbase_transaction: {},
                 transaction_ref: '',
-                id: ''
+                id: '',
             }
         },
         methods: {
             async getUser(){
-                console.log(sessionStorage.getItem('isAuthenticated'));
                await Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
                 .then(response => {
                     this.first_name = response.data.first_name  
@@ -344,7 +338,9 @@ import VueMomentsAgo from 'vue-moments-ago'
                 })
                await Api.axios_instance.get(Api.baseUrl+'api/v1/profile/get/'+this.id)
                 .then(res => {
-                    window.localStorage.setItem('userVerificationStatus', res.data.transaction_status)
+                    localStorage.setItem('bank_count', res.data.user.bank_trade_count)
+                    localStorage.setItem('userVerificationStatus', res.data.transaction_status)
+                    this.$store.commit('profileData', {userVerificationStatus:res.data.transaction_status, bank_count: res.data.user.bank_trade_count} )
                 })
             },
             async getTransactions(){
@@ -441,13 +437,11 @@ import VueMomentsAgo from 'vue-moments-ago'
         },
         mounted(){
             this.getUser()
-            // this.timer = setInterval(this.update, 300000)
             this.screenSize()
             this.getTransactions()
             this.getCoins()
             this.getSavedAccounts()
             this.update();
-            // this.coinbaseTransactionStatusUpdate()
             this.timer = setInterval(this.update, 30000)
         },
         computed: {

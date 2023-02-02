@@ -21,9 +21,9 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" ><i class="fa fa-bank" style="margin-top:7px !important; margin-bottom:7px"></i></label>
                     </div>
-                    <select class="form-control" v-model="bank" > 
+                    <select class="form-control" v-model="bank_data" > 
                         <option value="">Select Bank</option>
-                        <option :value="account.id" v-for="account in savedAccounts" :key="account"> {{account.account_number}} {{account.bank_name}}</option>
+                        <option :value="{'account_id': account.id, 'account_name': account.account_name}" v-for="account in savedAccounts" :key="account"> {{account.account_number}} {{account.bank_name}}</option>
                     </select>
                 </div>
             </div>
@@ -35,16 +35,16 @@
                     <div class="input-group">
                         <label class="input-group-text">$</label><input type="number"  step="0.01"  class="form-control"  v-model="dollar_amount" name="PAYMENT_AMOUNT" 
                             placeholder="Amount in USD" @input="dollarBasedCalculation(trade_type)">
-                        <label class="input-group-text">₦</label><input type="text"   v-model="naira_amount" class="form-control"
+                        <label class="input-group-text">₦</label>
+                            <input type="text"   v-model="naira_amount" class="form-control"
                             placeholder="Naira Value" @input="nairaBasedCalculation(trade_type)">
-                       
                     </div>
                     <div class="input-group mt-2" v-if="coin_shortcode === 'PM'">
                         <input type="hidden" name="PAYEE_ACCOUNT" value="U37368280" />
                         <input type="hidden" name="PAYEE_NAME" value="Smart Convert" />
                         <input type="hidden" name="PAYMENT_UNITS" value="USD" />
-                        <input type="hidden" name="PAYMENT_URL" value="https://ponpar.com" />
-                        <input type="hidden" name="NOPAYMENT_URL" value="https://ponpar.com" />
+                        <input type="hidden" name="PAYMENT_URL" value="https://app.smartconvert.ng" />
+                        <input type="hidden" name="NOPAYMENT_URL" value="https://app.smartconvert.ng" />
                         <input value="mailto:smartconvert@outlook.com" type="hidden" name="STATUS_URL" /> 
                         <!-- End of Hidden Fields -->
                     </div>
@@ -75,7 +75,6 @@
             <!--End of Perfect MOney Sell Form Section  -->
 
             <!-- Other Coins Form Section -->
-            
                 <div class="mb-3" v-else>
                     <label class="me-sm-2">Enter Your Amount </label>
                     <div class="input-group">
@@ -148,17 +147,16 @@
                     <label class="me-sm-2">Enter Your Amount </label>
                     <div class="input-group">
                     <label class="input-group-text">$</label><input type="text"  class="form-control" v-model="dollar_amount" 
-                            placeholder="Amount in USD" @input="dollarBasedCalculation(trade_type)" required>
-                   
+                        placeholder="Amount in USD" @input="dollarBasedCalculation(trade_type)" required>
                     <label class="input-group-text">₦</label><input type="text" v-model="naira_amount" class="form-control"
-                            placeholder="Naira Value" @input="nairaBasedCalculation(trade_type)" required>
+                        placeholder="Naira Value" @input="nairaBasedCalculation(trade_type)" required>
                     </div>
                     <div class="input-group mt-2" v-if="coin_shortcode === 'PM'">
                         <input type="text"   class="form-control" v-model="pm_account" 
                             placeholder="Enter your PM Account" required>
                     </div>
                     <div class="input-group mt-2" v-else>
-                        <input type="text"class="form-control" v-model="coin_amount" 
+                        <input type="text" class="form-control" v-model="coin_amount" 
                             placeholder="Amount of Coin" @input="coinBasedCalculation(trade_type)" required>
                     </div>
 
@@ -234,19 +232,26 @@ import Api from '../views/Api'
                 buy_active_status: false,
                 send_address: '',
                 mycelium_status: false,
-                first_address: '',
-                second_address: '',
-                third_address: '',
-                fourth_address: '',
-                fifth_address: ''
-
+                bank_transacted_count: '',
+                userVerificationStatus: '',
+                my_account: false,
+                bank_data: {}
+                
             }
         },
         methods: {
             async firstPhase(trade_not_active, trade_type){
                 this.loading = true
-                let verification_status = localStorage.getItem('id')
-               
+                let account_name = this.bank_data.account_name
+                this.bank = this.bank_data.account_id
+                this.bank_transacted_count = this.$store.state.profile_data.bank_count
+                this.userVerificationStatus = this.$store.state.profile_data.userVerificationStatus
+                let last_name = localStorage.getItem('last_name').toUpperCase()
+                let first_name = localStorage.getItem('first_name').toUpperCase()
+                account_name = account_name.split(" ")
+                if (account_name.includes(last_name, first_name) ){
+                    this.my_account = true
+                }
                 if (this.dollar_amount === '' || this.naira_amount === '' || this.coin_name === ''){
                     this.$toast.error({
                     title:'Oops!',
@@ -260,20 +265,6 @@ import Api from '../views/Api'
                     position: 'bottom left',
                     showDuration: 200,
                     message:'Chief! Amount specified is lower than the minimum limit'})
-                    this.loading = false
-                }else if(verification_status === "1" && this.dollar_amount > 200){
-                    this.$toast.error({
-                    title:'Oops!',
-                    position: 'bottom left',
-                    showDuration: 300,
-                    message:'Chief! you can\'t transact more than $200. Click Account to upload your ID for verification'})
-                    this.loading = false
-                }else if(verification_status === "3" &&  this.dollar_amount > 200){
-                    this.$toast.error({
-                    title:'Oops!',
-                    position: 'bottom left',
-                    showDuration: 300,
-                    message:'Chief! Your ID upload is awaiting admin approval'})
                     this.loading = false
                 }else if(this.buy_active_status == false){
                     this.$toast.error({
@@ -296,8 +287,44 @@ import Api from '../views/Api'
                     showDuration: 100,
                     message:'Chief! Please select a bank account or create one'})
                     this.loading = false 
+                } 
+                else if(this.trade_type == 'SELL' && this.userVerificationStatus == '1' && +this.dollar_amount > 150 && this.bank_transacted_count < 8){
+                        this.$toast.error({
+                        title:'Oops!',
+                        position: 'bottom left',
+                        timeOut: 5500,
+                        showDuration: 100,
+                        message:'You can\'t transact more than $150 for a day, you need to provide your ID by clicking on Account'})
+                    this.loading = false 
                 }
-                else{
+                else if(this.trade_type == 'SELL' && this.userVerificationStatus == '3' && this.dollar_amount > 150 && this.bank_transacted_count < 8){
+                        this.$toast.error({
+                        title:'Oops!',
+                        position: 'bottom left',
+                        showDuration: 100,
+                        timeOut: 4500,
+                        message:'Please hold on, you verification is awaiting approval'})
+                    this.loading = false 
+                
+                }   else if(this.trade_type == 'SELL' && this.userVerificationStatus == '1' && +this.dollar_amount > 300 && this.bank_transacted_count >= 8){
+                        this.$toast.error({
+                        title:'Oops!',
+                        position: 'bottom left',
+                        timeOut: 5500,
+                        showDuration: 100,
+                        message:'You can\'t transact more than $300 for a day, you need to provide your ID by clicking on Account'})
+                    this.loading = false 
+                }
+                else if(this.trade_type == 'SELL' && this.userVerificationStatus == '3' && this.dollar_amount > 300 && this.bank_transacted_count >= 8){
+                        this.$toast.error({
+                        title:'Oops!',
+                        position: 'bottom left',
+                        showDuration: 100,
+                        timeOut: 4500,
+                        message:'Please hold on, you verification is awaiting approval'})
+                    this.loading = false 
+                
+                } else {
                 let tradeData = {
                     dollar_amount: parseFloat(this.dollar_amount),
                     naira_amount: parseFloat(this.naira_amount),
@@ -309,68 +336,16 @@ import Api from '../views/Api'
                 let formData = {}
                     if (trade_type === 'SELL'){
                         if(this.selected_coin_name === "Perfect Money"){
-                            console.log("Perfect Money");
+                            console.log(" ");
                         }else{
                             const addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
                             let randomAddressSelection = Math.floor(Math.random() * addressArray.length) 
                             let receivingAddress = addressArray[randomAddressSelection]
-                            console.log(addressArray[randomAddressSelection]);
                             this.coin_address = receivingAddress
                         }
-                        // else if(this.selected_coin_name === "Bitcoin"){
-                        //     await Api.axios_instance.post("https://gateway.gear.mycelium.com/gateways/b31f6babde01f965c84a3e82e11d4b1c04d06536397cdef303f449565e0caa9b/orders?amount="+this.dollar_amount)
-                        //     .then((response) => {
-                        //             this.coin_address = response.data.address
-                        //             this.transaction_ref = response.data.payment_id
-                        //             this.address_account_id  = response.data.id
-                        //             this.mycelium_status = true
-                                    
-                        //             // Trade details in vue  store 
-                        //             let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
-                        //                 lowerCasedCoinName = lowerCasedCoinName.split(" ").join("");
-                        //                 let storeData = {
-                        //                     address: this.coin_address,
-                        //                     network: this.selected_coin_name,
-                        //                     dollar_amount: this.dollar_amount,
-                        //                     coin_amount: this.coin_amount,
-                        //                     coin_name: lowerCasedCoinName,
-                        //                 }
-
-                        //                 formData = {
-                        //                     dollar_amount: parseFloat(this.dollar_amount),
-                        //                     naira_amount: parseFloat(this.naira_amount),
-                        //                     coin_amount: parseFloat(this.coin_amount),
-                        //                     coin: this.coin_id,
-                        //                     bank: this.bank,
-                        //                     trade_type: trade_type,
-                        //                     buy_payment_mode: this.buy_payment_mode,
-                        //                     pm_account: this.pm_account,
-                        //                     wallet_address_id: this.transaction_ref,
-                        //                     address_account_id: this.address_account_id,
-                        //                     coin_address: this.coin_address
-                        //                 }
-                        //             this.$store.commit('uniqueAddressStore', storeData)
-                        //         })
-                    
-                        //     .catch((error) => {
-                        //         console.error(error)
-                        //     }) 
-                        // } else{
-                        //     if(this.selected_coin_name === "USDT" || this.selected_coin_name === "TRON"){
-                        //         this.coin_address = "TEu47d6okBh1ouCCcubur9GGQhKWjwthWW"
-                        //     } else if (this.selected_coin_name === "Solana"){
-                        //         this.coin_address = "JBJy5KmRnaMRcVKFueW3xFgTFs9mXpckFbRwYdMJ2Tpa"
-                        //     } else if (this.selected_coin_name === "Doge Coin"){
-                        //         this.coin_address = "DPbYsEkEqVyBar399sb1TBGENPeUpKZoBS"
-                        //     } else if (this.selected_coin_name === "LiteCoin"){
-                        //         this.coin_address = "ltc1qsa89exxyhld2yyr4t0hppzd78ratwg7f8y58yn"
-                        //     }  else if (this.selected_coin_name === "Ripple"){
-                        //         this.coin_address = "rPgLfcKCKUCtfRQrrtoXKzTA9zn2bFhmSM"
-                        //     }  else if (this.selected_coin_name === "Ethereum"){
-                        //         this.coin_address = "0x9a44f1ae2ECba6ce31b3B824301b230A575A27C3"
-                        //     }  
-                        // }
-                    }  // Trade details in vue store 
+                     
+                    }  
+                // Trade details in vue store 
                 let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
                     lowerCasedCoinName = lowerCasedCoinName.split(" ").join("");
                     let storeData = {
@@ -381,7 +356,6 @@ import Api from '../views/Api'
                         coin_name: lowerCasedCoinName,
                     }
                     this.$store.commit('uniqueAddressStore', storeData)
-                    
                 if (this.coin_shortcode === "PM"){
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
@@ -394,15 +368,37 @@ import Api from '../views/Api'
                     }
                 }
                 else{
-                    formData = {
-                        dollar_amount: parseFloat(this.dollar_amount),
-                        naira_amount: parseFloat(this.naira_amount),
-                        coin_amount: parseFloat(this.coin_amount),
-                        coin: this.coin_id,
-                        trade_type: trade_type,
-                        buy_payment_mode: this.buy_payment_mode,
-                        pm_account: this.pm_account,
-                        coin_address: this.coin_address
+                    if(this.my_account == true){
+                        if(this.bank_transacted_count >= 8){
+                            console.log(" ");
+                        }else{
+                            this.bank_transacted_count++
+                        }
+                        formData = {
+                            dollar_amount: parseFloat(this.dollar_amount),
+                            naira_amount: parseFloat(this.naira_amount),
+                            coin_amount: parseFloat(this.coin_amount),
+                            coin: this.coin_id,
+                            trade_type: trade_type,
+                            buy_payment_mode: this.buy_payment_mode,
+                            pm_account: this.pm_account,
+                            coin_address: this.coin_address,
+                            bank: this.bank,
+                            my_account: this.my_account,
+                            bank_transacted_count: this.bank_transacted_count
+                        }
+                    }else{
+                        formData = {
+                            dollar_amount: parseFloat(this.dollar_amount),
+                            naira_amount: parseFloat(this.naira_amount),
+                            coin_amount: parseFloat(this.coin_amount),
+                            coin: this.coin_id,
+                            trade_type: trade_type,
+                            buy_payment_mode: this.buy_payment_mode,
+                            pm_account: this.pm_account,
+                            coin_address: this.coin_address,
+                            bank: this.bank,
+                            
                     }
                 }
                 this.$store.commit('currentTrade', tradeData)
@@ -422,7 +418,7 @@ import Api from '../views/Api'
                 } else{
                     this.$emit('secondPhase', this.buy_Phase)
                 }
-            }
+            }}
                 
         },
             async setCoinDetails(){
@@ -432,7 +428,6 @@ import Api from '../views/Api'
                 const addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
                 let randomAddressSelection = Math.floor(Math.random() * addressArray.length) 
                 let receivingAddress = addressArray[randomAddressSelection]
-                console.log(addressArray[randomAddressSelection]);
                 this.coin_address = receivingAddress
                 this.selected_coin_name = this.coin_type[0].coin_name
                 this.minimum_sell_limit = this.coin_type[0].minimum_sell_limit

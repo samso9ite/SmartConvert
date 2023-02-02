@@ -10,7 +10,7 @@ import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 
 var toastrConfigs = {
   position: 'top right',
-  showDuration: 2000
+  showDuration: 4000
 }
 
 // axios.defaults.withCredentials = true

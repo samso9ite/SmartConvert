@@ -29,6 +29,10 @@ export default new Vuex.Store({
       network:'',
       address_account_id: '',
       wallet_address_id: ''
+    },
+    profile_data: {
+      bank_count: '',
+      userVerificationStatus: ''
     }
   },
   mutations: {
@@ -76,6 +80,10 @@ export default new Vuex.Store({
       state.addressInfo.network = payload.network
       state.addressInfo.address_account_id = payload.address_account_id
       state.addressInfo.wallet_address_id = payload.wallet_address_id
+    },
+    profileData(state, payload){
+      state.profile_data.bank_count = payload.bank_count
+      state.profile_data.userVerificationStatus = payload.userVerificationStatus
     }
   },
   actions: {
