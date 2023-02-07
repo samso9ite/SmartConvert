@@ -55,7 +55,7 @@
                                                     <td>{{transaction.coin_amount}}</td>
                                                     <td>${{transaction.dollar_amount}}</td>
                                                     <td>₦{{transaction.naira_amount}}</td>
-                                                    <td v-if="transaction.hash_key_type == '1'"><a :href="transaction.hash_key"> <button class="btn">Click to View</button> </a></td>
+                                                    <td v-if="transaction.hash_key_type == '1'"><a :href="transaction.hash_key" target="_blank"> <button class="btn">Click to View</button> </a></td>
                                                     <td v-else> {{ transaction.hash_key }} </td>
                                                     <td>{{transaction.comment}}</td>
                                                     <td> {{transaction.date}}</td>
@@ -85,7 +85,6 @@ import Footer from '../components/Footer.vue'
             return{
                 transactions: this.$store.state.all_transactions,
                 showMobileStyle: false,
-                url: 'https://www.google.com/'
             }
         },
         methods: {

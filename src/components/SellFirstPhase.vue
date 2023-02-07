@@ -236,7 +236,6 @@ import Api from '../views/Api'
                 userVerificationStatus: '',
                 my_account: false,
                 bank_data: {}
-                
             }
         },
         methods: {
@@ -248,10 +247,13 @@ import Api from '../views/Api'
                 this.userVerificationStatus = this.$store.state.profile_data.userVerificationStatus
                 let last_name = localStorage.getItem('last_name').toUpperCase()
                 let first_name = localStorage.getItem('first_name').toUpperCase()
-                account_name = account_name.split(" ")
-                if (account_name.includes(last_name, first_name) ){
+                if(trade_type == "SELL"){
+                    account_name = account_name.split(" ")
+                    if (account_name.includes(last_name, first_name) ){
                     this.my_account = true
+                } 
                 }
+             
                 if (this.dollar_amount === '' || this.naira_amount === '' || this.coin_name === ''){
                     this.$toast.error({
                     title:'Oops!',
@@ -338,13 +340,33 @@ import Api from '../views/Api'
                         if(this.selected_coin_name === "Perfect Money"){
                             console.log(" ");
                         }else{
-                            const addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
+                            // const addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
+                          
+                            const addressArray = [];
+
+                            if(this.coin_type[0].first_address != ""){
+                                addressArray.push(this.coin_type[0].first_address)
+                            }
+                            if(this.coin_type[0].second_address != ""){
+                                addressArray.push(this.coin_type[0].second_address)
+                            }
+                            if(this.coin_type[0].third_address != ""){
+                                addressArray.push(this.coin_type[0].third_address)
+                            }
+                            if(this.coin_type[0].fourth_address != ""){
+                                addressArray.push(this.coin_type[0].fourth_address)
+                            }
+                            if(this.coin_type[0].fifth_address != ""){
+                                addressArray.push(this.coin_type[0].fifth_address)
+                            }
+                            console.log(addressArray);
                             let randomAddressSelection = Math.floor(Math.random() * addressArray.length) 
                             let receivingAddress = addressArray[randomAddressSelection]
                             this.coin_address = receivingAddress
                         }
                      
                     }  
+                
                 // Trade details in vue store 
                 let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
                     lowerCasedCoinName = lowerCasedCoinName.split(" ").join("");
@@ -401,6 +423,7 @@ import Api from '../views/Api'
                             
                     }
                 }
+                console.log(formData);
                 this.$store.commit('currentTrade', tradeData)
                 await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {

@@ -19,6 +19,7 @@ let access = await sessionStorage.getItem('access')
   return config;
 });
 const baseUrl = 'http://127.0.0.1:8000/'
+// const baseUrl = 'https://api.smartconvert.ng/'
 export default { 
   axios_instance,
   baseUrl,

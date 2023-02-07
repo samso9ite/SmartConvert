@@ -132,12 +132,22 @@
                                                     <span>₦{{PM.sell_rate}} SELL</span>
                                                 </div>
                                             </li>
-                                            <li class="d-flex col-lg-2" style="margin-right:25px">
+                                            <!-- <li class="d-flex col-lg-2" style="margin-right:25px">
                                                 <i class="cc DOGE me-3"></i>
                                                 <div class="flex-grow-1">
                                                     <h5 class="m-0">DOGE </h5>
                                                 </div>
                                                 <div class="text-end">
+                                                    <h5>₦{{doge.buy_rate}} BUY</h5>
+                                                    <span>₦{{doge.sell_rate}} SELL</span>
+                                                </div>
+                                            </li> -->
+                                            <li class="d-flex col-lg-2" style="margin-right:25px">
+                                                <i class="cc DOGE me-3"></i>
+                                                <div class="flex-grow-1">
+                                                    <h5 class="m-0" style="font-size:13px">DOGE</h5>
+                                                </div>
+                                                 <div class="text-end">
                                                     <h5>₦{{doge.buy_rate}} BUY</h5>
                                                     <span>₦{{doge.sell_rate}} SELL</span>
                                                 </div>
@@ -317,6 +327,7 @@ import VueMomentsAgo from 'vue-moments-ago'
                 coinbase_transaction: {},
                 transaction_ref: '',
                 id: '',
+                doge: ''
             }
         },
         methods: {
@@ -362,12 +373,13 @@ import VueMomentsAgo from 'vue-moments-ago'
             getCoins(){
                 Api.axios_instance.get(Api.baseUrl+'api/v1/list-coin')
                 .then(response => {
+                    console.log(response.data);
                     this.coins = response.data
                     this.bitcoin = this.coins[0]; 
                     this.ETH = this.coins[1];
                     this.doge = this.coins[2];
                     this.PM = this.coins[8];
-                    this.USDT = this.coins[4];
+                    this.USDT = this.coins[3];
                     this.LTH = this.coins[5];
                     this.ripple = this.coins[6];
                     this.solana = this.coins[7]
