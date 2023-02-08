@@ -189,7 +189,17 @@
                                     </ul>
                                 </div>
 
-                            <div class="card-body">
+                            <div class="card-body" v-if="raiseCreateAccountMessage">
+                                <div class="alert alert-warning text-center">
+                                    <strong>Hello Boss!</strong> You need to add atleast one bank account before you can sell to us.<br>
+                                    Please note that your bank account name must tally with your registered account.
+                                    <br><br>
+                                    <router-link :to="'/account-settings'"> <button class="btn btn-primary"> Add your bank account </button> </router-link>
+                                </div>
+                                
+                            </div>
+
+                            <div class="card-body" v-else>
                                 <div class="buy-sell-widget">
                                     <div v-show="currentPhase==='SellFirstPhase'" >
                                         <SellFirstPhase @secondPhase="switchPhase" @firstPhase="switchPhase" @getTransactions="getTransactions" :coins="coins" :trade_type="trade_type" :trade_not_active="trade_not_active"  :savedAccounts="savedAccounts" :coinCurrentValue="coinCurrentValue"/>
@@ -327,7 +337,8 @@ import VueMomentsAgo from 'vue-moments-ago'
                 coinbase_transaction: {},
                 transaction_ref: '',
                 id: '',
-                doge: ''
+                doge: '',
+                raiseCreateAccountMessage: false
             }
         },
         methods: {
@@ -373,7 +384,6 @@ import VueMomentsAgo from 'vue-moments-ago'
             getCoins(){
                 Api.axios_instance.get(Api.baseUrl+'api/v1/list-coin')
                 .then(response => {
-                    console.log(response.data);
                     this.coins = response.data
                     this.bitcoin = this.coins[0]; 
                     this.ETH = this.coins[1];
@@ -405,14 +415,21 @@ import VueMomentsAgo from 'vue-moments-ago'
                 })
             },
             sellFunction(){
-                this.trade_type = "SELL"
-                this.sell_transaction_in_progress = true
-                this.trade_not_active = false
+                if(this.savedAccounts.length){
+                    this.trade_type = "SELL"
+                    this.sell_transaction_in_progress = true
+                    this.trade_not_active = false
+                }else{
+                    this.raiseCreateAccountMessage = true
+                }
+                
             },
             buyFunction(){
+                this.raiseCreateAccountMessage = false
                 this.trade_type = "BUY"
                 this.buy_transaction_in_progress = true
                 this.trade_not_active = false
+                
             },
             switchPhase(currentPhase){
                 this.sell_transaction_in_progress = true
