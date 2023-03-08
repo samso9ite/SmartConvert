@@ -13,13 +13,14 @@
                         </div>
                         <div class="auth-form card">
                             <div class="card-header justify-content-center">
-                                <h4 class="card-title">Sign in</h4>
+                                <h4 class="card-title">Account Activation</h4>
                             </div>
-                             <div class="alert alert-danger fade in" v-if="errors.length">
+                                <div class="alert alert-danger fade in" v-if="errors.length">
                                     <p v-for="error in errors" :key="error">
                                        {{error}}
                                     </p>
                                 </div>
+                               
                            </div>
                     </div>
                 </div>
@@ -34,19 +35,29 @@ import Api from './Api.js';
         name: 'Activation',
         data(){
             return{
+                display_message: false,
+                errors: []
             }
         },
         methods: {
-           getReference(){
+           async getReference(){
             let id = this.$route.params.id
             let reference = this.$route.params.reference
             const formData = {
                 uid: id,
                 token: reference
             }
-            Api.axios_instance.post(Api.baseUrl+'auth/users/activation/', formData,  {mode: 'no-cors'})
+           await Api.axios_instance.post(Api.baseUrl+'auth/users/activation/', formData,  {mode: 'no-cors'})
             .then(res => {
+                this.display_message = true
+               
                 this.$router.push("/signin")
+                this.$toast.success({
+                        title:'Activation!',
+                        message:'Account Activated. Please login.',
+                        showDuration: 500,
+                        timeOut: 4500,
+                    })
             })
             .catch(error => {
                     if (error.response){

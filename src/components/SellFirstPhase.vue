@@ -9,7 +9,7 @@
                         <label class="input-group-text"><i class="cc BTC-alt" v-if="selected_coin_name === 'Bitcoin'"></i> <i class="cc SOL-alt" v-if="selected_coin_name === 'Solana'"></i> <i class="cc TX-alt" v-if="selected_coin_name === 'TRON'"></i> <img src="../../public/assets/images/pm-64.png" width="38px" v-if="selected_coin_name === 'Perfect Money'"/><i class="cc ETH-alt"  v-if="selected_coin_name == 'Ethereum'"></i><i class="cc LTC-alt"  v-if="selected_coin_name == 'LiteCoin'"></i><i class="cc DOGE-alt"  v-if="selected_coin_name == 'Doge Coin'"></i><i class="cc USDT-alt" v-if="selected_coin_name == 'USDT' "></i><i class="cc XRP-alt" v-if="selected_coin_name == 'Ripple'"></i></label>
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
-                        <option value="">Select Coin</option>
+                        <option :value="[{select:'selected'}]">Click to Select Coin</option>
                         <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code, sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status,first_address:coin.first_address, second_address:coin.second_address, third_address:coin.third_address, fourth_address:coin.fourth_address, fifth_address:coin.fifth_address}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
@@ -22,7 +22,7 @@
                         <label class="input-group-text" ><i class="fa fa-bank" style="margin-top:7px !important; margin-bottom:7px"></i></label>
                     </div>
                     <select class="form-control" v-model="bank_data" > 
-                        <option value="">Select Bank</option>
+                        <option :value="{select: 'selected'}">Click to Select Bank</option>
                         <option :value="{'account_id': account.id, 'account_name': account.account_name}" v-for="account in savedAccounts" :key="account"> {{account.account_number}} {{account.bank_name}}</option>
                     </select>
                 </div>
@@ -123,7 +123,7 @@
                         <label class="input-group-text"><i class="cc BTC-alt" v-if="selected_coin_name === 'Bitcoin'"></i> <i class="cc TX-alt" v-if="selected_coin_name === 'TRON'"></i> <img src="../../public/assets/images/pm-64.png" width="38px" v-if="selected_coin_name === 'Perfect Money'"/><i class="cc ETH-alt"  v-if="selected_coin_name == 'Ethereum'"></i><i class="cc LTC-alt"  v-if="selected_coin_name == 'LiteCoin'"></i><i class="cc DOGE-alt"  v-if="selected_coin_name == 'Doge Coin'"></i><i class="cc USDT-alt" v-if="selected_coin_name == 'USDT' "></i><i class="cc XRP-alt" v-if="selected_coin_name == 'Ripple'"></i></label>
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
-                        <option value="">Select Coin</option>
+                        <option :value="[{select:'selected'}]">Click to Select Coin</option>
                         <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code, sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
@@ -136,7 +136,7 @@
                         <label class="input-group-text" ><i class="fa fa-bank" style="margin-top:7px !important; margin-bottom:7px"></i></label>
                     </div>
                     <select class="form-control" v-model="buy_payment_mode" > 
-                        <option value="">Select Payment Mode</option>
+                        <option :value="'selected'">Select Payment Mode</option>
                         <option value="TRANSFER">TRANSFER</option>
                         <option value="CASH DEPOSIT">CASH DEPOSIT</option>
                     </select>
@@ -200,7 +200,7 @@ import Api from '../views/Api'
                 coin_amount: '',
                 dollar_amount:'',
                 currentPhase: 'SellSecondPhase',
-                coin_type: [],
+                coin_type: [{select:'selected'}],
                 bank: '',
                 selected_coin_name:'',
                 minimum_buy_limit: '',
@@ -220,7 +220,7 @@ import Api from '../views/Api'
                 coin_id: '',
                 selected: true,
                 pm_account: '',
-                buy_payment_mode: '',
+                buy_payment_mode: 'selected',
                 coin_address: '',
                 buy_Phase: 'BuyPreviewPhase',
                 address_check: this.$store.state.addressInfo.address,
@@ -235,7 +235,7 @@ import Api from '../views/Api'
                 bank_transacted_count: '',
                 userVerificationStatus: '',
                 my_account: false,
-                bank_data: {}
+                bank_data: {select: 'selected'}
             }
         },
         methods: {
@@ -386,8 +386,26 @@ import Api from '../views/Api'
                         trade_type: trade_type,
                         buy_payment_mode: this.buy_payment_mode,
                         pm_account: this.pm_account,
-                        coin_address: this.coin_address
+                        coin_address: this.coin_address,
+                        coin_amount: parseFloat(this.coin_amount)
                     }
+                this.$store.commit('currentTrade', tradeData)
+                await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
+                .then(response => {
+                    this.$emit('getTransactions')
+                    this.$toast.success({
+                    title:'Welldone Boss!',
+                    message:'Order Has Been created'
+                    })
+                }).finally(() => {
+                    this.loading = true
+                })  
+            
+                if(trade_type == 'SELL'){
+                    this.$emit('firstPhase', this.currentPhase)
+                } else{
+                    this.$emit('secondPhase', this.buy_Phase)
+                }
                 }
                 else{
                     if(this.my_account == true){

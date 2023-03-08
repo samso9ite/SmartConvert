@@ -10,7 +10,7 @@
                 <td>Reference no</td>
                 <td style="color:white"><b><span style="font-size: 21px !important;">{{transaction_ref}}</span><br> Copy and paste reference no on remark/narration when making payment</b> </td>
             </tr>
-            <tr>
+            <tr v-if="coin_amount != Infinity">
                 <td>Coin Amount</td>
                 <td>{{coin_amount}} {{coin_name}}</td>
             </tr>

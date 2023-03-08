@@ -29,8 +29,12 @@
                                     </div>
                                     <div class="mb-3">
                                         <label>Password</label>
-                                        <input type="password" class="form-control" placeholder="Password"
-                                            name="password" v-model="password">
+                                        <VuePassword
+                                            v-model="password"
+                                            :disableStrength = true
+                                        />
+                                        <!-- <input type="password" class="form-control" placeholder="Password"
+                                            name="password" v-model="password"> -->
                                     </div>
                                     <div class="row d-flex justify-content-between mt-4 mb-2">
                                         <div class="mb-3 mb-0">
@@ -55,8 +59,11 @@
 
 <script>
 import Api from './Api.js';
+import VuePassword from 'vue-password'
+
     export default {
         name: 'Signin',
+        components: {VuePassword},
         data(){
             return{
                 email: '',
@@ -104,3 +111,8 @@ import Api from './Api.js';
         },
     }
 </script>
+<style>
+.VuePassword__Toggle{
+    padding-left: 9rem !important;
+}
+</style>

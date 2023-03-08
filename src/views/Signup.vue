@@ -47,8 +47,12 @@
                                     </div>
                                     <div class="mb-3">
                                         <label>Password</label>
-                                        <input type="password" class="form-control" placeholder="Password"
-                                            name="password" v-model="password">
+                                        <VuePassword
+                                            v-model="password"
+                                            :disableStrength = true
+                                        />
+                                        <!-- <input type="password" class="form-control" placeholder="Password"
+                                            name="password" v-model="password"> -->
                                     </div>
                                     <div class="text-center mt-4">
                                         <button type="submit" class="btn btn-success btn-block" :disabled="loading" style="background-color:rgb(122 21 61); border: none;" :disbled="loading">Sign up</button>
@@ -71,8 +75,12 @@
 
 <script>
 import Api from './Api.js'
+import VuePassword from 'vue-password'
+
     export default{
         name: 'Signup',
+        components: {VuePassword},
+
         data(){
             return{
                 email: '',
@@ -125,3 +133,9 @@ import Api from './Api.js'
         }
     }
 </script> 
+
+<style>
+.VuePassword__Toggle{
+    padding-left: 9rem !important;
+}
+</style>
