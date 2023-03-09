@@ -43,9 +43,12 @@
                         <input type="hidden" name="PAYEE_ACCOUNT" value="U37368280" />
                         <input type="hidden" name="PAYEE_NAME" value="Smart Convert" />
                         <input type="hidden" name="PAYMENT_UNITS" value="USD" />
-                        <input type="hidden" name="PAYMENT_URL" value="https://app.smartconvert.ng" />
-                        <input type="hidden" name="NOPAYMENT_URL" value="https://app.smartconvert.ng" />
-                        <input value="mailto:smartconvert@outlook.com" type="hidden" name="STATUS_URL" /> 
+                        <input type="hidden" name="PAYMENT_URL" value="http://localhost:8081/pmStatus" />
+                        <input type="hidden" name="PAYMENT_URL_METHOD" value="GET">
+                        <input type="hidden" name="NOPAYMENT_URL_METHOD" value="GET">
+                        <input type="hidden" name="NOPAYMENT_URL" value="http://localhost:8081/pmStatus" />
+                        <input value="mailto:smartconvert@gmail.com" type="hidden" name="STATUS_URL" /> 
+                        <!-- <input type="hidden" name="BANK" :value="bank"/>  -->
                         <!-- End of Hidden Fields -->
                     </div>
                     <div class="input-group mt-2" v-else>
@@ -64,7 +67,7 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-lg-6">
-                        <button type="submit" class="btn btn-success btn-block">Proceed</button>
+                        <button type="submit" class="btn btn-success btn-block" @click="setTradeData">Proceed</button>
                     </div>
                     <div class="col-lg-6" @click="reloadPage">
                         <span style="color:white; font-size: 22px; float: right; cursor: pointer;" > <i class="las la-arrow-left"></i> Back</span>
@@ -239,6 +242,20 @@ import Api from '../views/Api'
             }
         },
         methods: {
+            setTradeData(){
+                console.log("I am here now now");
+                let tradeData = {
+                    dollar_amount: parseFloat(this.dollar_amount),
+                    naira_amount: parseFloat(this.naira_amount),
+                    coin_amount: parseFloat(this.coin_amount),
+                    coin_name: this.selected_coin_name,
+                    bank_account: this.bank_data.account_id,
+                    trade_type: 'SELL',
+                    coin_id: this.coin_id
+                }
+                console.log(tradeData);
+                this.$store.commit('currentTrade', tradeData)
+            },
             async firstPhase(trade_not_active, trade_type){
                 this.loading = true
                 let account_name = this.bank_data.account_name
@@ -247,11 +264,11 @@ import Api from '../views/Api'
                 this.userVerificationStatus = this.$store.state.profile_data.userVerificationStatus
                 let last_name = localStorage.getItem('last_name').toUpperCase()
                 let first_name = localStorage.getItem('first_name').toUpperCase()
-                if(trade_type == "SELL"){
-                    account_name = account_name.split(" ")
-                    if (account_name.includes(last_name, first_name) ){
-                    this.my_account = true
-                } 
+                    if(trade_type == "SELL"){
+                        account_name = account_name.split(" ")
+                        if (account_name.includes(last_name, first_name) ){
+                        this.my_account = true
+                    } 
                 }
              
                 if (this.dollar_amount === '' || this.naira_amount === '' || this.coin_name === ''){
@@ -334,7 +351,9 @@ import Api from '../views/Api'
                     coin_name: this.selected_coin_name,
                     bank_account: this.bank,
                     trade_type: trade_type,
+                    coin_id: this.coin_id
                 }
+                this.$store.commit('currentTrade', tradeData)
                 let formData = {}
                     if (trade_type === 'SELL'){
                         if(this.selected_coin_name === "Perfect Money"){
@@ -389,7 +408,6 @@ import Api from '../views/Api'
                         coin_address: this.coin_address,
                         coin_amount: parseFloat(this.coin_amount)
                     }
-                this.$store.commit('currentTrade', tradeData)
                 await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
                     this.$emit('getTransactions')
@@ -442,7 +460,7 @@ import Api from '../views/Api'
                     }
                 }
                 console.log(formData);
-                this.$store.commit('currentTrade', tradeData)
+                
                 await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
                     this.$emit('getTransactions')

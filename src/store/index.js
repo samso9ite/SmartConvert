@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { createStore } from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex)
 
@@ -13,7 +15,8 @@ export default new Vuex.Store({
       naira_amount: '',
       coin_name: '',
       trade_type: '',
-      bank_account: ''
+      bank_account: '',
+      coin_id: '',
     },
     user :{
       username: '',
@@ -57,6 +60,7 @@ export default new Vuex.Store({
       state.currentTrade.dollar_amount = payload.dollar_amount
       state.currentTrade.naira_amount = payload.naira_amount
       state.currentTrade.trade_type = payload.trade_type
+      state.currentTrade.coin_id = payload.coin_id
     },
     setToken(state, payload){
       state.token = payload.token,
@@ -89,5 +93,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-  }
+  },
+  plugins: [createPersistedState()]
 })

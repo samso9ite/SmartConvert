@@ -83,6 +83,13 @@ const routes = [
     component: () => import('../views/IdVerification.vue'),
     meta: {requiresAuth: true}
   },
+  {
+    path: '/pmStatus',
+    name: 'PMStatus',
+    component: () => import('../views/PMStatus.vue'),
+    props: route => ({query:route.query.PAYEE_ACCOUNT & route.query.PAYER_ACCOUNT & route.query.PAYMENT_UNITS & route.query.PAYMENT_AMOUNT & route.query.PAYMENT_BATCH_NUM & route.query.PAYMENT_ID}),
+    // meta: {requiresAuth: true}
+  },
 
 ]
 
