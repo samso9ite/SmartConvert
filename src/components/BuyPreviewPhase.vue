@@ -24,15 +24,15 @@
             </tr>
             <tr>
                 <td>Account Number</td>
-                <td><span style="font-size: 20px !important;">0124587202</span></td>
+                <td><span style="font-size: 20px !important;">{{admin_account_number  }}</span></td>
             </tr>
             <tr>
                 <td>Account Name</td>
-                <td>AWOLUSI DAMILOLA SOLOMON </td>
+                <td>{{ admin_account_name }} </td>
             </tr>
             <tr>
                 <td>Bank</td>
-                <td>GTBank</td>
+                <td>{{ admin_bank }}</td>
             </tr>
             </tbody>
             </table>
@@ -48,8 +48,12 @@ export default({
     data(){
         return{
             currentPhase: 'SuccessPhase',
+            admin_account_name: this.$store.state.currentTrade.admin_bank_name,
+            admin_account_number: this.$store.state.currentTrade.admin_bank_number,
+            admin_bank_name: this.$store.state.currentTrade.admin_bank_name,
+            admin_bank: this.$store.state.currentTrade.admin_bank  
         }
-    },
+    },  
     methods: {
         successPhase(){
             this.$emit('successPhase', this.currentPhase)

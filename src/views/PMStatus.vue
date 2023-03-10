@@ -84,7 +84,8 @@ import Footer from '../components/Footer.vue'
                 payment_batch_num: '',
                 // payment_id: '',
                 payer_account: '',
-                naira_amount: ''
+                naira_amount: '',
+                showMobileStyle: false
 
             }
         },

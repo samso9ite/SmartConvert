@@ -133,15 +133,19 @@
             </div>
 
             <div class="mb-3">
-                <label class="me-sm-2">Payment Method</label>
+                <label class="me-sm-2">Making Payment To</label>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label class="input-group-text" ><i class="fa fa-bank" style="margin-top:7px !important; margin-bottom:7px"></i></label>
                     </div>
-                    <select class="form-control" v-model="buy_payment_mode" > 
+                    <!-- <select class="form-control" v-model="buy_payment_mode" > 
                         <option :value="'selected'">Select Payment Mode</option>
                         <option value="TRANSFER">TRANSFER</option>
                         <option value="CASH DEPOSIT">CASH DEPOSIT</option>
+                    </select> -->
+                    <select class="form-control" v-model="buy_payment_mode_bank" > 
+                        <option :value="{select: 'selected'}">Click to Select Bank</option>
+                        <option :value="{'account_id': account.id, 'account_name': account.account_name, 'account_number': account.account_number, 'bank':account.bank_name}" v-for="account in adminBankAccouts" :key="account"> {{account.account_number}} {{account.bank_name}}</option>
                     </select>
                 </div>
             </div>
@@ -195,7 +199,7 @@ import Api from '../views/Api'
     export default{
         name: 'SellFirstPhase',
         props: [
-            'coins', 'savedAccounts', 'coinCurrentValue', 'trade_not_active', 'trade_type'
+            'coins', 'savedAccounts', 'coinCurrentValue', 'trade_not_active', 'trade_type', 'adminBankAccouts'
         ],
         data(){
             return{
@@ -223,7 +227,8 @@ import Api from '../views/Api'
                 coin_id: '',
                 selected: true,
                 pm_account: '',
-                buy_payment_mode: 'selected',
+                buy_payment_mode_bank: {select: 'selected'},
+                buy_payment_mode: '',
                 coin_address: '',
                 buy_Phase: 'BuyPreviewPhase',
                 address_check: this.$store.state.addressInfo.address,
@@ -238,28 +243,30 @@ import Api from '../views/Api'
                 bank_transacted_count: '',
                 userVerificationStatus: '',
                 my_account: false,
-                bank_data: {select: 'selected'}
+                bank_data: {select: 'selected'},
             }
         },
         methods: {
             setTradeData(){
-                console.log("I am here now now");
                 let tradeData = {
                     dollar_amount: parseFloat(this.dollar_amount),
                     naira_amount: parseFloat(this.naira_amount),
                     coin_amount: parseFloat(this.coin_amount),
                     coin_name: this.selected_coin_name,
                     bank_account: this.bank_data.account_id,
+                    admin_bank_name: this.buy_payment_mode_bank.account_name,
+                    admin_bank_number: this.buy_payment_mode_bank.account_number,
+                    admin_bank: this.buy_payment_mode_bank.bank,
                     trade_type: 'SELL',
                     coin_id: this.coin_id
                 }
-                console.log(tradeData);
                 this.$store.commit('currentTrade', tradeData)
             },
             async firstPhase(trade_not_active, trade_type){
                 this.loading = true
                 let account_name = this.bank_data.account_name
                 this.bank = this.bank_data.account_id
+                this.buy_payment_mode = this.buy_payment_mode_bank.account_name + ' ' + this.buy_payment_mode_bank.account_number
                 this.bank_transacted_count = this.$store.state.profile_data.bank_count
                 this.userVerificationStatus = this.$store.state.profile_data.userVerificationStatus
                 let last_name = localStorage.getItem('last_name').toUpperCase()
@@ -351,7 +358,10 @@ import Api from '../views/Api'
                     coin_name: this.selected_coin_name,
                     bank_account: this.bank,
                     trade_type: trade_type,
-                    coin_id: this.coin_id
+                    coin_id: this.coin_id,
+                    admin_bank_name: this.buy_payment_mode_bank.account_name,
+                    admin_bank_number: this.buy_payment_mode_bank.account_number,
+                    admin_bank: this.buy_payment_mode_bank.bank
                 }
                 this.$store.commit('currentTrade', tradeData)
                 let formData = {}
@@ -400,22 +410,31 @@ import Api from '../views/Api'
                 if (this.coin_shortcode === "PM"){
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
-                        naira_amount: parseFloat(this.naira_amount),
-                        coin: this.coin_id,
-                        trade_type: trade_type,
-                        buy_payment_mode: this.buy_payment_mode,
-                        pm_account: this.pm_account,
-                        coin_address: this.coin_address,
-                        coin_amount: parseFloat(this.coin_amount)
+                            naira_amount: parseFloat(this.naira_amount),
+                            // coin_amount: parseFloat(this.coin_amount),
+                            coin: this.coin_id,
+                            trade_type: trade_type,
+                            buy_payment_mode: this.buy_payment_mode,
+                            pm_account: this.pm_account,
+                            coin_address: this.coin_address,
+                            bank: this.bank,
+                            my_account: this.my_account,
+                            bank_transacted_count: this.bank_transacted_count
                     }
+                    console.log(formData);
                 await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
+                    console.log(response);
                     this.$emit('getTransactions')
                     this.$toast.success({
                     title:'Welldone Boss!',
                     message:'Order Has Been created'
                     })
-                }).finally(() => {
+                }).
+                catch(err => {
+                    console.log(err);
+                })
+                .finally(() => {
                     this.loading = true
                 })  
             
@@ -459,7 +478,6 @@ import Api from '../views/Api'
                             
                     }
                 }
-                console.log(formData);
                 
                 await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {

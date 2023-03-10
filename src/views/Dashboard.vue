@@ -202,7 +202,7 @@
                             <div class="card-body" v-else>
                                 <div class="buy-sell-widget">
                                     <div v-show="currentPhase==='SellFirstPhase'" >
-                                        <SellFirstPhase @secondPhase="switchPhase" @firstPhase="switchPhase" @getTransactions="getTransactions" :coins="coins" :trade_type="trade_type" :trade_not_active="trade_not_active"  :savedAccounts="savedAccounts" :coinCurrentValue="coinCurrentValue"/>
+                                        <SellFirstPhase @secondPhase="switchPhase" @firstPhase="switchPhase" @getTransactions="getTransactions" :coins="coins" :trade_type="trade_type" :trade_not_active="trade_not_active"  :savedAccounts="savedAccounts" :coinCurrentValue="coinCurrentValue" :adminBankAccouts="adminBankAccouts"/>
                                     </div>
                                     <div v-show="currentPhase==='BuyPreviewPhase'" >
                                         <BuyPreviewPhase @successPhase="switchPhase" @getTransactions="getTransactions" :trade_type="trade_type" :trade_not_active="trade_not_active" :coin_amount="current_coin_amount" :coin_name="current_coin_name" :naira_amount="current_naira_amount" :dollar_amount="current_dollar_amount" :transaction_ref="transaction_ref"/>
@@ -338,7 +338,8 @@ import VueMomentsAgo from 'vue-moments-ago'
                 transaction_ref: '',
                 id: '',
                 doge: '',
-                raiseCreateAccountMessage: false
+                raiseCreateAccountMessage: false,
+                adminBankAccouts: []
             }
         },
         methods: {
@@ -451,11 +452,16 @@ import VueMomentsAgo from 'vue-moments-ago'
                 }
                 
              },
-            getSavedAccounts(){
-              Api.axios_instance.get(Api.baseUrl+'api/v1/list-bank')
+           async getSavedAccounts(){
+              await Api.axios_instance.get(Api.baseUrl+'api/v1/list-bank')
               .then(response => {
                 this.savedAccounts = response.data
               })  
+
+              await Api.axios_instance.get(Api.baseUrl+'api/v1/list-admin-bank')
+              .then(res => {
+                this.adminBankAccouts = res.data
+            })
            },
            screenSize(){
             if(screen.width < 800){
