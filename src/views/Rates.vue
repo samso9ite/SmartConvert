@@ -75,8 +75,8 @@ import Api from './Api.js'
                 }
             },
         mounted(){
-            this.getRates()
-            this.screenSize()
-        }
+                this.getRates()
+                this.screenSize()
+            }
         }
 </script>

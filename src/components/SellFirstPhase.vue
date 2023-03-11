@@ -43,11 +43,11 @@
                         <input type="hidden" name="PAYEE_ACCOUNT" value="U37368280" />
                         <input type="hidden" name="PAYEE_NAME" value="Smart Convert" />
                         <input type="hidden" name="PAYMENT_UNITS" value="USD" />
-                        <input type="hidden" name="PAYMENT_URL" value="http://localhost:8081/pmStatus" />
+                        <input type="hidden" name="PAYMENT_URL" value="https://app.smartconvert.ng/pmStatus" />
                         <input type="hidden" name="PAYMENT_URL_METHOD" value="GET">
                         <input type="hidden" name="NOPAYMENT_URL_METHOD" value="GET">
-                        <input type="hidden" name="NOPAYMENT_URL" value="http://localhost:8081/pmStatus" />
-                        <input value="mailto:smartconvert@gmail.com" type="hidden" name="STATUS_URL" /> 
+                        <input type="hidden" name="NOPAYMENT_URL" value="https://app.smartconvert.ng/pmStatus" />
+                        <input value="mailto:smartconvertng@gmail.com" type="hidden" name="STATUS_URL" /> 
                         <!-- <input type="hidden" name="BANK" :value="bank"/>  -->
                         <!-- End of Hidden Fields -->
                     </div>
@@ -266,7 +266,7 @@ import Api from '../views/Api'
                 this.loading = true
                 let account_name = this.bank_data.account_name
                 this.bank = this.bank_data.account_id
-                this.buy_payment_mode = this.buy_payment_mode_bank.account_name + ' ' + this.buy_payment_mode_bank.account_number
+                this.buy_payment_mode = this.buy_payment_mode_bank.account_name + '     ' + this.buy_payment_mode_bank.account_number
                 this.bank_transacted_count = this.$store.state.profile_data.bank_count
                 this.userVerificationStatus = this.$store.state.profile_data.userVerificationStatus
                 let last_name = localStorage.getItem('last_name').toUpperCase()

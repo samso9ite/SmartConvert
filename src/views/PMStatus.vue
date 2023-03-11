@@ -51,7 +51,7 @@
                                                 </tbody>
                                             </table>
 
-                                            <h5 class="mt-5">Note: Your transaction was cancelled <br><br>><router-link :to="'/'"> Click Here To Make New Order</router-link> </h5>
+                                            <h5 class="mt-5"><router-link :to="'/'"> Click Here To Make New Order</router-link> </h5>
                                         </div>
                                     </div>
                                 </div>
