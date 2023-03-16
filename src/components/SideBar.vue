@@ -104,6 +104,7 @@ import { computed } from 'vue';
         methods: {
             logout(){
                 sessionStorage.clear();
+                localStorage.clear()
                 window.localStorage.clear();
                 this.$router.push({path:'/signin'})
             },

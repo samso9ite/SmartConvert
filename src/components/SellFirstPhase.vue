@@ -388,7 +388,6 @@ import Api from '../views/Api'
                             if(this.coin_type[0].fifth_address != ""){
                                 addressArray.push(this.coin_type[0].fifth_address)
                             }
-                            console.log(addressArray);
                             let randomAddressSelection = Math.floor(Math.random() * addressArray.length) 
                             let receivingAddress = addressArray[randomAddressSelection]
                             this.coin_address = receivingAddress

@@ -111,6 +111,7 @@ import VuePassword from 'vue-password'
         },
     }
 </script>
+
 <style>
 .VuePassword__Toggle{
     padding-left: 9rem !important;

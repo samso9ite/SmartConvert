@@ -234,8 +234,8 @@
                                                         <td>REFERENCE</td>
                                                         <td>STATUS</td>
                                                         <td> TYPE</td>
-                                                        <td>COIN</td>
-                                                        <td>COIN AMOUNT</td>
+                                                        <td>ASSET</td>
+                                                        <td> AMOUNT</td>
                                                         <td>(₦)AMOUNT</td>
                                                     </tr>
                                                     <tr v-for="transaction in transactions" :key="transaction">

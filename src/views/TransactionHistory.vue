@@ -24,8 +24,8 @@
                                                 <td>Reference</td>
                                                 <td>Type</td>
                                                 <td>Status</td>
-                                                <td>Coin</td>
-                                                <td>Coin Amount</td>
+                                                <td>Asset</td>
+                                                <td> Amount</td>
                                                 <td>Dollar Amount</td>
                                                 <td>Naira Amount</td>
                                                 <td>Hash Key</td>
