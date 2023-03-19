@@ -106,7 +106,7 @@ import Footer from '../components/Footer.vue'
                 coin:  this.$store.state.currentTrade.coin_id,
                 trade_type: 'SELL',
                 coin_address: '',
-                bank:  this.$store.state.currentTrade.bank,
+                bank:  this.$store.state.currentTrade.bank_account,
               }
                 Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(res => {

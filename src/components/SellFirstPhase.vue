@@ -43,10 +43,10 @@
                         <input type="hidden" name="PAYEE_ACCOUNT" value="U37368280" />
                         <input type="hidden" name="PAYEE_NAME" value="Smart Convert" />
                         <input type="hidden" name="PAYMENT_UNITS" value="USD" />
-                        <input type="hidden" name="PAYMENT_URL" value="https://app.smartconvert.ng/pmStatus" />
+                        <input type="hidden" name="PAYMENT_URL" value="http://localhost:8080/pmStatus" />
                         <input type="hidden" name="PAYMENT_URL_METHOD" value="GET">
                         <input type="hidden" name="NOPAYMENT_URL_METHOD" value="GET">
-                        <input type="hidden" name="NOPAYMENT_URL" value="https://app.smartconvert.ng/pmStatus" />
+                        <input type="hidden" name="NOPAYMENT_URL" value="http://localhost:8080/pmStatus" />
                         <input value="mailto:smartconvertng@gmail.com" type="hidden" name="STATUS_URL" /> 
                         <!-- <input type="hidden" name="BANK" :value="bank"/>  -->
                         <!-- End of Hidden Fields -->
@@ -370,7 +370,6 @@ import Api from '../views/Api'
                             console.log(" ");
                         }else{
                             // const addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
-                          
                             const addressArray = [];
 
                             if(this.coin_type[0].first_address != ""){
@@ -392,7 +391,6 @@ import Api from '../views/Api'
                             let receivingAddress = addressArray[randomAddressSelection]
                             this.coin_address = receivingAddress
                         }
-                     
                     }  
                 
                 // Trade details in vue store 
@@ -420,7 +418,7 @@ import Api from '../views/Api'
                             my_account: this.my_account,
                             bank_transacted_count: this.bank_transacted_count
                     }
-                    console.log(formData);
+                console.log(formData);
                 await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
                     console.log(response);

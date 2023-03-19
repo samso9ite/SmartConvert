@@ -55,7 +55,7 @@
                                                     <td>{{transaction.coin_amount}}</td>
                                                     <td>${{transaction.dollar_amount}}</td>
                                                     <td>₦{{transaction.naira_amount}}</td>
-                                                    <td v-if="transaction.hash_key_type == '1'"><a :href="transaction.hash_key" target="_blank"> <button class="btn">Click to View</button> </a></td>
+                                                    <td v-if="transaction.hash_key_type === '1'"><a :href="transaction.hash_key" target="_blank"> <button class="btn">Click to View</button> </a></td>
                                                     <td v-else> {{ transaction.hash_key }} </td>
                                                     <td>{{transaction.comment}}</td>
                                                     <td> {{transaction.date}}</td>
@@ -78,16 +78,34 @@
 <script>
 import SideBar from '../components/SideBar.vue'
 import Footer from '../components/Footer.vue'
+import Api from './Api.js'
     export default {
         name: 'TransactionHistory',
         components: {SideBar, Footer},
         data(){
             return{
-                transactions: this.$store.state.all_transactions,
+                transactions: [],
                 showMobileStyle: false,
             }
         },
         methods: {
+            async getTransactions(){
+                await Api.axios_instance.get(Api.baseUrl+'api/v1/list-transaction')
+                .then(response => {
+                    this.transactions = response.data
+                    this.transactions = this.transactions.reverse()
+                    this.transaction_ref = this.transactions[0].transaction_reference
+                    var transacted_amount = 0;
+                    this.transactions.forEach(transaction => {
+                        if(transaction.transaction_status == "2"){
+                            transacted_amount += transaction.naira_amount
+                        }
+                    })
+                    this.total_transacted = transacted_amount
+                    this.$store.commit('transactions', {all_transactions:response.data})
+                 })
+            },
+
             screenSize(){
             if(screen.width < 800){
                 this.showMobileStyle = true
@@ -97,6 +115,7 @@ import Footer from '../components/Footer.vue'
         
         mounted() {
             this.screenSize()
+            this.getTransactions()
         }
         }
 </script>
