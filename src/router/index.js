@@ -91,6 +91,13 @@ const routes = [
     // meta: {requiresAuth: true}
   },
 
+  {
+    path: '/testimonials',
+    name: 'Testimonials',
+    component: () => import('../views/Testimonials.vue'),
+    meta: {requiresAuth: true}
+},
+
 ]
 
 const router = new VueRouter({

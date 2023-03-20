@@ -75,9 +75,11 @@
                 </li> -->
 
                 <li style="margin-top:7px;">
-                        <a  data-toggle="tooltip" data-placement="right" title="Contact Us">
-                                <span><i class="las la-phone-volume"></i> <span style="color:#3b3261">Contact</span></span>
+                    <router-link :to="'/testimonials'">
+                         <a  data-toggle="tooltip" data-placement="right" title="Contact Us">
+                                <span><i class="las la-thumbs-up"></i> <span style="color:#3b3261; font-size: 13px;">Testimonial</span></span>
                         </a>
+                    </router-link>
                 </li>
 
                 <li style="margin-top:7px;">

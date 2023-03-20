@@ -107,12 +107,11 @@ import Api from './Api.js'
             },
 
             screenSize(){
-            if(screen.width < 800){
-                this.showMobileStyle = true
+                if(screen.width < 800){
+                    this.showMobileStyle = true
+                }
             }
-            }
-            },
-        
+        },
         mounted() {
             this.screenSize()
             this.getTransactions()

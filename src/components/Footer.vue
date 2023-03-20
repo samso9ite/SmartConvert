@@ -4,17 +4,14 @@
             <div class="row align-items-center">
                 <div class="col-xl-6 col-md-6">
                     <div class="copy_right">
-                        Copyright © SmartConvert.
-                        <!-- <script>
-                            var CurrentYear = new Date().getFullYear()
-                            document.write(CurrentYear)
-                        </script> Quixlab. All Rights Reserved. -->
+                        2023 Copyright © SmartConvert.
+                    
                     </div>
                 </div>
                 <div class="col-xl-6 col-md-6 text-lg-right text-center">
                     <div class="social">
-                        <a href="#"><i class="fa fa-instagram"></i></a>
-                        <a href="#"><i class="fa fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/smart_convert/"><i class="fa fa-instagram"></i></a>
+                        <a href="https://twitter.com/smart_convert"><i class="fa fa-twitter"></i></a>
                     </div>
                 </div>
             </div>

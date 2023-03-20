@@ -43,10 +43,10 @@
                         <input type="hidden" name="PAYEE_ACCOUNT" value="U37368280" />
                         <input type="hidden" name="PAYEE_NAME" value="Smart Convert" />
                         <input type="hidden" name="PAYMENT_UNITS" value="USD" />
-                        <input type="hidden" name="PAYMENT_URL" value="http://localhost:8080/pmStatus" />
+                        <input type="hidden" name="PAYMENT_URL" value="https://app.smartconvert.ng/pmStatus" />
                         <input type="hidden" name="PAYMENT_URL_METHOD" value="GET">
                         <input type="hidden" name="NOPAYMENT_URL_METHOD" value="GET">
-                        <input type="hidden" name="NOPAYMENT_URL" value="http://localhost:8080/pmStatus" />
+                        <input type="hidden" name="NOPAYMENT_URL" value="https://app.smartconvert.ng/pmStatus" />
                         <input value="mailto:smartconvertng@gmail.com" type="hidden" name="STATUS_URL" /> 
                         <!-- <input type="hidden" name="BANK" :value="bank"/>  -->
                         <!-- End of Hidden Fields -->
@@ -418,7 +418,6 @@ import Api from '../views/Api'
                             my_account: this.my_account,
                             bank_transacted_count: this.bank_transacted_count
                     }
-                console.log(formData);
                 await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
                     console.log(response);
