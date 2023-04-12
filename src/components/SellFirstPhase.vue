@@ -121,7 +121,7 @@
         <div class="currency_validate" style="margin-top:-0.7rem" v-if="trade_type === 'BUY'">
             <div class="alert alert-info alert-dismissible" v-if="bank_transacted_count < 6" :style="{'display': !show ? 'none' : 'block'}">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" style="color:black; font-size: 30px;" @click="verificationInfo">&times;</a><br>
-                <strong>Hey Boss</strong> You can only buy up to $150/transaction, transact 5 more times with same account to buy up to $300 or <router-link :to="'account-verification'" style="color:black"> verify your account  </router-link>.
+                <strong>Hey Boss</strong> You can only buy up to $150/transaction, <b>transact {{ data.count_remainder }}</b> more times with same account to buy up to $300 or <router-link :to="'account-verification'" style="color:black"> verify your account  </router-link>.
             </div>
             <div class="mb-3">
                 <label class="me-sm-2">Coin Type </label>
@@ -245,12 +245,19 @@ import Api from '../views/Api'
                 buy_active_status: false,
                 send_address: '',
                 mycelium_status: false,
-                bank_transacted_count: '',
-                userVerificationStatus: '',
+                bank_transacted_count: this.$store.state.profile_data.bank_count,
+                userVerificationStatus: this.$store.state.profile_data.userVerificationStatus,
                 my_account: false,
                 firstPreviewPhase: 'FirstPreviewPhase',
                 bank_data: {select: 'selected'},
-                buy_data: {}
+                buy_data: {},
+                remainder: ''
+            }
+        },
+
+        computed: {
+            data: function(){
+               return this.$store.state.profile_data
             }
         },
         methods: {
@@ -273,14 +280,13 @@ import Api from '../views/Api'
                this.show  =  !this.show 
             },
             async firstPhase(trade_not_active, trade_type){
-                console.log(this.trade_type);  
                 this.loading = true
                 let account_name = this.bank_data.account_name
                 this.bank = this.bank_data.account_id
+                this.bank_transacted_count = this.$store.state.profile_data.bank_count,
+                this.userVerificationStatus = this.$store.state.profile_data.userVerificationStatus,
                 this.buy_payment_mode = this.bank_data.account_name + '     ' + this.bank_data.account_number
-                this.bank_transacted_count = this.$store.state.profile_data.bank_count
-                this.userVerificationStatus = this.$store.state.profile_data.userVerificationStatus
-                let last_name = localStorage.getItem('last_name').toUpperCase()
+              let last_name = localStorage.getItem('last_name').toUpperCase()
                 let first_name = localStorage.getItem('first_name').toUpperCase()
                     if(trade_type == "SELL"){
                         account_name = account_name.split(" ")
@@ -325,7 +331,7 @@ import Api from '../views/Api'
                     message:'Chief! Please select a bank account or create one'})
                     this.loading = false 
                 } 
-                else if(this.trade_type == 'BUY' && this.userVerificationStatus == '1' && +this.dollar_amount > 150 && this.bank_transacted_count < 6){
+                else if(this.trade_type == 'BUY' && this.userVerificationStatus == '1' && this.dollar_amount > 150 && this.bank_transacted_count < 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',

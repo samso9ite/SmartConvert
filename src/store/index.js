@@ -38,7 +38,8 @@ export default new Vuex.Store({
     },
     profile_data: {
       bank_count: '',
-      userVerificationStatus: ''
+      userVerificationStatus: '',
+      count_remainder: ''
     },
     buy_data: {}
   },
@@ -95,6 +96,7 @@ export default new Vuex.Store({
     profileData(state, payload){
       state.profile_data.bank_count = payload.bank_count
       state.profile_data.userVerificationStatus = payload.userVerificationStatus
+      state.profile_data.count_remainder = payload.count_remainder
     },
 
     buyData(state, payload){

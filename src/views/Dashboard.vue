@@ -354,12 +354,13 @@ import VueMomentsAgo from 'vue-moments-ago'
             async getUser(){
                 await Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
                 .then(response => {
+                    console.log(response);
                     this.first_name = response.data.first_name  
                     this.last_name = response.data.last_name  
                     this.phone_number = response.data.phone_number 
                     this.address = response.data.address  
                     this.email = response.data.email  
-                    this.id = 32
+                    this.id = response.data.id
                     window.localStorage.setItem('first_name', this.first_name)
                     window.localStorage.setItem('last_name', this.last_name)
                     window.localStorage.setItem('phone_number', this.phone_number)
@@ -367,11 +368,16 @@ import VueMomentsAgo from 'vue-moments-ago'
                     window.localStorage.setItem('email', this.email)
                     window.localStorage.setItem('id', this.id)
                 })
-               await Api.axios_instance.get(Api.baseUrl+'api/v1/profile/get/'+this.id)
+               await Api.axios_instance.get(Api.baseUrl+'api/v1/profile/get')
                 .then(res => {
-                    localStorage.setItem('bank_count', res.data.user.bank_trade_count)
-                    localStorage.setItem('userVerificationStatus', res.data.transaction_status)
-                    this.$store.commit('profileData', {userVerificationStatus:res.data.transaction_status, bank_count: res.data.user.bank_trade_count} )
+                    console.log(res);
+                    let bank_count = res.data[0].user.bank_trade_count
+                    let verification_status = res.data[0].transaction_status
+                    localStorage.setItem('bank_count', bank_count)
+                    localStorage.setItem('userVerificationStatus', verification_status)
+                    let count_remainder = 6 - bank_count 
+                    console.log(count_remainder);
+                    this.$store.commit('profileData', {userVerificationStatus:res.data[0].transaction_status, bank_count: res.data[0].user.bank_trade_count, count_remainder: count_remainder} )
                 })
             },
             async getTransactions(){
