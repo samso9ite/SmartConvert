@@ -119,6 +119,10 @@
         
         <!-- BUY Component  -->
         <div class="currency_validate" style="margin-top:-0.7rem" v-if="trade_type === 'BUY'">
+            <div class="alert alert-info alert-dismissible" v-if="bank_transacted_count < 6" :style="{'display': !show ? 'none' : 'block'}">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" style="color:black; font-size: 30px;" @click="verificationInfo">&times;</a><br>
+                <strong>Hey Boss</strong> You can only buy up to $150/transaction, transact 5 more times with same account to buy up to $300 or <router-link :to="'account-verification'" style="color:black"> verify your account  </router-link>.
+            </div>
             <div class="mb-3">
                 <label class="me-sm-2">Coin Type </label>
                 <div class="input-group mb-3">
@@ -143,9 +147,9 @@
                         <option value="TRANSFER">TRANSFER</option>
                         <option value="CASH DEPOSIT">CASH DEPOSIT</option>
                     </select> -->
-                    <select class="form-control" v-model="buy_payment_mode_bank" > 
+                    <select class="form-control" v-model="bank_data" > 
                         <option :value="{select: 'selected'}">Click to Select Bank</option>
-                        <option :value="{'account_id': account.id, 'account_name': account.account_name, 'account_number': account.account_number, 'bank':account.bank_name}" v-for="account in adminBankAccouts" :key="account"> {{account.account_number}} {{account.bank_name}}</option>
+                        <option :value="{'account_id': account.id, 'account_name': account.account_name, 'account_number': account.account_number, 'bank':account.bank_name}" v-for="account in adminBankAccouts" :key="account">{{account.bank_name}}</option>
                     </select>
                 </div>
             </div>
@@ -222,12 +226,13 @@ import Api from '../views/Api'
                 trx_rate:'',
                 ltc_rate:'',
                 usdt_rate:'',
+                show: true,
                 coin_shortcode: '',
                 current_coin_value: '',
                 coin_id: '',
                 selected: true,
                 pm_account: '',
-                buy_payment_mode_bank: {select: 'selected'},
+                bank_data: {select: 'selected'},
                 buy_payment_mode: '',
                 coin_address: '',
                 buy_Phase: 'BuyPreviewPhase',
@@ -243,7 +248,9 @@ import Api from '../views/Api'
                 bank_transacted_count: '',
                 userVerificationStatus: '',
                 my_account: false,
+                firstPreviewPhase: 'FirstPreviewPhase',
                 bank_data: {select: 'selected'},
+                buy_data: {}
             }
         },
         methods: {
@@ -254,19 +261,23 @@ import Api from '../views/Api'
                     coin_amount: parseFloat(this.coin_amount),
                     coin_name: this.selected_coin_name,
                     bank_account: this.bank_data.account_id,
-                    admin_bank_name: this.buy_payment_mode_bank.account_name,
-                    admin_bank_number: this.buy_payment_mode_bank.account_number,
-                    admin_bank: this.buy_payment_mode_bank.bank,
+                    admin_bank_name: this.bank_data.account_name,
+                    admin_bank_number: this.bank_data.account_number,
+                    admin_bank: this.bank_data.bank,
                     trade_type: 'SELL',
                     coin_id: this.coin_id
                 }
                 this.$store.commit('currentTrade', tradeData)
             },
+            verificationInfo(){
+               this.show  =  !this.show 
+            },
             async firstPhase(trade_not_active, trade_type){
+                console.log(this.trade_type);  
                 this.loading = true
                 let account_name = this.bank_data.account_name
                 this.bank = this.bank_data.account_id
-                this.buy_payment_mode = this.buy_payment_mode_bank.account_name + '     ' + this.buy_payment_mode_bank.account_number
+                this.buy_payment_mode = this.bank_data.account_name + '     ' + this.bank_data.account_number
                 this.bank_transacted_count = this.$store.state.profile_data.bank_count
                 this.userVerificationStatus = this.$store.state.profile_data.userVerificationStatus
                 let last_name = localStorage.getItem('last_name').toUpperCase()
@@ -314,16 +325,16 @@ import Api from '../views/Api'
                     message:'Chief! Please select a bank account or create one'})
                     this.loading = false 
                 } 
-                else if(this.trade_type == 'SELL' && this.userVerificationStatus == '1' && +this.dollar_amount > 150 && this.bank_transacted_count < 8){
+                else if(this.trade_type == 'BUY' && this.userVerificationStatus == '1' && +this.dollar_amount > 150 && this.bank_transacted_count < 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',
-                        timeOut: 5500,
-                        showDuration: 100,
+                        timeOut: 7500,
+                        showDuration:200,
                         message:'You can\'t transact more than $150 for a day, you need to provide your ID by clicking on Account'})
                     this.loading = false 
                 }
-                else if(this.trade_type == 'SELL' && this.userVerificationStatus == '3' && this.dollar_amount > 150 && this.bank_transacted_count < 8){
+                else if(this.trade_type == 'BUY' && this.userVerificationStatus == '3' && this.dollar_amount > 150 && this.bank_transacted_count < 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',
@@ -332,7 +343,7 @@ import Api from '../views/Api'
                         message:'Please hold on, you verification is awaiting approval'})
                     this.loading = false 
                 
-                }   else if(this.trade_type == 'SELL' && this.userVerificationStatus == '1' && +this.dollar_amount > 300 && this.bank_transacted_count >= 8){
+                }   else if(this.trade_type == 'BUY' && this.userVerificationStatus == '1' && +this.dollar_amount > 300 && this.bank_transacted_count >= 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',
@@ -341,7 +352,7 @@ import Api from '../views/Api'
                         message:'You can\'t transact more than $300 for a day, you need to provide your ID by clicking on Account'})
                     this.loading = false 
                 }
-                else if(this.trade_type == 'SELL' && this.userVerificationStatus == '3' && this.dollar_amount > 300 && this.bank_transacted_count >= 8){
+                else if(this.trade_type == 'BUY' && this.userVerificationStatus == '3' && this.dollar_amount > 300 && this.bank_transacted_count >= 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',
@@ -359,9 +370,9 @@ import Api from '../views/Api'
                     bank_account: this.bank,
                     trade_type: trade_type,
                     coin_id: this.coin_id,
-                    admin_bank_name: this.buy_payment_mode_bank.account_name,
-                    admin_bank_number: this.buy_payment_mode_bank.account_number,
-                    admin_bank: this.buy_payment_mode_bank.bank
+                    admin_bank_name: this.bank_data.account_name,
+                    admin_bank_number: this.bank_data.account_number,
+                    admin_bank: this.bank_data.bank
                 }
                 this.$store.commit('currentTrade', tradeData)
                 let formData = {}
@@ -404,6 +415,11 @@ import Api from '../views/Api'
                         coin_name: lowerCasedCoinName,
                     }
                     this.$store.commit('uniqueAddressStore', storeData)
+                // if(this.trade_type == 'BUY'){
+                //     this.bank = this.bank_data.account_id,
+                // }else{
+                //     this.bank = this.ban
+                // }
                 if (this.coin_shortcode === "PM"){
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
@@ -414,36 +430,50 @@ import Api from '../views/Api'
                             buy_payment_mode: this.buy_payment_mode,
                             pm_account: this.pm_account,
                             coin_address: this.coin_address,
-                            bank: this.bank,
+                            bank: this.bank_data.account_id,
                             my_account: this.my_account,
                             bank_transacted_count: this.bank_transacted_count
                     }
-                await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
-                .then(response => {
-                    console.log(response);
-                    this.$emit('getTransactions')
-                    this.$toast.success({
-                    title:'Welldone Boss!',
-                    message:'Order Has Been created'
-                    })
-                }).
-                catch(err => {
-                    console.log(err);
-                })
-                .finally(() => {
-                    this.loading = true
-                })  
+                this.buy_data = {formData}
+                console.log(this.buy_data);
+                this.$store.commit('buyData', this.buy_data)
+                // await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
+                // .then(response => {
+                //     console.log(response);
+                //     this.$emit('getTransactions')
+                //     this.$toast.success({
+                //     title:'Welldone Boss!',
+                //     message:'Order Has Been created'
+                //     })
+                // }).
+                // catch(err => {
+                //     console.log(err);
+                // })
+                // .finally(() => {
+                //     this.loading = true
+                // })  
             
                 if(trade_type == 'SELL'){
+                    console.log("Trade Type Sell");
+                    await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
+                    .then(response => {
+                        this.$emit('getTransactions')
+                        this.$toast.success({
+                        title:'Welldone Boss!',
+                        message:'Order Has Been created'
+                        })
+                    }).finally(() => {
+                        this.loading = true
+                    })  
                     this.$emit('firstPhase', this.currentPhase)
                 } else{
-                    this.$emit('secondPhase', this.buy_Phase)
+                    this.$emit('previewPhase', this.firstPreviewPhase)
                 }
                 }
                 else{
                     if(this.my_account == true){
-                        if(this.bank_transacted_count >= 8){
-                            console.log(" ");
+                        if(this.bank_transacted_count >= 6){
+                            console.log("");
                         }else{
                             this.bank_transacted_count++
                         }
@@ -456,7 +486,7 @@ import Api from '../views/Api'
                             buy_payment_mode: this.buy_payment_mode,
                             pm_account: this.pm_account,
                             coin_address: this.coin_address,
-                            bank: this.bank,
+                            bank: this.bank_data,
                             my_account: this.my_account,
                             bank_transacted_count: this.bank_transacted_count
                         }
@@ -470,26 +500,30 @@ import Api from '../views/Api'
                             buy_payment_mode: this.buy_payment_mode,
                             pm_account: this.pm_account,
                             coin_address: this.coin_address,
-                            bank: this.bank,
+                            bank: this.bank_data.account_id,
                             
                     }
                 }
-                
-                await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
-                .then(response => {
-                    this.$emit('getTransactions')
-                    this.$toast.success({
-                    title:'Welldone Boss!',
-                    message:'Order Has Been created'
-                    })
-                }).finally(() => {
-                    this.loading = true
-                })  
+                this.buy_data = {formData}
+                this.$store.commit('buyData', this.buy_data)
+               
             
                 if(trade_type == 'SELL'){
+                    console.log("Trade Type Sell");
+                    await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
+                    .then(response => {
+                        console.log(response);
+                        this.$emit('getTransactions')
+                        this.$toast.success({
+                        title:'Welldone Boss!',
+                        message:'Order Has Been Created'
+                        })
+                    }).finally(() => {
+                        this.loading = true
+                    })  
                     this.$emit('firstPhase', this.currentPhase)
                 } else{
-                    this.$emit('secondPhase', this.buy_Phase)
+                    this.$emit('previewPhase', this.firstPreviewPhase)
                 }
             }}
                 
@@ -535,10 +569,8 @@ import Api from '../views/Api'
                     }
                     else if(this.coin_shortcode === "TRX"){
                         this.current_coin_value = results.TRX.USD
-                    }
-                    
-                })
-                
+                    }    
+                }) 
             },
             reloadPage(){
                 location.reload()

@@ -1,7 +1,7 @@
 <template>
     <div style="margin-top:-0.7rem">
         <center>
-            <h2>Preview Order</h2>
+            <h2>Make Payment</h2>
 
             <h4>Please note that paying with an account name different from your registered name would render the order unprocessed </h4>
             <table class="table table-striped" style="font-size:14px; font-weight: 500; color: white;">
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import Api from '../views/Api'
 export default({
     name: "buyPreviewPhase",
     props: ['coin_amount', 'naira_amount', 'dollar_amount', 'coin_name', 'transaction_ref'],

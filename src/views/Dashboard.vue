@@ -202,10 +202,13 @@
                             <div class="card-body" v-else>
                                 <div class="buy-sell-widget">
                                     <div v-show="currentPhase==='SellFirstPhase'" >
-                                        <SellFirstPhase @secondPhase="switchPhase" @firstPhase="switchPhase" @getTransactions="getTransactions" :coins="coins" :trade_type="trade_type" :trade_not_active="trade_not_active"  :savedAccounts="savedAccounts" :coinCurrentValue="coinCurrentValue" :adminBankAccouts="adminBankAccouts"/>
+                                        <SellFirstPhase @firstPhase="switchPhase"  @previewPhase="switchPhase" @getTransactions="getTransactions" :coins="coins" :trade_type="trade_type" :trade_not_active="trade_not_active"  :savedAccounts="savedAccounts" :coinCurrentValue="coinCurrentValue" :adminBankAccouts="adminBankAccouts"/>
                                     </div>
                                     <div v-show="currentPhase==='BuyPreviewPhase'" >
-                                        <BuyPreviewPhase @successPhase="switchPhase" @getTransactions="getTransactions" :trade_type="trade_type" :trade_not_active="trade_not_active" :coin_amount="current_coin_amount" :coin_name="current_coin_name" :naira_amount="current_naira_amount" :dollar_amount="current_dollar_amount" :transaction_ref="transaction_ref"/>
+                                        <BuyPreviewPhase @successPhase="switchPhase" :trade_type="trade_type" :trade_not_active="trade_not_active" :coin_amount="current_coin_amount" :coin_name="current_coin_name" :naira_amount="current_naira_amount" :dollar_amount="current_dollar_amount" :transaction_ref="transaction_ref"/>
+                                    </div>
+                                    <div v-show="currentPhase==='FirstPreviewPhase'" >
+                                        <FirstPreviewPhase @secondPhase="switchPhase" @getTransactions="getTransactions" :trade_type="trade_type" :trade_not_active="trade_not_active" :coin_amount="current_coin_amount" :coin_name="current_coin_name" :naira_amount="current_naira_amount" :dollar_amount="current_dollar_amount" :transaction_ref="transaction_ref"/>
                                     </div>
                                     <div v-show="currentPhase==='SellSecondPhase'">
                                         <QRPage  @secondPhase="switchPhase"  :walletAddress="wallet_address" :walletDollarAmount="wallet_dollar_amount" :walletCoinName="wallet_coin_name" :walletCoinAmount="wallet_coin_amount" :walletNetwork="wallet_network"/>
@@ -251,13 +254,17 @@
                                                         <td>
                                                             <i class="cc TX me-3" v-if="transaction.coin.coin_name == 'TRON'"></i><i class="cc BTC me-3" v-if="transaction.coin.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" class="me-3" width="6%" v-if="transaction.coin.coin_name === 'Perfect Money'"/><i class="cc ETH" me-3 style="color:#5968ba" v-if="transaction.coin.coin_name == 'Ethereum'"></i><i class="cc LTC me-3"  v-if="transaction.coin.coin_name == 'LiteCoin'"></i><i class="cc DOGE me-3"  v-if="transaction.coin.coin_name == 'Doge Coin'"></i><i class="cc USDT me-3" v-if="transaction.coin.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="transaction.coin.coin_name == 'Ripple'"></i>{{transaction.coin.coin_name}}
                                                         </td>
-                                                        <td class="text-success"  v-if="transaction.transaction_status == '3'">{{transaction.coin_amount}} </td>
-                                                        <td class="text-success"  v-else-if="transaction.transaction_status == '2'">{{transaction.coin_amount}} </td>
-                                                        <td class="text-danger"  v-else-if="transaction.transaction_status == '5'">{{transaction.coin_amount}} </td>
-                                                        <td class="text-danger"  v-else-if="transaction.transaction_status == '4'">{{transaction.coin_amount}} </td>
-                                                        <td class="text-danger"  v-else-if="transaction.transaction_status == '6'">{{transaction.coin_amount}} </td>
-                                                        <td class="text-success"  v-else-if="transaction.transaction_status == '7'">{{transaction.coin_amount}} </td>
-                                                        <td class="text-warning"  v-else>{{transaction.coin_amount}}  </td>
+                                                       
+                                                            <td class="text-success"  v-if="transaction.transaction_status == '3' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
+                                                            <td class="text-success"  v-else-if="transaction.transaction_status == '2' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
+                                                            <td class="text-danger"  v-else-if="transaction.transaction_status == '5' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
+                                                            <td class="text-danger"  v-else-if="transaction.transaction_status == '4' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
+                                                            <td class="text-danger"  v-else-if="transaction.transaction_status == '6' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
+                                                            <td class="text-success"  v-else-if="transaction.transaction_status == '7' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
+                                                            <td class="text-warning"  v-else-if="transaction.transaction_status == '1' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
+                                                            <td class=""  v-else> ${{transaction.dollar_amount}}  </td>
+                                                     
+                                                      
                                                         <td>₦{{transaction.naira_amount}}</td>
                                                     </tr>
                                                 </tbody>
@@ -284,11 +291,12 @@ import QRPage from '../components/QRPage.vue'
 import SellFirstPhase from '../components/SellFirstPhase.vue'
 import SuccessPage from '../components/SuccessPage.vue'
 import BuyPreviewPhase from '../components/BuyPreviewPhase.vue'
+import FirstPreviewPhase from '../components/FirstPreviewPhase.vue'
 import VueMomentsAgo from 'vue-moments-ago'
 
     export default {
         name: 'Dashboard',
-        components: {SideBar, SuccessPage, QRPage, SellFirstPhase, VueMomentsAgo, BuyPreviewPhase, Footer},
+        components: {SideBar, SuccessPage, QRPage, SellFirstPhase, VueMomentsAgo, BuyPreviewPhase, FirstPreviewPhase, Footer},
         data(){
             return{
                 first_name: sessionStorage.getItem('first_name'),
@@ -344,14 +352,14 @@ import VueMomentsAgo from 'vue-moments-ago'
         },
         methods: {
             async getUser(){
-               await Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
+                await Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
                 .then(response => {
                     this.first_name = response.data.first_name  
                     this.last_name = response.data.last_name  
                     this.phone_number = response.data.phone_number 
                     this.address = response.data.address  
                     this.email = response.data.email  
-                    this.id = response.data.id
+                    this.id = 32
                     window.localStorage.setItem('first_name', this.first_name)
                     window.localStorage.setItem('last_name', this.last_name)
                     window.localStorage.setItem('phone_number', this.phone_number)
@@ -367,7 +375,7 @@ import VueMomentsAgo from 'vue-moments-ago'
                 })
             },
             async getTransactions(){
-                await Api.axios_instance.get(Api.baseUrl+'api/v1/list-transaction',  {mode: 'no-cors'})
+                await Api.axios_instance.get(Api.baseUrl+'api/v1/list-transaction')
                 .then(response => {
                     this.transactions = response.data
                     this.transactions = this.transactions.reverse()

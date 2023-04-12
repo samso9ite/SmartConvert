@@ -39,7 +39,8 @@ export default new Vuex.Store({
     profile_data: {
       bank_count: '',
       userVerificationStatus: ''
-    }
+    },
+    buy_data: {}
   },
   mutations: {
     initializeStore(){
@@ -94,6 +95,10 @@ export default new Vuex.Store({
     profileData(state, payload){
       state.profile_data.bank_count = payload.bank_count
       state.profile_data.userVerificationStatus = payload.userVerificationStatus
+    },
+
+    buyData(state, payload){
+      state.buy_data = payload
     }
   },
   actions: {
