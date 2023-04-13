@@ -368,16 +368,16 @@ import VueMomentsAgo from 'vue-moments-ago'
                     window.localStorage.setItem('email', this.email)
                     window.localStorage.setItem('id', this.id)
                 })
-               await Api.axios_instance.get(Api.baseUrl+'api/v1/profile/get')
+               await Api.axios_instance.get(Api.baseUrl+'api/v1/profile/get/' + this.id)
                 .then(res => {
                     console.log(res);
-                    let bank_count = res.data[0].user.bank_trade_count
-                    let verification_status = res.data[0].transaction_status
+                    let bank_count = res.data.user.bank_trade_count
+                    let verification_status = res.data.transaction_status
                     localStorage.setItem('bank_count', bank_count)
                     localStorage.setItem('userVerificationStatus', verification_status)
                     let count_remainder = 6 - bank_count 
                     console.log(count_remainder);
-                    this.$store.commit('profileData', {userVerificationStatus:res.data[0].transaction_status, bank_count: res.data[0].user.bank_trade_count, count_remainder: count_remainder} )
+                    this.$store.commit('profileData', {userVerificationStatus:res.data.transaction_status, bank_count: res.data.user.bank_trade_count, count_remainder: count_remainder} )
                 })
             },
             async getTransactions(){

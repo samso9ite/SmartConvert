@@ -331,7 +331,7 @@ import Api from '../views/Api'
                     message:'Chief! Please select a bank account or create one'})
                     this.loading = false 
                 } 
-                else if(this.trade_type == 'BUY' && this.userVerificationStatus == '1' && this.dollar_amount > 150 && this.bank_transacted_count < 6){
+                else if(this.trade_type == 'BUY' && this.userVerificationStatus == 'UNVERIFIED' && this.dollar_amount > 150 && this.bank_transacted_count < 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',
@@ -340,7 +340,7 @@ import Api from '../views/Api'
                         message:'You can\'t transact more than $150 for a day, you need to provide your ID by clicking on Account'})
                     this.loading = false 
                 }
-                else if(this.trade_type == 'BUY' && this.userVerificationStatus == '3' && this.dollar_amount > 150 && this.bank_transacted_count < 6){
+                else if(this.trade_type == 'BUY' && this.userVerificationStatus == 'AWAITING APPROVAL' && this.dollar_amount > 150 && this.bank_transacted_count < 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',
@@ -349,7 +349,7 @@ import Api from '../views/Api'
                         message:'Please hold on, you verification is awaiting approval'})
                     this.loading = false 
                 
-                }   else if(this.trade_type == 'BUY' && this.userVerificationStatus == '1' && +this.dollar_amount > 300 && this.bank_transacted_count >= 6){
+                }   else if(this.trade_type == 'BUY' && this.userVerificationStatus == 'UNVERIFIED' && +this.dollar_amount > 300 && this.bank_transacted_count >= 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',
@@ -358,7 +358,7 @@ import Api from '../views/Api'
                         message:'You can\'t transact more than $300 for a day, you need to provide your ID by clicking on Account'})
                     this.loading = false 
                 }
-                else if(this.trade_type == 'BUY' && this.userVerificationStatus == '3' && this.dollar_amount > 300 && this.bank_transacted_count >= 6){
+                else if(this.trade_type == 'BUY' && this.userVerificationStatus == 'AWAITING APPROVAL' && this.dollar_amount > 300 && this.bank_transacted_count >= 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',

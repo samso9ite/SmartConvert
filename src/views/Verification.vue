@@ -68,12 +68,12 @@
                             <div class="row">
                                 <div class="col-xl-12">
                                     <div class="phone_verify">
-                                        <h4 class="card-title mb-3"> Phone Number</h4>
+                                        <h4 class="card-title mb-3" > Phone Number</h4>
                                     </div>
                                 </div>
                                 <div class="col-xl-12">
                                     <div class="phone_verified">
-                                        <h5> <span><i class="fa fa-phone"></i></span> {{phone}}</h5>
+                                        <h5 style="color:white"> <span><i class="fa fa-phone"></i></span> {{phone}}</h5>
                                         <div class="verify">
                                             <div class="verified">
                                                 <span><i class="la la-check"></i></span>
@@ -105,7 +105,7 @@
                                                 <span v-if="status === '2'">VERIFIED</span>
                                                 <span v-if="status === '3'">AWAITING CONFIRMATION</span>
                                             </span></p>
-                                           <router-link :to="'/upload-verification'" v-if="status=== '1'"> <a class="btn btn-success mt-3">Upload ID</a> </router-link>
+                                           <router-link :to="'/upload-verification'" v-if="status === '1'"> <a class="btn btn-success mt-3">Upload ID</a> </router-link>
                                         </div>
                                     </div>
                                 </div>
@@ -142,13 +142,15 @@
         methods: {
             getUserVerificationStatus(){
                 let user_id = localStorage.getItem('id')
+                console.log(user_id);
                 Api.axios_instance.get(Api.baseUrl+'api/v1/profile/get/'+user_id)
                 .then(res =>{
+                    console.log(res);
                     this.status = res.data.transaction_status
                     this.f_name = res.data.user.first_name
-                    this.l_name = res.data.user.lasst_name
+                    this.l_name = res.data.user.last_name
                     this.email = res.data.user.email
-                    this.phone = res.data.user.phone
+                    this.phone = res.data.user.phone_number
                 }
                 )   
             },   
