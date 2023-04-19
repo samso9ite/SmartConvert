@@ -119,7 +119,7 @@
         
         <!-- BUY Component  -->
         <div class="currency_validate" style="margin-top:-0.7rem" v-if="trade_type === 'BUY'">
-            <div class="alert alert-info alert-dismissible" v-if="bank_transacted_count < 6" :style="{'display': !show ? 'none' : 'block'}">
+            <div class="alert alert-info alert-dismissible" v-if="bank_transacted_count < 6 && data.userVerificationStatus != '2'" :style="{'display': !show ? 'none' : 'block'}">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" style="color:black; font-size: 30px;" @click="verificationInfo">&times;</a><br>
                 <strong>Hey Boss</strong> You can only buy up to $150/transaction, <b>transact {{ data.count_remainder }}</b> more times with same account to buy up to $300 or <router-link :to="'account-verification'" style="color:black"> verify your account  </router-link>.
             </div>
@@ -271,8 +271,9 @@ import Api from '../views/Api'
                     admin_bank_name: this.bank_data.account_name,
                     admin_bank_number: this.bank_data.account_number,
                     admin_bank: this.bank_data.bank,
-                    trade_type: 'SELL',
-                    coin_id: this.coin_id
+                    coin_id: this.coin_id,
+                    trade_type: SELL,
+                    coin_address: this.coin_address
                 }
                 this.$store.commit('currentTrade', tradeData)
             },
@@ -331,7 +332,7 @@ import Api from '../views/Api'
                     message:'Chief! Please select a bank account or create one'})
                     this.loading = false 
                 } 
-                else if(this.trade_type == 'BUY' && this.userVerificationStatus == 'UNVERIFIED' && this.dollar_amount > 150 && this.bank_transacted_count < 6){
+                else if(this.trade_type == 'BUY' && this.userVerificationStatus == '1' && this.dollar_amount > 150 && this.bank_transacted_count < 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',
@@ -340,7 +341,7 @@ import Api from '../views/Api'
                         message:'You can\'t transact more than $150 for a day, you need to provide your ID by clicking on Account'})
                     this.loading = false 
                 }
-                else if(this.trade_type == 'BUY' && this.userVerificationStatus == 'AWAITING APPROVAL' && this.dollar_amount > 150 && this.bank_transacted_count < 6){
+                else if(this.trade_type == 'BUY' && this.userVerificationStatus == '3' && this.dollar_amount > 150 && this.bank_transacted_count < 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',
@@ -349,7 +350,7 @@ import Api from '../views/Api'
                         message:'Please hold on, you verification is awaiting approval'})
                     this.loading = false 
                 
-                }   else if(this.trade_type == 'BUY' && this.userVerificationStatus == 'UNVERIFIED' && +this.dollar_amount > 300 && this.bank_transacted_count >= 6){
+                }   else if(this.trade_type == 'BUY' && this.userVerificationStatus == '1' && +this.dollar_amount > 300 && this.bank_transacted_count >= 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',
@@ -358,7 +359,7 @@ import Api from '../views/Api'
                         message:'You can\'t transact more than $300 for a day, you need to provide your ID by clicking on Account'})
                     this.loading = false 
                 }
-                else if(this.trade_type == 'BUY' && this.userVerificationStatus == 'AWAITING APPROVAL' && this.dollar_amount > 300 && this.bank_transacted_count >= 6){
+                else if(this.trade_type == 'BUY' && this.userVerificationStatus == '3' && this.dollar_amount > 300 && this.bank_transacted_count >= 6){
                         this.$toast.error({
                         title:'Oops!',
                         position: 'bottom left',
@@ -378,7 +379,9 @@ import Api from '../views/Api'
                     coin_id: this.coin_id,
                     admin_bank_name: this.bank_data.account_name,
                     admin_bank_number: this.bank_data.account_number,
-                    admin_bank: this.bank_data.bank
+                    admin_bank: this.bank_data.bank,
+                    coin_address: this.coin_address,
+                    pm_account: this.pm_account
                 }
                 this.$store.commit('currentTrade', tradeData)
                 let formData = {}
@@ -429,19 +432,18 @@ import Api from '../views/Api'
                 if (this.coin_shortcode === "PM"){
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
-                            naira_amount: parseFloat(this.naira_amount),
-                            // coin_amount: parseFloat(this.coin_amount),
-                            coin: this.coin_id,
-                            trade_type: trade_type,
-                            buy_payment_mode: this.buy_payment_mode,
-                            pm_account: this.pm_account,
-                            coin_address: this.coin_address,
-                            bank: this.bank_data.account_id,
-                            my_account: this.my_account,
-                            bank_transacted_count: this.bank_transacted_count
+                        naira_amount: parseFloat(this.naira_amount),
+                        // coin_amount: parseFloat(this.coin_amount),
+                        coin: this.coin_id,
+                        trade_type: trade_type,
+                        buy_payment_mode: this.buy_payment_mode,
+                        pm_account: this.pm_account,
+                        coin_address: this.coin_address,
+                        bank: this.bank_data.account_id,
+                        my_account: this.my_account,
+                        bank_transacted_count: this.bank_transacted_count
                     }
                 this.buy_data = {formData}
-                console.log(this.buy_data);
                 this.$store.commit('buyData', this.buy_data)
                 // await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 // .then(response => {
@@ -460,7 +462,6 @@ import Api from '../views/Api'
                 // })  
             
                 if(trade_type == 'SELL'){
-                    console.log("Trade Type Sell");
                     await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                     .then(response => {
                         this.$emit('getTransactions')
@@ -513,12 +514,9 @@ import Api from '../views/Api'
                 this.buy_data = {formData}
                 this.$store.commit('buyData', this.buy_data)
                
-            
                 if(trade_type == 'SELL'){
-                    console.log("Trade Type Sell");
                     await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                     .then(response => {
-                        console.log(response);
                         this.$emit('getTransactions')
                         this.$toast.success({
                         title:'Welldone Boss!',

@@ -34,8 +34,10 @@
                                     </div>
 
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-success ps-5 pe-5">Submit</button>
+                                        <button type="submit" class="btn btn-success ps-5 pe-5" :disabled="loading">Submit</button>
                                     </div>
+                                    <br>
+                                    <span class="text-danger"><center> Please note that your details are secure, private and it will not be exposed to any third party. </center></span>
                                 </form>
                             </div>
                         </div>
@@ -74,19 +76,12 @@ import Api from './Api'
             },
             uploadId(){
                 this.loading = true
-                // let formData= {
-                //     front_id: this.id,
-                //     back_id: this.id,
-                //     transaction_status: "3"
-
-                // }
                 const formData = new FormData();
                 formData.append('front_id', this.front_id)
                 formData.append('back_id', this.back_id )
                 formData.append('transaction_status', "3")
                 Api.axios_instance.patch(Api.baseUrl+'api/v1/profile-id/', formData)
                 .then(response => {
-                    console.log(response.data);
                     this.$toast.success({
                         title:'Welldone!',
                         message:'Means of Identification Uploaded '

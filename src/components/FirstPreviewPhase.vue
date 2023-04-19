@@ -22,6 +22,14 @@
                 <td>Naira Value </td>
                 <td><span style="font-size: 20px !important;">₦{{tradeDetails.naira_amount}}</span></td>
             </tr>
+            <tr v-if="tradeDetails.coin_address">
+                <td>Coin Address </td>
+                <td ><span style="font-size: 20px !important;">{{tradeDetails.coin_address}}</span></td>
+            </tr>
+            <tr  v-if="tradeDetails.pm_account">
+                <td>PM Account </td>
+                <td><span style="font-size: 20px !important;">{{tradeDetails.pm_account}}</span></td>
+            </tr>
             <tr>
                 <td> Bank</td>
                 <td>{{ tradeDetails.admin_bank }}</td>
@@ -56,7 +64,6 @@ export default({
         },
         createTransaction(){
             this.$emit('secondPhase', 'BuyPreviewPhase')
-            // console.log(this.$store.state.buy_data);
             let formData = this.$store.state.buy_data.formData
             Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
@@ -72,6 +79,10 @@ export default({
                 .finally(() => {
                     this.loading = true
                 })  
+        },
+        cancelTrade(){
+            location.reload()
+        
         }
       
     },

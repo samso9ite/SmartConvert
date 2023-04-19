@@ -19,7 +19,9 @@ export default new Vuex.Store({
       coin_id: '',
       admin_bank_number: '',
       admin_bank_name: '',
-      admin_bank: ''
+      admin_bank: '',
+      coin_address: '',
+      pm_account: ''
     },
     user :{
       username: '',
@@ -69,6 +71,8 @@ export default new Vuex.Store({
       state.currentTrade.admin_bank_name = payload.admin_bank_name
       state.currentTrade.admin_bank_number = payload.admin_bank_number
       state.currentTrade.admin_bank = payload.admin_bank
+      state.currentTrade.coin_address = payload.coin_address
+      state.currentTrade.pm_account = payload.pm_account
     },
     setToken(state, payload){
       state.token = payload.token,
