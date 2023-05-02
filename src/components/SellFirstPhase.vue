@@ -142,12 +142,7 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" ><i class="fa fa-bank" style="margin-top:7px !important; margin-bottom:7px"></i></label>
                     </div>
-                    <!-- <select class="form-control" v-model="buy_payment_mode" > 
-                        <option :value="'selected'">Select Payment Mode</option>
-                        <option value="TRANSFER">TRANSFER</option>
-                        <option value="CASH DEPOSIT">CASH DEPOSIT</option>
-                    </select> -->
-                    <select class="form-control" v-model="bank_data" > 
+                   <select class="form-control" v-model="bank_data" > 
                         <option :value="{select: 'selected'}">Click to Select Bank</option>
                         <option :value="{'account_id': account.id, 'account_name': account.account_name, 'account_number': account.account_number, 'bank':account.bank_name}" v-for="account in adminBankAccouts" :key="account">{{account.bank_name}}</option>
                     </select>
@@ -283,7 +278,9 @@ import Api from '../views/Api'
             async firstPhase(trade_not_active, trade_type){
                 this.loading = true
                 let account_name = this.bank_data.account_name
+                console.log(this.bank_data);
                 this.bank = this.bank_data.account_id
+                console.log(this.bank);
                 this.bank_transacted_count = this.$store.state.profile_data.bank_count,
                 this.userVerificationStatus = this.$store.state.profile_data.userVerificationStatus,
                 this.buy_payment_mode = this.bank_data.account_name + '     ' + this.bank_data.account_number
@@ -374,7 +371,7 @@ import Api from '../views/Api'
                     naira_amount: parseFloat(this.naira_amount),
                     coin_amount: parseFloat(this.coin_amount),
                     coin_name: this.selected_coin_name,
-                    bank_account: this.bank,
+                    bank_account: this.bank_data.account_id,
                     trade_type: trade_type,
                     coin_id: this.coin_id,
                     admin_bank_name: this.bank_data.account_name,
@@ -493,7 +490,7 @@ import Api from '../views/Api'
                             buy_payment_mode: this.buy_payment_mode,
                             pm_account: this.pm_account,
                             coin_address: this.coin_address,
-                            bank: this.bank_data,
+                            bank: this.bank_data.account_id,
                             my_account: this.my_account,
                             bank_transacted_count: this.bank_transacted_count
                         }
