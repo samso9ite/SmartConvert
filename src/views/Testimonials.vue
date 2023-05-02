@@ -92,7 +92,10 @@ import Api from './Api.js'
             getTestimonials(){
                 Api.axios_instance.get(Api.baseUrl+'api/v1/list-testimonials')
                     .then(res => {
-                        this.testimonials = res.data
+                        let testimonials_data = res.data
+                         this.testimonials = testimonials_data.filter((item) => {
+                             return item.user.email === localStorage.getItem('email')
+                        })
                     }
                 )
             }

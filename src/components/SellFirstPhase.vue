@@ -272,7 +272,7 @@ import Api from '../views/Api'
                     admin_bank_number: this.bank_data.account_number,
                     admin_bank: this.bank_data.bank,
                     coin_id: this.coin_id,
-                    trade_type: SELL,
+                    trade_type: 'SELL',
                     coin_address: this.coin_address
                 }
                 this.$store.commit('currentTrade', tradeData)
