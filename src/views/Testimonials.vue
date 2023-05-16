@@ -96,7 +96,7 @@ import Api from './Api.js'
                          this.testimonials = testimonials_data.filter((item) => {
                              return item.user.email === localStorage.getItem('email')
                         })
-                    }
+                        }
                 )
             }
         },

@@ -240,6 +240,7 @@
                                                         <td>ASSET</td>
                                                         <td> AMOUNT</td>
                                                         <td>(₦)AMOUNT</td>
+                                                        <td>COMMENT</td>
                                                     </tr>
                                                     <tr v-for="transaction in transactions" :key="transaction">
                                                         <td>{{transaction.transaction_reference}}</td>
@@ -266,6 +267,7 @@
                                                      
                                                       
                                                         <td>₦{{transaction.naira_amount}}</td>
+                                                        <td>{{ transaction.comment }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>

@@ -121,7 +121,7 @@
         <div class="currency_validate" style="margin-top:-0.7rem" v-if="trade_type === 'BUY'">
             <div class="alert alert-info alert-dismissible" v-if="bank_transacted_count < 6 && data.userVerificationStatus != '2'" :style="{'display': !show ? 'none' : 'block'}">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" style="color:black; font-size: 30px;" @click="verificationInfo">&times;</a><br>
-                <strong>Hey Boss</strong> You can only buy up to $150/transaction, <b>transact {{ data.count_remainder }}</b> more times with same account to buy up to $300 or <router-link :to="'account-verification'" style="color:black"> verify your account  </router-link>.
+                <strong>Hi,</strong> you can only buy upto $150/transaction on your first 6 purchase<b>transact {{ data.count_remainder }}</b> more times with same bank account name register on this website to buy upto 300$. To buy more kindly<router-link :to="'account-verification'" style="color:black"> verify your account  </router-link>.
             </div>
             <div class="mb-3">
                 <label class="me-sm-2">Coin Type </label>
@@ -307,14 +307,14 @@ import Api from '../views/Api'
                     showDuration: 200,
                     message:'Chief! Amount specified is lower than the minimum limit'})
                     this.loading = false
-                }else if(this.buy_active_status == false){
+                }else if(trade_type === 'BUY' && this.sell_active_status == false){
                     this.$toast.error({
                     title:'Oops!',
                     position: 'bottom left',
                     showDuration: 300,
                     message:'The selected coin isn\'t available to buy at the moment.'})
                     this.loading = false
-                }else if(this.sell_active_status == false){
+                }else if(trade_type === 'SELL' && this.buy_active_status == false){
                     this.$toast.error({
                     title:'Oops!',
                     position: 'bottom left',
@@ -543,6 +543,8 @@ import Api from '../views/Api'
                 this.coin_sell_status = this.coin_type[0].sell_active_status
                 this.sell_active_status = this.coin_type[0].sell_active_status
                 this.buy_active_status = this.coin_type[0].buy_active_status
+                console.log(this.sell_active_status);
+                console.log(this.buy_active_status);
                 this.coin_sell_rate = this.coin_type[0].sell_rate
                 this.coin_buy_rate = this.coin_type[0].buy_rate
                 this.coin_shortcode = this.coin_type[0].shortcode 
