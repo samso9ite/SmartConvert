@@ -72,7 +72,11 @@ export default({
                     title:'Welldone Boss!',
                     message:'Order Has Been created'
                     })
+                    if(this.$store.state.profile_data.buy_bonus_status == true){
+                        Api.axios_instance.patch(Api.baseUrl+'api/v1/profile/update', {buy_bonus_status: false})
+                    }
                 })
+                
                 .catch(err => {
                     console.log(err);
                 })

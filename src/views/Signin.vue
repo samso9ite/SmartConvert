@@ -82,7 +82,7 @@ import VuePassword from 'vue-password'
                 await   Api.axios_instance.post(Api.baseUrl+'auth/jwt/create/', formData,  {mode: 'no-cors'})
                 .then(res => {
                     const access = res.data.access
-                    sessionStorage.setItem('access', access)
+                   sessionStorage.setItem('access', access)
                     sessionStorage.setItem('isAuthenticated', true)
                     this.$router.push("/")
                 })
@@ -91,16 +91,8 @@ import VuePassword from 'vue-password'
                         this.$toast.error({
                         title:'Oops!',
                         message:'Incorrect Email or Password'
-                })
+                })  
                         console.log(error.data);
-                        // for(const property in error.response.data){
-                        //     this.errors.push(`${property}:${error.response.data[property]}`)
-                        // }
-                        // console.log(JSON.stringify(error.message));
-                        // } else if (error.message){
-                        //     console.log(JSON.stringify(error.message));
-                        // } else{
-                        //     console.log(JSON.stringify(error));
                         }
                     }
                 )  
@@ -108,6 +100,10 @@ import VuePassword from 'vue-password'
                     this.loading = false
                 })          
             },
+        },
+
+        mounted() {
+            this.$store.dispatch('Set_Campaign')
         },
     }
 </script>

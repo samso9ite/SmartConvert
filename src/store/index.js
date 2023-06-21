@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Api from '../views/Api'
 import { createStore } from "vuex";
 import createPersistedState from "vuex-persistedstate";
 
@@ -9,6 +10,7 @@ export default new Vuex.Store({
   state: {
     isAuthenticated: '',
     token: '',
+    campaign: {},
     currentTrade: {
       dollar_amount: '',
       coin_amount: '',
@@ -41,9 +43,12 @@ export default new Vuex.Store({
     profile_data: {
       bank_count: '',
       userVerificationStatus: '',
-      count_remainder: ''
+      count_remainder: '',
+      buy_bonus_status: false,
+      sell_bonus_status: false,
+      bonus_status: false
     },
-    buy_data: {}
+    buy_data: {},
   },
   mutations: {
     initializeStore(){
@@ -101,13 +106,26 @@ export default new Vuex.Store({
       state.profile_data.bank_count = payload.bank_count
       state.profile_data.userVerificationStatus = payload.userVerificationStatus
       state.profile_data.count_remainder = payload.count_remainder
+      state.profile_data.bonus_status = payload.bonus_status
+      state.profile_data.buy_bonus_status = payload.buy_bonus_status
+      state.profile_data.sell_bonus_status = payload.sell_bonus_status
     },
 
     buyData(state, payload){
       state.buy_data = payload
+    },
+
+    setCampaign(state, payload){
+      state.campaign = payload
     }
   },
   actions: {
+    Set_Campaign(context){
+      Api.axios_instance.get(Api.baseUrl+'api/v1/list-campaign')
+      .then(res => {
+        context.state.campaign = res.data[0]
+      })
+    }
   },
   modules: {
   },

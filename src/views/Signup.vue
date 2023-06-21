@@ -1,5 +1,6 @@
 <template>
     <div id="">
+        
         <div class="authincation section-padding" style=" 
           background: linear-gradient(to right, rgba(50, 70, 80, 0.7), rgba(0, 0, 0, 0.7)), url('../assets/images/main_bg.jpg')  !important;
             background-repeat:no-repeat !important;
@@ -45,14 +46,16 @@
                                         <label>Last Name</label>
                                         <input type="text" class="form-control" placeholder="Last Name" v-model="last_name">
                                     </div>
+                                    <div class="mb-3" v-show="$store.state.campaign.status == true">
+                                        <label>Promo Code</label>
+                                        <input type="text" class="form-control" placeholder="Promo Code" v-model="coupon_code">
+                                    </div>
                                     <div class="mb-3">
                                         <label>Password</label>
                                         <VuePassword
                                             v-model="password"
                                             :disableStrength = true
                                         />
-                                        <!-- <input type="password" class="form-control" placeholder="Password"
-                                            name="password" v-model="password"> -->
                                     </div>
                                     <div class="text-center mt-4">
                                         <button type="submit" class="btn btn-success btn-block" :disabled="loading" style="background-color:rgb(122 21 61); border: none;" :disbled="loading">Sign up</button>
@@ -90,47 +93,74 @@ import VuePassword from 'vue-password'
                 errors: [],
                 password:'',
                 loading: false,
-                registered: false
+                registered: false,
+                campaign: {},
+                coupon_code: null,
+                buy_bonus_status: false,
+                sell_bonus_status: false,
+                bonus_status: false
             }
         },
 
         methods: {
             async submitForm(e){
-                console.log(this.mobile_number);
-                const formData = {
-                    password : this.password,
-                    re_password: this.password,
-                    first_name: this.first_name,
-                    last_name: this.last_name,
-                    phone_number: this.mobile_number,
-                    email : this.email
-                }
-                this.loading = true
-                await   Api.axios_instance.post(Api.baseUrl+'auth/users/', formData,  {mode: 'no-cors'})
-                .then(res => {
-                      this.$toast.success({
-                        title:'Welldone!',
-                        message:'Account Created Successfully '
+                let bonus_data = false
+                if( this.$store.state.campaign.code !== this.coupon_code){
+                    this.$toast.error({
+                        title:'Oops!',
+                        message:'You entered a wrong or expired code',
+                        showDuration: 200
                     })
-                    this.registered = true
-                })
-                .catch(error => {
-                    if (error.response){
-                        for (const property in error.response.data){
-                            this.errors.push(`${property}: ${error.response.data[property]}`)
-                        }
-                        console.log(JSON.stringify(error.response.data));
-                        } else if (error.message){
-                            console.log(JSON.stringify(error.message));
-                        } else{
-                            console.log(JSON.stringify(error));
-                        }
-                })
-                .finally(() => {
+                } else{
+                
+                    if(this.$store.state.campaign.code === this.coupon_code){
+                        this.bonus_status = true,
+                        this.sell_bonus_status = true,
+                        this.buy_bonus_status = true
+                    }
+
+                    const formData = {
+                        password : this.password,
+                        re_password: this.password,
+                        first_name: this.first_name,
+                        last_name: this.last_name,
+                        phone_number: this.mobile_number,
+                        email : this.email,
+                        bonus_status: this.bonus_status,
+                        sell_bonus_status: this.sell_bonus_status,
+                        buy_bonus_status: this.buy_bonus_status
+                    }
+                    console.log(formData);
                     this.loading = true
-                })
-            }
-        }
+                    await   Api.axios_instance.post(Api.baseUrl+'auth/users/', formData,  {mode: 'no-cors'})
+                    .then(res => {
+                        this.$toast.success({
+                            title:'Welldone!',
+                            message:'Account Created Successfully '
+                        })
+                        this.registered = true
+                    })
+                    .catch(error => {
+                        if (error.response){
+                            for (const property in error.response.data){
+                                this.errors.push(`${property}: ${error.response.data[property]}`)
+                            }
+                            } else if (error.message){
+                                console.log(JSON.stringify(error.message));
+                            } else{
+                                console.log(JSON.stringify(error));
+                            }
+                    })
+                    .finally(() => {
+                        this.loading = true
+                    })
+                }
+            }, 
+        },
+
+        mounted() {
+            this.$store.dispatch('Set_Campaign')
+        },
     }
 </script> 
 

@@ -2,7 +2,9 @@
 <!-- <div> -->
    
     <div id="">
+        
         <SideBar />
+        
         <div class="page_title">
             <div class="container-fluid">
                 <div class="row">
@@ -17,13 +19,20 @@
         <div class="content-body" :class="{'mobileStyle': showMobileStyle}">
             <div class="container-fluid">   
                 <div class="row">
+                    <div class="alert alert-success" v-show="$store.state.profile_data.sell_bonus_status == true || $store.state.profile_data.sell_bonus_status == true"
+                     :style="{'display': !show ? 'none' : 'block'}">
+                        
+                      <strong>Hello Chief!</strong> <span v-show="$store.state.profile_data.buy_bonus_status == true">You're eligible for ₦{{ $store.state.campaign.amount }} bonus when you Buy.</span> 
+                      <span v-show="$store.state.profile_data.sell_bonus_status == true"> You're eligible for ₦{{ $store.state.campaign.amount }}  when you sell. </span> due to the ongoing promo.
+                      <a href="#" class="close" data-dismiss="alert" aria-label="close" style="color:black; font-size: 30px; float: right;" @click="closeCampaignMessage">&times;</a>
+                    </div>
                     <div class="col-xl-3 col-lg-3 col-xxl-3">
                         <div class="card balance-widget">
                             <div class="card-header border-0 py-0">
                                 <h4 class="card-title">Welcome Back {{first_name}} </h4>
-                            </div>
+                            </div>      
                             <div class="card-body pt-0">
-                                <div class="balance-widget">
+                                <div class="balance-widget">    
                                     <div class="total-balance">
                                         <h3>{{transactions.length}}</h3>
                                         <h6>Total Trades Transacted</h6>
@@ -349,14 +358,15 @@ import VueMomentsAgo from 'vue-moments-ago'
                 id: '',
                 doge: '',
                 raiseCreateAccountMessage: false,
-                adminBankAccouts: []
+                adminBankAccouts: [],
+                show: true
             }
         },
         methods: {
             async getUser(){
                 await Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
                 .then(response => {
-                    console.log(response);
+                    console.log(response.data);
                     this.first_name = response.data.first_name  
                     this.last_name = response.data.last_name  
                     this.phone_number = response.data.phone_number 
@@ -372,14 +382,14 @@ import VueMomentsAgo from 'vue-moments-ago'
                 })
                await Api.axios_instance.get(Api.baseUrl+'api/v1/profile/get/' + this.id)
                 .then(res => {
-                    console.log(res);
                     let bank_count = res.data.user.bank_trade_count
                     let verification_status = res.data.transaction_status
                     localStorage.setItem('bank_count', bank_count)
                     localStorage.setItem('userVerificationStatus', verification_status)
                     let count_remainder = 6 - bank_count 
-                    console.log(count_remainder);
-                    this.$store.commit('profileData', {userVerificationStatus:res.data.transaction_status, bank_count: res.data.user.bank_trade_count, count_remainder: count_remainder} )
+                    this.$store.commit('profileData', {userVerificationStatus:res.data.transaction_status,
+                        bank_count: res.data.user.bank_trade_count, count_remainder: count_remainder, bonus_status:res.data.user.bonus_status, 
+                        sell_bonus_status:res.data.user.sell_bonus_status, buy_bonus_status:res.data.user.buy_bonus_status} )
                 })
             },
             async getTransactions(){
@@ -413,6 +423,13 @@ import VueMomentsAgo from 'vue-moments-ago'
                 }
                 )
             },
+            getCampaign(){
+                Api.axios_instance.get(Api.baseUrl+'api/v1/list-campaign')
+                .then(res => {
+                    console.log(res);
+                    this.$store.commit('setCampaign', res.data[0])
+                })
+            },  
             update(){
                 Api.axios_instance.get(this.url)
                 .then(response  => {
@@ -484,7 +501,9 @@ import VueMomentsAgo from 'vue-moments-ago'
                 this.showMobileStyle = true
             }
            },
-          
+           closeCampaignMessage(){
+                this.show = !this.show
+           }
         },
         mounted(){
             this.getUser()
@@ -493,6 +512,7 @@ import VueMomentsAgo from 'vue-moments-ago'
             this.getCoins()
             this.getSavedAccounts()
             this.update();
+            this.getCampaign()
             this.timer = setInterval(this.update, 30000)
         },
         computed: {

@@ -180,7 +180,6 @@ export default {
                 })
         },
         updateAccountDetails(){
-            console.log("I am here");
             let formData = {
                 nationality: this.nationality,
                 state: this.state,
@@ -190,8 +189,8 @@ export default {
             Api.axios_instance.patch(Api.baseUrl+'api/v1/profile/update', formData)
             .then(response => {
                 this.$toast.success({
-                        title:'Welldone!',
-                        message:'Account Updated Successfully '
+                    title:'Welldone!',
+                    message:'Account Updated Successfully '
                 })
                 this.getUser()
             })

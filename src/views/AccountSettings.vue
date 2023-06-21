@@ -202,7 +202,6 @@ import axios from 'axios';
            },
            screenSize(){
             if(screen.width < 800){
-                console.log("Mobile Size")
                 this.showMobileStyle = true
             }
             }

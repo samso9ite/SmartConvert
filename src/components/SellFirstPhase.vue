@@ -150,30 +150,30 @@
             </div>
           
             <div class="mb-3">
-                    <label class="me-sm-2">Enter Your Amount </label>
-                    <div class="input-group">
-                    <label class="input-group-text">$</label><input type="text"  class="form-control" v-model="dollar_amount" 
-                        placeholder="Amount in USD" @input="dollarBasedCalculation(trade_type)" required>
-                    <label class="input-group-text">₦</label><input type="text" v-model="naira_amount" class="form-control"
-                        placeholder="Naira Value" @input="nairaBasedCalculation(trade_type)" required>
-                    </div>
-                    <div class="input-group mt-2" v-if="coin_shortcode === 'PM'">
-                        <input type="text"   class="form-control" v-model="pm_account" 
-                            placeholder="Enter your PM Account" required>
-                    </div>
-                    <div class="input-group mt-2" v-else>
-                        <input type="text" class="form-control" v-model="coin_amount" 
-                            placeholder="Amount of Coin" @input="coinBasedCalculation(trade_type)" required>
-                    </div>
+                <label class="me-sm-2">Enter Your Amount </label>
+                <div class="input-group">
+                <label class="input-group-text">$</label><input type="text"  class="form-control" v-model="dollar_amount" 
+                    placeholder="Amount in USD" @input="dollarBasedCalculation(trade_type)" required>
+                <label class="input-group-text">₦</label><input type="text" v-model="naira_amount" class="form-control"
+                    placeholder="Naira Value" @input="nairaBasedCalculation(trade_type)" required>
+                </div>
+                <div class="input-group mt-2" v-if="coin_shortcode === 'PM'">
+                    <input type="text"   class="form-control" v-model="pm_account" 
+                        placeholder="Enter your PM Account" required>
+                </div>
+                <div class="input-group mt-2" v-else>
+                    <input type="text" class="form-control" v-model="coin_amount" 
+                        placeholder="Amount of Coin" @input="coinBasedCalculation(trade_type)" required>
+                </div>
 
-                    <div class="input-group mt-2" v-if="coin_shortcode !== 'PM'">
-                        <input type="text"   class="form-control" v-model="coin_address" 
-                            placeholder="Enter Your Coin  Address" required>
-                    </div>
-                    <div class="d-flex justify-content-between mt-3">
-                        <p class="mb-0">Minimum Limit</p>
-                        <h4 class="mb-0">${{minimum_buy_limit}} </h4>
-                    </div>
+                <div class="input-group mt-2" v-if="coin_shortcode !== 'PM'">
+                    <input type="text"   class="form-control" v-model="coin_address" 
+                        placeholder="Enter Your Coin  Address" required>
+                </div>
+                <div class="d-flex justify-content-between mt-3">
+                    <p class="mb-0">Minimum Limit</p>
+                    <h4 class="mb-0">${{minimum_buy_limit}} </h4>
+                </div>
                
                 <div class="row mt-3">
                     <div class="col-lg-6" v-if="loading">
@@ -278,13 +278,11 @@ import Api from '../views/Api'
             async firstPhase(trade_not_active, trade_type){
                 this.loading = true
                 let account_name = this.bank_data.account_name
-                console.log(this.bank_data);
                 this.bank = this.bank_data.account_id
-                console.log(this.bank);
                 this.bank_transacted_count = this.$store.state.profile_data.bank_count,
                 this.userVerificationStatus = this.$store.state.profile_data.userVerificationStatus,
                 this.buy_payment_mode = this.bank_data.account_name + '     ' + this.bank_data.account_number
-              let last_name = localStorage.getItem('last_name').toUpperCase()
+                let last_name = localStorage.getItem('last_name').toUpperCase()
                 let first_name = localStorage.getItem('first_name').toUpperCase()
                     if(trade_type == "SELL"){
                         account_name = account_name.split(" ")
@@ -344,7 +342,7 @@ import Api from '../views/Api'
                         position: 'bottom left',
                         showDuration: 100,
                         timeOut: 4500,
-                        message:'Please hold on, you verification is awaiting approval'})
+                        message:'Please hold on, your verification is awaiting approval'})
                     this.loading = false 
                 
                 }   else if(this.trade_type == 'BUY' && this.userVerificationStatus == '1' && +this.dollar_amount > 300 && this.bank_transacted_count >= 6){
@@ -421,12 +419,7 @@ import Api from '../views/Api'
                         coin_name: lowerCasedCoinName,
                     }
                     this.$store.commit('uniqueAddressStore', storeData)
-                // if(this.trade_type == 'BUY'){
-                //     this.bank = this.bank_data.account_id,
-                // }else{
-                //     this.bank = this.ban
-                // }
-                if (this.coin_shortcode === "PM"){
+                   if (this.coin_shortcode === "PM"){
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
                         naira_amount: parseFloat(this.naira_amount),
@@ -442,21 +435,6 @@ import Api from '../views/Api'
                     }
                 this.buy_data = {formData}
                 this.$store.commit('buyData', this.buy_data)
-                // await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
-                // .then(response => {
-                //     console.log(response);
-                //     this.$emit('getTransactions')
-                //     this.$toast.success({
-                //     title:'Welldone Boss!',
-                //     message:'Order Has Been created'
-                //     })
-                // }).
-                // catch(err => {
-                //     console.log(err);
-                // })
-                // .finally(() => {
-                //     this.loading = true
-                // })  
             
                 if(trade_type == 'SELL'){
                     await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
@@ -512,6 +490,7 @@ import Api from '../views/Api'
                 this.$store.commit('buyData', this.buy_data)
                
                 if(trade_type == 'SELL'){
+                    if (this.$store.state.profile_data.sell)
                     await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                     .then(response => {
                         this.$emit('getTransactions')
@@ -519,6 +498,9 @@ import Api from '../views/Api'
                         title:'Welldone Boss!',
                         message:'Order Has Been Created'
                         })
+                        if(this.$store.state.profile_data.sell_bonus_status == true){
+                            Api.axios_instance.patch(Api.baseUrl+'api/v1/profile/update', {sell_bonus_status: false})
+                        }
                     }).finally(() => {
                         this.loading = true
                     })  
@@ -543,13 +525,11 @@ import Api from '../views/Api'
                 this.coin_sell_status = this.coin_type[0].sell_active_status
                 this.sell_active_status = this.coin_type[0].sell_active_status
                 this.buy_active_status = this.coin_type[0].buy_active_status
-                console.log(this.sell_active_status);
-                console.log(this.buy_active_status);
                 this.coin_sell_rate = this.coin_type[0].sell_rate
                 this.coin_buy_rate = this.coin_type[0].buy_rate
                 this.coin_shortcode = this.coin_type[0].shortcode 
                 this.coin_id = this.coin_type[0].coin_id
-                await Api.axios_instance.get("https://min-api.cryptocompare.com/data/pricemulti?fsyms="+this.coin_shortcode+"&tsyms=USD&api_key=f72b59432fb04a56c30fee2cc24adfdca9cda19c8a50b49c7bddba4cc0a469b6")
+                await Api.axios_instance.get("https://min-api.cryptocompare.com/data/pricemulti?fsyms="+this.coin_shortcode+"&tsyms=USD&api_key=40c4cada7ddcb05ecedb554f444d3e51924ff6115d4ed983eb868feaf50b098d")
                 .then(response  => {
                     var results = response.data
                         if(this.coin_shortcode === "BTC"){
