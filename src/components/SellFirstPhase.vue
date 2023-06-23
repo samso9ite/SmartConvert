@@ -246,7 +246,8 @@ import Api from '../views/Api'
                 firstPreviewPhase: 'FirstPreviewPhase',
                 bank_data: {select: 'selected'},
                 buy_data: {},
-                remainder: ''
+                remainder: '',
+                campaign_bonus: false
             }
         },
 
@@ -381,6 +382,9 @@ import Api from '../views/Api'
                 this.$store.commit('currentTrade', tradeData)
                 let formData = {}
                     if (trade_type === 'SELL'){
+                        if(this.$store.state.profile_data.sell_bonus_status == true){
+                            this.campaign_bonus = true
+                        }
                         if(this.selected_coin_name === "Perfect Money"){
                             console.log(" ");
                         }else{
@@ -407,6 +411,12 @@ import Api from '../views/Api'
                             this.coin_address = receivingAddress
                         }
                     }  
+                    if(this.trade_type == 'BUY'){
+                        if(this.$store.state.profile_data.buy_bonus_status == true){
+                            this.campaign_bonus = true
+                        }
+                    }
+                    
                 
                 // Trade details in vue store 
                 let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
@@ -431,7 +441,8 @@ import Api from '../views/Api'
                         coin_address: this.coin_address,
                         bank: this.bank_data.account_id,
                         my_account: this.my_account,
-                        bank_transacted_count: this.bank_transacted_count
+                        bank_transacted_count: this.bank_transacted_count,
+                        campaign_bonus: this.campaign_bonus
                     }
                 this.buy_data = {formData}
                 this.$store.commit('buyData', this.buy_data)
@@ -470,7 +481,8 @@ import Api from '../views/Api'
                             coin_address: this.coin_address,
                             bank: this.bank_data.account_id,
                             my_account: this.my_account,
-                            bank_transacted_count: this.bank_transacted_count
+                            bank_transacted_count: this.bank_transacted_count,
+                            campaign_bonus: this.campaign_bonus
                         }
                     }else{
                         formData = {
@@ -483,14 +495,13 @@ import Api from '../views/Api'
                             pm_account: this.pm_account,
                             coin_address: this.coin_address,
                             bank: this.bank_data.account_id,
-                            
+                            campaign_bonus: this.campaign_bonus
                     }
                 }
                 this.buy_data = {formData}
                 this.$store.commit('buyData', this.buy_data)
                
                 if(trade_type == 'SELL'){
-                    if (this.$store.state.profile_data.sell)
                     await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                     .then(response => {
                         this.$emit('getTransactions')
@@ -588,7 +599,6 @@ import Api from '../views/Api'
                 }
                 this.coin_amount = this.dollar_amount/this.current_coin_value
             },
-
         }
     }
 </script>
