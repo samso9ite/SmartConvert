@@ -95,7 +95,7 @@ import VuePassword from 'vue-password'
                 loading: false,
                 registered: false,
                 campaign: {},
-                coupon_code: null,
+                coupon_code: '',
                 buy_bonus_status: false,
                 sell_bonus_status: false,
                 bonus_status: false
@@ -105,7 +105,7 @@ import VuePassword from 'vue-password'
         methods: {
             async submitForm(e){
                 let bonus_data = false
-                if( this.$store.state.campaign.code !== this.coupon_code){
+                if( this.$store.state.campaign.code !== this.coupon_code && this.coupon_code !== ''){
                     this.$toast.error({
                         title:'Oops!',
                         message:'You entered a wrong or expired code',
