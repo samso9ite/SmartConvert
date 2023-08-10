@@ -52,9 +52,13 @@
                                                     <td>
                                                         <i class="cc BTC me-3" v-if="transaction.coin.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" width="11%" v-if="transaction.coin.coin_name === 'Perfect Money'"/><i class="cc ETH" me-3 style="color:#5968ba" v-if="transaction.coin.coin_name == 'Ethereum'"></i><i class="cc LTC me-3"  v-if="transaction.coin.coin_name == 'Litecoin'"></i><i class="cc DOGE me-3"  v-if="transaction.coin.coin_name == 'Doge Coin'"></i><i class="cc USDT me-3" v-if="transaction.coin.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="transaction.coin.coin_name == 'Ripple'"></i>{{transaction.coin.coin_name}}
                                                     </td>
-                                                    <td>{{transaction.coin_amount}}</td>
-                                                    <td>${{transaction.dollar_amount}}</td>
-                                                    <td>₦{{transaction.naira_amount}}</td>
+                                                    <td  v-if="transaction.transaction_status == 2 || transaction.transaction_status == 3 || transaction.transaction_status == 7">{{transaction.amount_received}}</td>
+                                                    <td v-else>{{transaction.coin_amount}}</td>
+                                                    <td  v-if="transaction.transaction_status == 2 || transaction.transaction_status == 3 || transaction.transaction_status == 7">${{transaction.paid_dollar_amount}}</td>
+                                                    <td v-else>${{transaction.dollar_amount}}</td>
+                                                    <td  v-if="transaction.transaction_status == 2 || transaction.transaction_status == 3 || transaction.transaction_status == 7">₦{{transaction.paid_naira_amount}}</td>
+                                                    <td v-else>₦{{transaction.naira_amount}}</td> 
+                                                    
                                                     <td v-if="transaction.hash_key_type === '1'"><a :href="transaction.hash_key" target="_blank"> <button class="btn">Click to View</button> </a></td>
                                                     <td v-else> {{ transaction.hash_key }} </td>
                                                     <td>{{transaction.comment}}</td>

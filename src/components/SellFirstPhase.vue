@@ -148,7 +148,19 @@
                     </select>
                 </div>
             </div>
-          
+            <div class="mb-3">
+                <label class="me-sm-2">Account to receive bonus</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" ><i class="fa fa-bank" style="margin-top:7px !important; margin-bottom:7px"></i></label>
+                    </div>
+                    <select class="form-control" v-model="bank_data" > 
+                        <option :value="{select: 'selected'}">Click to Select Bank</option>
+                        <option :value="{'account_id': account.id, 'account_name': account.account_name}" v-for="account in savedAccounts" :key="account"> {{account.account_number}} {{account.bank_name}}</option>
+                    </select>
+                </div>
+            </div>
+            
             <div class="mb-3">
                 <label class="me-sm-2">Enter Your Amount </label>
                 <div class="input-group">
@@ -416,7 +428,6 @@ import Api from '../views/Api'
                             this.campaign_bonus = true
                         }
                     }
-                    
                 
                 // Trade details in vue store 
                 let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
@@ -433,7 +444,6 @@ import Api from '../views/Api'
                     formData = {
                         dollar_amount: parseFloat(this.dollar_amount),
                         naira_amount: parseFloat(this.naira_amount),
-                        // coin_amount: parseFloat(this.coin_amount),
                         coin: this.coin_id,
                         trade_type: trade_type,
                         buy_payment_mode: this.buy_payment_mode,

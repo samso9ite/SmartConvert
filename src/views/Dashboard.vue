@@ -23,7 +23,7 @@
                      :style="{'display': !show ? 'none' : 'block'}">
                         
                       <strong>Hello Chief!</strong> <span v-show="$store.state.profile_data.buy_bonus_status == true">You're eligible for ₦{{ $store.state.campaign.amount }} bonus when you Buy.</span> 
-                      <span v-show="$store.state.profile_data.sell_bonus_status == true"> You're eligible for ₦{{ $store.state.campaign.amount }}  when you sell. </span> due to the ongoing promo.
+                      <span v-show="$store.state.profile_data.sell_bonus_status == true"> You're eligible for ₦{{ $store.state.campaign.amount }}  when you sell. </span> due to the ongoing promo. <b><router-link to="/account-settings" style="color:red">Set your bank details to receive bonus </router-link> </b>
                       <a href="#" class="close" data-dismiss="alert" aria-label="close" style="color:black; font-size: 30px; float: right;" @click="closeCampaignMessage">&times;</a>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-xxl-3">
@@ -242,7 +242,6 @@
                                             <table class="table mb-0 table-responsive-sm">
                                                 <tbody>
                                                     <tr>
-                                                        <!-- <td><span class="sold-thumb"><i class="la la-arrow-down"></i></span> </td> -->
                                                         <td>REFERENCE</td>
                                                         <td>STATUS</td>
                                                         <td> TYPE</td>
@@ -264,19 +263,19 @@
                                                         <td>
                                                             <i class="cc TX me-3" v-if="transaction.coin.coin_name == 'TRON'"></i><i class="cc BTC me-3" v-if="transaction.coin.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" class="me-3" width="6%" v-if="transaction.coin.coin_name === 'Perfect Money'"/><i class="cc ETH" me-3 style="color:#5968ba" v-if="transaction.coin.coin_name == 'Ethereum'"></i><i class="cc LTC me-3"  v-if="transaction.coin.coin_name == 'LiteCoin'"></i><i class="cc DOGE me-3"  v-if="transaction.coin.coin_name == 'Doge Coin'"></i><i class="cc USDT me-3" v-if="transaction.coin.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="transaction.coin.coin_name == 'Ripple'"></i>{{transaction.coin.coin_name}}
                                                         </td>
-                                                       
-                                                            <td class="text-success"  v-if="transaction.transaction_status == '3' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
-                                                            <td class="text-success"  v-else-if="transaction.transaction_status == '2' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
+                                                            <td class="text-success"  v-if="transaction.transaction_status == '3' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.amount_received}} </td>
+                                                            <td class="text-success"  v-else-if="transaction.transaction_status == '2' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.amount_received}} </td>
                                                             <td class="text-danger"  v-else-if="transaction.transaction_status == '5' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
                                                             <td class="text-danger"  v-else-if="transaction.transaction_status == '4' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
                                                             <td class="text-danger"  v-else-if="transaction.transaction_status == '6' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
-                                                            <td class="text-success"  v-else-if="transaction.transaction_status == '7' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
+                                                            <td class="text-success"  v-else-if="transaction.transaction_status == '7' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.amount_received}} </td>
                                                             <td class="text-warning"  v-else-if="transaction.transaction_status == '1' && transaction.coin.coin_name != 'Perfect Money'">{{transaction.coin_amount}} </td>
-                                                            <td class=""  v-else> ${{transaction.dollar_amount}}  </td>
-                                                     
-                                                      
-                                                        <td>₦{{transaction.naira_amount}}</td>
+                                                            <td v-else-if="transaction.coin.coin_name == 'Perfect Money' && transaction.transaction_status == 2 || transaction.transaction_status == 3 || transaction.transaction_status == 7">${{transaction.paid_dollar_amount}}  </td>
+                                                            <td v-else> ${{transaction.dollar_amount}} </td>
+                                                        <td  v-if="transaction.transaction_status == 2 || transaction.transaction_status == 3 || transaction.transaction_status == 7">₦{{transaction.paid_naira_amount}}</td>
+                                                        <td v-else>₦{{transaction.naira_amount}}</td>
                                                         <td>{{ transaction.comment }}</td>
+                                                        
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -284,7 +283,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>  
                     </div>
                 </div>
             </div>
