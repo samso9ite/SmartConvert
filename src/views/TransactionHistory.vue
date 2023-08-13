@@ -58,12 +58,10 @@
                                                     <td v-else>${{transaction.dollar_amount}}</td>
                                                     <td  v-if="transaction.transaction_status == 2 || transaction.transaction_status == 3 || transaction.transaction_status == 7">₦{{transaction.paid_naira_amount}}</td>
                                                     <td v-else>₦{{transaction.naira_amount}}</td> 
-                                                    
                                                     <td v-if="transaction.hash_key_type === '1'"><a :href="transaction.hash_key" target="_blank"> <button class="btn">Click to View</button> </a></td>
                                                     <td v-else> {{ transaction.hash_key }} </td>
                                                     <td>{{transaction.comment}}</td>
                                                     <td> {{transaction.date}}</td>
-                                                  
                                                 </tr>
                                             </tbody>
                                         </table>

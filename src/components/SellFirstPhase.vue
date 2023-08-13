@@ -8,9 +8,26 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text"><i class="cc BTC-alt" v-if="selected_coin_name === 'Bitcoin'"></i> <i class="cc SOL-alt" v-if="selected_coin_name === 'Solana'"></i> <i class="cc TX-alt" v-if="selected_coin_name === 'TRON'"></i> <img src="../../public/assets/images/pm-64.png" width="38px" v-if="selected_coin_name === 'Perfect Money'"/><i class="cc ETH-alt"  v-if="selected_coin_name == 'Ethereum'"></i><i class="cc LTC-alt"  v-if="selected_coin_name == 'LiteCoin'"></i><i class="cc DOGE-alt"  v-if="selected_coin_name == 'Doge Coin'"></i><i class="cc USDT-alt" v-if="selected_coin_name == 'USDT' "></i><i class="cc XRP-alt" v-if="selected_coin_name == 'Ripple'"></i></label>
                     </div>
-                    <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
+                    <select class="form-control" v-model="coin_type" @change="setCoinAddress()">
                         <option :value="[{select:'selected'}]">Click to Select Coin</option>
-                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code, sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status,first_address:coin.first_address, second_address:coin.second_address, third_address:coin.third_address, fourth_address:coin.fourth_address, fifth_address:coin.fifth_address}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
+                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, 
+                            minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code, 
+                            sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status,first_address:coin.first_address,
+                            second_address:coin.second_address, third_address:coin.third_address, fourth_address:coin.fourth_address, 
+                            fifth_address:coin.fifth_address, has_networks:coin.has_networks}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3" v-if="network_active">
+                <label class="me-sm-2">Coin Network</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" ><i class="fa fa-signal" style="margin-top:7px !important; margin-bottom:7px"></i></label>
+                    </div>
+                    <select class="form-control" v-model="selected_network" @change="setNetworkWallet()"> 
+                        <option :value="selected">Click to select network</option>
+                        <option :value="network" v-for="network in networks" :key="network"> {{network.network_name}} </option>
                     </select>
                 </div>
             </div>
@@ -21,7 +38,7 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" ><i class="fa fa-bank" style="margin-top:7px !important; margin-bottom:7px"></i></label>
                     </div>
-                    <select class="form-control" v-model="bank_data" > 
+                    <select class="form-control" v-model="bank_data"> 
                         <option :value="{select: 'selected'}">Click to Select Bank</option>
                         <option :value="{'account_id': account.id, 'account_name': account.account_name}" v-for="account in savedAccounts" :key="account"> {{account.account_number}} {{account.bank_name}}</option>
                     </select>
@@ -131,7 +148,11 @@
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
                         <option :value="[{select:'selected'}]">Click to Select Coin</option>
-                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code, sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
+                        <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, 
+                            sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, 
+                            minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code,
+                            sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status}]" 
+                            v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
             </div>
@@ -148,19 +169,7 @@
                     </select>
                 </div>
             </div>
-            <div class="mb-3">
-                <label class="me-sm-2">Account to receive bonus</label>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text" ><i class="fa fa-bank" style="margin-top:7px !important; margin-bottom:7px"></i></label>
-                    </div>
-                    <select class="form-control" v-model="bank_data" > 
-                        <option :value="{select: 'selected'}">Click to Select Bank</option>
-                        <option :value="{'account_id': account.id, 'account_name': account.account_name}" v-for="account in savedAccounts" :key="account"> {{account.account_number}} {{account.bank_name}}</option>
-                    </select>
-                </div>
-            </div>
-            
+          
             <div class="mb-3">
                 <label class="me-sm-2">Enter Your Amount </label>
                 <div class="input-group">
@@ -259,7 +268,12 @@ import Api from '../views/Api'
                 bank_data: {select: 'selected'},
                 buy_data: {},
                 remainder: '',
-                campaign_bonus: false
+                campaign_bonus: false,
+                network_active: false,
+                networks: [],
+                selected_network: {},
+                addressArray: [],
+                receivingAddress: ''
             }
         },
 
@@ -281,9 +295,10 @@ import Api from '../views/Api'
                     admin_bank: this.bank_data.bank,
                     coin_id: this.coin_id,
                     trade_type: 'SELL',
-                    coin_address: this.coin_address
+                    coin_address: this.receivingAddress
                 }
                 this.$store.commit('currentTrade', tradeData)
+                console.log(this.$store.state.currentTrade);
             },
             verificationInfo(){
                this.show  =  !this.show 
@@ -388,7 +403,7 @@ import Api from '../views/Api'
                     admin_bank_name: this.bank_data.account_name,
                     admin_bank_number: this.bank_data.account_number,
                     admin_bank: this.bank_data.bank,
-                    coin_address: this.coin_address,
+                    coin_address: this.receivingAddress,
                     pm_account: this.pm_account
                 }
                 this.$store.commit('currentTrade', tradeData)
@@ -400,27 +415,24 @@ import Api from '../views/Api'
                         if(this.selected_coin_name === "Perfect Money"){
                             console.log(" ");
                         }else{
-                            // const addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
-                            const addressArray = [];
-
                             if(this.coin_type[0].first_address != ""){
-                                addressArray.push(this.coin_type[0].first_address)
+                                this.addressArray.push(this.coin_type[0].first_address)
                             }
                             if(this.coin_type[0].second_address != ""){
-                                addressArray.push(this.coin_type[0].second_address)
+                                this.addressArray.push(this.coin_type[0].second_address)
                             }
                             if(this.coin_type[0].third_address != ""){
-                                addressArray.push(this.coin_type[0].third_address)
+                                this.addressArray.push(this.coin_type[0].third_address)
                             }
                             if(this.coin_type[0].fourth_address != ""){
-                                addressArray.push(this.coin_type[0].fourth_address)
+                                this.addressArray.push(this.coin_type[0].fourth_address)
                             }
                             if(this.coin_type[0].fifth_address != ""){
-                                addressArray.push(this.coin_type[0].fifth_address)
+                                this.addressArray.push(this.coin_type[0].fifth_address)
                             }
-                            let randomAddressSelection = Math.floor(Math.random() * addressArray.length) 
-                            let receivingAddress = addressArray[randomAddressSelection]
-                            this.coin_address = receivingAddress
+                            let randomAddressSelection = Math.floor(Math.random() * this.addressArray.length) 
+                            this.receivingAddress =  this.addressArray[randomAddressSelection]
+                            this.coin_address = this.receivingAddress
                         }
                     }  
                     if(this.trade_type == 'BUY'){
@@ -432,13 +444,15 @@ import Api from '../views/Api'
                 // Trade details in vue store 
                 let lowerCasedCoinName = this.selected_coin_name.toLowerCase()
                     lowerCasedCoinName = lowerCasedCoinName.split(" ").join("");
+
                     let storeData = {
-                        address: this.coin_address,
+                        address: this.receivingAddress,
                         network: this.selected_coin_name,
                         dollar_amount: this.dollar_amount,
                         coin_amount: this.coin_amount,
                         coin_name: lowerCasedCoinName,
                     }
+                    console.log(storeData);
                     this.$store.commit('uniqueAddressStore', storeData)
                    if (this.coin_shortcode === "PM"){
                     formData = {
@@ -488,11 +502,12 @@ import Api from '../views/Api'
                             trade_type: trade_type,
                             buy_payment_mode: this.buy_payment_mode,
                             pm_account: this.pm_account,
-                            coin_address: this.coin_address,
+                            coin_address: this.receivingAddress,
                             bank: this.bank_data.account_id,
                             my_account: this.my_account,
                             bank_transacted_count: this.bank_transacted_count,
-                            campaign_bonus: this.campaign_bonus
+                            campaign_bonus: this.campaign_bonus,
+                            network: this.selected_network.network_name
                         }
                     }else{
                         formData = {
@@ -503,9 +518,10 @@ import Api from '../views/Api'
                             trade_type: trade_type,
                             buy_payment_mode: this.buy_payment_mode,
                             pm_account: this.pm_account,
-                            coin_address: this.coin_address,
+                            coin_address: this.receivingAddress,
                             bank: this.bank_data.account_id,
-                            campaign_bonus: this.campaign_bonus
+                            campaign_bonus: this.campaign_bonus,
+                            network: this.selected_network.network_name
                     }
                 }
                 this.buy_data = {formData}
@@ -532,14 +548,38 @@ import Api from '../views/Api'
             }}
                 
         },
-            async setCoinDetails(){
+
+        setCoinAddress(){
+            this.network_active = false
+            this.selected_network = []
+            this.coin_address = ''
+            if(this.coin_type[0].has_networks && this.trade_type == 'SELL'){
+                this.network_active = true
+                Api.axios_instance.get(Api.baseUrl+'api/v1/list-networks/'+this.coin_type[0].coin_id)
+                .then(res => {
+                    this.networks = res.data
+                })
+            }else{
+                this.setCoinDetails()       
+                this.addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
+                let randomAddressSelection = Math.floor(Math.random() * addressArray.length) 
+                this.receivingAddress = addressArray[randomAddressSelection]
+                
+            }
+        },
+        setNetworkWallet(){
+            this.addressArray = [this.selected_network.first_address, this.selected_network.second_address, this.selected_network.third_address]
+            let randomAddressSelection = Math.floor(Math.random() * this.addressArray.length) 
+            this.receivingAddress = this.addressArray[randomAddressSelection]
+            console.log(this.receivingAddress);
+            this.setCoinDetails()
+        },
+        async setCoinDetails(){
                 this.dollar_amount = ""
                 this.naira_amount = ""
                 this.coin_amount = ""
-                const addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
-                let randomAddressSelection = Math.floor(Math.random() * addressArray.length) 
-                let receivingAddress = addressArray[randomAddressSelection]
-                this.coin_address = receivingAddress
+                this.coin_address = this.receivingAddress
+                console.log(this.coin_address);
                 this.selected_coin_name = this.coin_type[0].coin_name
                 this.minimum_sell_limit = this.coin_type[0].minimum_sell_limit
                 this.minimum_buy_limit = this.coin_type[0].minimum_buy_limit

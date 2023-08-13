@@ -1,6 +1,4 @@
-<template>  
-<!-- <div> -->
-   
+<template> 
     <div id="">
         
         <SideBar />
@@ -23,11 +21,11 @@
                      :style="{'display': !show ? 'none' : 'block'}">
                         
                       <strong>Hello Chief!</strong> <span v-show="$store.state.profile_data.buy_bonus_status == true">You're eligible for ₦{{ $store.state.campaign.amount }} bonus when you Buy.</span> 
-                      <span v-show="$store.state.profile_data.sell_bonus_status == true"> You're eligible for ₦{{ $store.state.campaign.amount }}  when you sell. </span> due to the ongoing promo. <b><router-link to="/account-settings" style="color:red">Set your bank details to receive bonus </router-link> </b>
+                      <span v-show="$store.state.profile_data.sell_bonus_status == true"> You're eligible for ₦{{ $store.state.campaign.amount }}  when you sell. </span> due to the ongoing promo. <b v-if="savedAccounts.length == 0"><router-link to="/account-settings" style="color:red">Set your bank details to receive bonus </router-link> </b>
                       <a href="#" class="close" data-dismiss="alert" aria-label="close" style="color:black; font-size: 30px; float: right;" @click="closeCampaignMessage">&times;</a>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-xxl-3">
-                        <div class="card balance-widget">
+                         <div class="card balance-widget">
                             <div class="card-header border-0 py-0">
                                 <h4 class="card-title">Welcome Back {{first_name}} </h4>
                             </div>      
@@ -44,7 +42,6 @@
 
                    
                     <div class="col-xl-3 col-lg-3 col-xxl-3">
-                        <!-- <div class="col-xl-12 col-lg-6 col-xxl-6"> -->
                             <div class="widget-card">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="widget-stat">
@@ -57,27 +54,23 @@
                                         </h4>
                                     </div>
                                     <div id="btcChart"></div>
-                                <!-- </div> -->
                             </div>
                             
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-xxl-3">
-                        <!-- <div class="col-xl-12 col-lg-6 col-xxl-6"> -->
-                            <div class="widget-card">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="widget-stat">
-                                        <div class="coin-title">
-                                            <span><i class="cc BTC-alt"></i></span>
-                                            <h5 class="d-inline-block ms-2 mb-3">Completed Trades
-                                            </h5>
-                                        </div>
-                                        <h4 style="margin-left: 40px;"> {{succesful_transactions}} <span class="badge badge-success ms-2"></span> </h4>
+                        <div class="widget-card">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="widget-stat">
+                                    <div class="coin-title">
+                                        <span><i class="cc BTC-alt"></i></span>
+                                        <h5 class="d-inline-block ms-2 mb-3">Completed Trades
+                                        </h5>
                                     </div>
-                                    <div id="btcChart"></div>
-                                <!-- </div> -->
-                            </div>
-                            
+                                    <h4 style="margin-left: 40px;"> {{succesful_transactions}} <span class="badge badge-success ms-2"></span> </h4>
+                                </div>
+                                <div id="btcChart"></div>
+                        </div>
                         </div>
                     </div>
 
@@ -87,13 +80,12 @@
                                     <div class="widget-stat">
                                         <div class="coin-title">
                                             <span><i class="cc BTC-alt"></i></span>
-                                            <h5 class="d-inline-block ms-2 mb-3">Failed  Trades
+                                            <h5 class="d-inline-block ms-2 mb-3">Failed Trades
                                             </h5>
                                         </div>
                                         <h4 style="margin-left: 40px;"> {{failed_transactions}} <span class="badge badge-success ms-2"></span>
                                         </h4>
                                     </div>
-                                    <!-- <div id="btcChart"></div> -->
                             </div>
 
                         </div>
@@ -141,16 +133,7 @@
                                                     <span>₦{{PM.sell_rate}} SELL</span>
                                                 </div>
                                             </li>
-                                            <!-- <li class="d-flex col-lg-2" style="margin-right:25px">
-                                                <i class="cc DOGE me-3"></i>
-                                                <div class="flex-grow-1">
-                                                    <h5 class="m-0">DOGE </h5>
-                                                </div>
-                                                <div class="text-end">
-                                                    <h5>₦{{doge.buy_rate}} BUY</h5>
-                                                    <span>₦{{doge.sell_rate}} SELL</span>
-                                                </div>
-                                            </li> -->
+                                         
                                             <li class="d-flex col-lg-2" style="margin-right:25px">
                                                 <i class="cc DOGE me-3"></i>
                                                 <div class="flex-grow-1">
@@ -365,7 +348,6 @@ import VueMomentsAgo from 'vue-moments-ago'
             async getUser(){
                 await Api.axios_instance.get(Api.baseUrl+'api/v1/user_data')
                 .then(response => {
-                    console.log(response.data);
                     this.first_name = response.data.first_name  
                     this.last_name = response.data.last_name  
                     this.phone_number = response.data.phone_number 
@@ -411,6 +393,7 @@ import VueMomentsAgo from 'vue-moments-ago'
                 Api.axios_instance.get(Api.baseUrl+'api/v1/list-coin')
                 .then(response => {
                     this.coins = response.data
+                    console.log(this.coins);
                     this.bitcoin = this.coins[0]; 
                     this.ETH = this.coins[1];
                     this.doge = this.coins[2];

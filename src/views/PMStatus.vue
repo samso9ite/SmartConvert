@@ -85,7 +85,8 @@ import Footer from '../components/Footer.vue'
                 // payment_id: '',
                 payer_account: '',
                 naira_amount: '',
-                showMobileStyle: false
+                showMobileStyle: false,
+                campaign_bonus: false
 
             }
         },
@@ -98,6 +99,9 @@ import Footer from '../components/Footer.vue'
               this.payment_units = this.$route.query.PAYMENT_UNITS;
               this.payment_batch_num = this.$route.query.PAYMENT_BATCH_NUM;
               this.naira_amount =  this.$store.state.currentTrade.naira_amount
+              if(this.$store.state.profile_data.sell_bonus_status == true){
+                    this.campaign_bonus = true
+                }
             //   this.payment_id = this.$route.query.PAYMENT_ID;
               let formData = {
                 dollar_amount: this.payment_amount,
@@ -107,6 +111,7 @@ import Footer from '../components/Footer.vue'
                 trade_type: 'SELL',
                 coin_address: '',
                 bank:  this.$store.state.currentTrade.bank_account,
+                campaign_bonus: this.campaign_bonus
               }
                 Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(res => {

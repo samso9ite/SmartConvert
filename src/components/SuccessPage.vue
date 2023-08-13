@@ -17,6 +17,14 @@ export default({
     },
     methods: {
         successPhase(){
+            let storeData = {
+                address: '',
+                network: '',
+                dollar_amount:'',
+                coin_amount: '',
+                coin_name: '',
+            }
+            this.$store.commit('uniqueAddressStore', storeData)
             this.$emit('successPhase', this.currentPhase)
         },
     }
