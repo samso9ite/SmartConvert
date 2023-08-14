@@ -59,7 +59,6 @@ import Api from './Api.js';
                 this.loading = true
                 await   Api.axios_instance.post(Api.baseUrl+'auth/jwt/create/', formData,  {mode: 'no-cors'})
                 .then(res => {
-                    console.log(res.data);
                     const access = res.data.access
                     sessionStorage.setItem('access', access)
                     this.$router.push("/dashboard")
@@ -69,7 +68,6 @@ import Api from './Api.js';
                         for(const property in error.response.data){
                             this.errors.push(`${property}:${error.response.data[property]}`)
                         }
-                        console.log(JSON.stringify(error.message));
                         } else if (error.message){
                             console.log(JSON.stringify(error.message));
                         } else{

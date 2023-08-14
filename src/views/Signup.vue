@@ -130,7 +130,6 @@ import VuePassword from 'vue-password'
                         sell_bonus_status: this.sell_bonus_status,
                         buy_bonus_status: this.buy_bonus_status
                     }
-                    console.log(formData);
                     this.loading = true
                     await   Api.axios_instance.post(Api.baseUrl+'auth/users/', formData,  {mode: 'no-cors'})
                     .then(res => {

@@ -64,7 +64,6 @@ import Api from './Api.js';
                         for(const property in error.response.data){
                             this.errors.push(`${property}:${error.response.data[property]}`)
                         }
-                        console.log(JSON.stringify(error.message));
                         } else if (error.message){
                             console.log(JSON.stringify(error.message));
                         } else{

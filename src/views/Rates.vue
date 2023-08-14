@@ -63,13 +63,11 @@ import Api from './Api.js'
             getRates(){
                 Api.axios_instance.get(Api.baseUrl+'api/v1/list-coin')
                 .then(response => {
-                    console.log(response.data)
                     this.rates = response.data
                 })
             },
             screenSize(){
                 if(screen.width < 800){
-                    console.log("Mobile Size")
                     this.showMobileStyle = true
                 }
                 }

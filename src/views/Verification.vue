@@ -143,10 +143,8 @@
         methods: {
             getUserVerificationStatus(){
                 let user_id = localStorage.getItem('id')
-                console.log(user_id);
                 Api.axios_instance.get(Api.baseUrl+'api/v1/profile/get/'+user_id)
                 .then(res =>{
-                    console.log(res);
                     this.status = res.data.transaction_status
                     this.f_name = res.data.user.first_name
                     this.l_name = res.data.user.last_name
