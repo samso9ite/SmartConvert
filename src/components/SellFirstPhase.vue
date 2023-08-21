@@ -4,9 +4,21 @@
         <div class="currency_validate" style="margin-top:-0.7rem" v-if="trade_type === 'SELL'">
             <div class="mb-3">
                 <label class="me-sm-2">Coin Type </label>
+            
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text"><i class="cc BTC-alt" v-if="selected_coin_name === 'Bitcoin'"></i> <i class="cc SOL-alt" v-if="selected_coin_name === 'Solana'"></i> <i class="cc TX-alt" v-if="selected_coin_name === 'TRON'"></i> <img src="../../public/assets/images/pm-64.png" width="38px" v-if="selected_coin_name === 'Perfect Money'"/><i class="cc ETH-alt"  v-if="selected_coin_name == 'Ethereum'"></i><i class="cc LTC-alt"  v-if="selected_coin_name == 'LiteCoin'"></i><i class="cc DOGE-alt"  v-if="selected_coin_name == 'Doge Coin'"></i><i class="cc USDT-alt" v-if="selected_coin_name == 'USDT' "></i><i class="cc XRP-alt" v-if="selected_coin_name == 'Ripple'"></i></label>
+                        <label class="input-group-text">
+                            <i class="cc BTC-alt" v-if="selected_coin_name === 'Bitcoin'"></i> 
+                            <i class="cc SOL-alt" v-if="selected_coin_name === 'Solana'"></i>
+                            <i class="cc TX-alt" v-if="selected_coin_name === 'TRON'"></i> 
+                            <img src="../../public/assets/images/pm-64.png" width="38px" v-if="selected_coin_name === 'Perfect Money'"/>
+                            <i class="cc ETH-alt"  v-if="selected_coin_name == 'Ethereum'"></i>
+                            <i class="cc LTC-alt"  v-if="selected_coin_name == 'LiteCoin'"></i>
+                            <i class="cc DOGE-alt"  v-if="selected_coin_name == 'Doge Coin'"></i>
+                            <i class="cc USDT-alt" v-if="selected_coin_name == 'USDT' "></i>
+                            <i class="cc XRP-alt" v-if="selected_coin_name == 'Ripple'"></i>
+                            <img :src=coin_image width="35" class="rounded-circle" v-else/>
+                        </label>
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinAddress()">
                         <option :value="[{select:'selected'}]">Click to Select Coin</option>
@@ -14,7 +26,7 @@
                             minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code, 
                             sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status,first_address:coin.first_address,
                             second_address:coin.second_address, third_address:coin.third_address, fourth_address:coin.fourth_address, 
-                            fifth_address:coin.fifth_address, has_networks:coin.has_networks}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
+                            fifth_address:coin.fifth_address, has_networks:coin.has_networks, coin_image:coin.image}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
             </div>
@@ -144,14 +156,24 @@
                 <label class="me-sm-2">Coin Type </label>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text"><i class="cc BTC-alt" v-if="selected_coin_name === 'Bitcoin'"></i> <i class="cc TX-alt" v-if="selected_coin_name === 'TRON'"></i> <img src="../../public/assets/images/pm-64.png" width="38px" v-if="selected_coin_name === 'Perfect Money'"/><i class="cc ETH-alt"  v-if="selected_coin_name == 'Ethereum'"></i><i class="cc LTC-alt"  v-if="selected_coin_name == 'LiteCoin'"></i><i class="cc DOGE-alt"  v-if="selected_coin_name == 'Doge Coin'"></i><i class="cc USDT-alt" v-if="selected_coin_name == 'USDT' "></i><i class="cc XRP-alt" v-if="selected_coin_name == 'Ripple'"></i></label>
+                        <label class="input-group-text">
+                            <i class="cc BTC-alt" v-if="selected_coin_name === 'Bitcoin'"></i> 
+                            <i class="cc TX-alt" v-if="selected_coin_name === 'TRON'"></i> 
+                            <img src="../../public/assets/images/pm-64.png" width="38px" v-if="selected_coin_name === 'Perfect Money'"/>
+                            <i class="cc ETH-alt"  v-if="selected_coin_name == 'Ethereum'"></i>
+                            <i class="cc LTC-alt"  v-if="selected_coin_name == 'LiteCoin'"></i>
+                            <i class="cc DOGE-alt"  v-if="selected_coin_name == 'Doge Coin'"></i>
+                            <i class="cc USDT-alt" v-if="selected_coin_name == 'USDT' "></i>
+                            <i class="cc XRP-alt" v-if="selected_coin_name == 'Ripple'"></i>
+                            <img :src=coin_image width="35" class="rounded-circle" v-else/>
+                        </label>
                     </div>
                     <select class="form-control" v-model="coin_type" @change="setCoinDetails()">
                         <option :value="[{select:'selected'}]">Click to Select Coin</option>
                         <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, 
                             sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, 
                             minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code,
-                            sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status}]" 
+                            sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status, coin_image:coin.image}]" 
                             v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
@@ -232,6 +254,7 @@ import Api from '../views/Api'
                 selected_coin_name:'',
                 minimum_buy_limit: '',
                 minimum_sell_limit: '',
+                coin_image: '',
                 coin_sell_rate: '',
                 coin_buy_rate: '',
                 btc_rate: '',
@@ -590,6 +613,7 @@ import Api from '../views/Api'
                 this.coin_buy_rate = this.coin_type[0].buy_rate
                 this.coin_shortcode = this.coin_type[0].shortcode 
                 this.coin_id = this.coin_type[0].coin_id
+                this.coin_image = this.coin_type[0].coin_image
                 await Api.axios_instance.get("https://min-api.cryptocompare.com/data/pricemulti?fsyms="+this.coin_shortcode+"&tsyms=USD&api_key=40c4cada7ddcb05ecedb554f444d3e51924ff6115d4ed983eb868feaf50b098d")
                 .then(response  => {
                     var results = response.data
