@@ -29,8 +29,8 @@
                                                     <i class="cc DOGE me-3"  v-if="rate.coin_name == 'Doge Coin'"></i>
                                                     <i class="cc USDT me-3" v-if="rate.coin_name == 'USDT' "></i>
                                                     <i class="cc XRP me-3" v-if="rate.coin_name == 'Ripple'"></i><i class="cc TX me-3" v-if="rate.coin_name == 'TRON'"></i>
-                                                    <img src="../../public/assets/images/cryptocurrency.jpg" class="me-3" width="35px" v-if="rate.coin_name == 'Solana'"/>
-                                                    <img :src=rate.image width="30" class="rounded-circle" style="margin-right: 10px;" v-else/>
+                                                    <img src="../../public/assets/images/cryptocurrency.jpg" class="me-3 rounded-circle" width="35px" v-if="rate.coin_name == 'Solana'"/>
+                                                    <img :src=rate.image width="30" class="rounded-circle" style="margin-right: 10px" v-else/>
                                                     <div class="flex-grow-1">
                                                         <h5 class="m-0">{{rate.coin_name}}</h5>
                                                     </div>

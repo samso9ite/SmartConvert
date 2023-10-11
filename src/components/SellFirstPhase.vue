@@ -321,7 +321,7 @@ import Api from '../views/Api'
                     coin_address: this.receivingAddress
                 }
                 this.$store.commit('currentTrade', tradeData)
-                console.log(this.$store.state.currentTrade);
+               
             },
             verificationInfo(){
                this.show  =  !this.show 
@@ -356,14 +356,14 @@ import Api from '../views/Api'
                     showDuration: 200,
                     message:'Chief! Amount specified is lower than the minimum limit'})
                     this.loading = false
-                }else if(trade_type === 'BUY' && this.sell_active_status == false){
+                }else if(trade_type === 'SELL' && this.sell_active_status == false){
                     this.$toast.error({
                     title:'Oops!',
                     position: 'bottom left',
                     showDuration: 300,
                     message:'The selected coin isn\'t available to buy at the moment.'})
                     this.loading = false
-                }else if(trade_type === 'SELL' && this.buy_active_status == false){
+                }else if(trade_type === 'BUY' && this.buy_active_status == false){
                     this.$toast.error({
                     title:'Oops!',
                     position: 'bottom left',
@@ -475,7 +475,6 @@ import Api from '../views/Api'
                         coin_amount: this.coin_amount,
                         coin_name: lowerCasedCoinName,
                     }
-                    console.log(storeData);
                     this.$store.commit('uniqueAddressStore', storeData)
                    if (this.coin_shortcode === "PM"){
                     formData = {
@@ -594,7 +593,6 @@ import Api from '../views/Api'
             this.addressArray = [this.selected_network.first_address, this.selected_network.second_address, this.selected_network.third_address]
             let randomAddressSelection = Math.floor(Math.random() * this.addressArray.length) 
             this.receivingAddress = this.addressArray[randomAddressSelection]
-            console.log(this.receivingAddress);
             this.setCoinDetails()
         },
         async setCoinDetails(){
@@ -602,7 +600,6 @@ import Api from '../views/Api'
                 this.naira_amount = ""
                 this.coin_amount = ""
                 this.coin_address = this.receivingAddress
-                console.log(this.coin_address);
                 this.selected_coin_name = this.coin_type[0].coin_name
                 this.minimum_sell_limit = this.coin_type[0].minimum_sell_limit
                 this.minimum_buy_limit = this.coin_type[0].minimum_buy_limit
