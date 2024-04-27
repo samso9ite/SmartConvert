@@ -66,6 +66,7 @@ export default new Vuex.Store({
       }
     },
     currentTrade(state, payload){
+      console.log(payload);
       state.currentTrade.bank_account = payload.bank_account
       state.currentTrade.coin_amount = payload.coin_amount
       state.currentTrade.coin_name = payload.coin_name

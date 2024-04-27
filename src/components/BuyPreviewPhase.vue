@@ -14,6 +14,10 @@
                 <td>Coin Amount</td>
                 <td>{{coin_amount}} {{coin_name}}</td>
             </tr>
+            <tr v-if="coin_address != Infinity">
+                <td>Coin Address</td>
+                <td>{{coin_address}}</td>
+            </tr>
             <tr>
                 <td>Dollar Value </td>
                 <td>${{dollar_amount}}</td>
@@ -45,7 +49,7 @@
 import Api from '../views/Api'
 export default({
     name: "buyPreviewPhase",
-    props: ['coin_amount', 'naira_amount', 'dollar_amount', 'coin_name', 'transaction_ref'],
+    props: ['coin_amount', 'naira_amount', 'dollar_amount', 'coin_name', 'transaction_ref', 'coin_address'],
     data(){
         return{
             currentPhase: 'SuccessPhase',

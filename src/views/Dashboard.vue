@@ -290,6 +290,7 @@
                       :naira_amount="current_naira_amount"
                       :dollar_amount="current_dollar_amount"
                       :transaction_ref="transaction_ref"
+                      :coin_address="this.$store.state.currentTrade.coin_address"
                     />
                   </div>
                   <div v-show="currentPhase === 'FirstPreviewPhase'">
@@ -322,7 +323,7 @@
               </div>
             </div>
           </div>
-          <div class="col-xl-9 col-lg-8 col-xxl-8">
+          <div class="col-xl-8 col-lg-8 col-xxl-8">
             <div class="card">
               <div class="card-header border-0 py-0">
                 <h4 class="card-title">Recent Activities</h4>
@@ -744,9 +745,9 @@ export default {
       } else if (this.currentPhase === "BuyPreviewPhase") {
         this.current_coin_name = this.$store.state.currentTrade.coin_name;
         this.current_coin_amount = this.$store.state.currentTrade.coin_amount;
-        this.current_dollar_amount =
-          this.$store.state.currentTrade.dollar_amount;
+        this.current_dollar_amount = this.$store.state.currentTrade.dollar_amount;
         this.current_naira_amount = this.$store.state.currentTrade.naira_amount;
+        this.current_coin_address = this.$store.state.currentTrade.coin_address;
       }
     },
     async getSavedAccounts() {

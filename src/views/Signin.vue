@@ -92,7 +92,7 @@ import VuePassword from 'vue-password'
                         title:'Oops!',
                         message:'Incorrect Email or Password'
                 })  
-                        console.log(error.data);
+                        // console.log(error.data);
                         }
                     }
                 )  

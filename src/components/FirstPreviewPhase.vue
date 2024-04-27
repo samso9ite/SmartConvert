@@ -23,7 +23,7 @@
                 <td><span style="font-size: 20px !important;">₦{{tradeDetails.naira_amount}}</span></td>
             </tr>
             <tr v-if="tradeDetails.coin_address">
-                <td>Coin Address </td>
+                <td>Wallet </td>
                 <td ><span style="font-size: 20px !important;">{{tradeDetails.coin_address}}</span></td>
             </tr>
             <tr  v-if="tradeDetails.pm_account">
@@ -36,7 +36,8 @@
             </tr>
             </tbody>
             </table>
-            <button type="submit" @click="createTransaction()" class="btn btn-success btn-block">Proceed</button>  <button type="submit" @click="cancelTrade()" class="btn btn-danger btn-block">Cancel</button>
+            <button type="submit" @click="createTransaction()" class="btn btn-success btn-block">Proceed</button>
+              <button type="submit" @click="cancelTrade()" class="btn btn-danger btn-block">Cancel</button>
         </center>
     </div>
 </template>
@@ -45,7 +46,7 @@
 import Api from '../views/Api'
 export default({
     name: "buyPreviewPhase",
-    props: ['coin_amount', 'naira_amount', 'dollar_amount', 'coin_name', 'transaction_ref'],
+    props: ['coin_amount', 'naira_amount', 'dollar_amount', 'coin_name', 'transaction_ref', 'coin_address'],
     data(){
         return{
             currentPhase: 'SuccessPhase',

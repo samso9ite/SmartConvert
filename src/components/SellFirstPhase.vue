@@ -87,7 +87,7 @@
 
                     <div class="input-group mt-2" v-if="coin_shortcode !== 'PM' && trade_type === 'BUY'">
                         <input type="text"   class="form-control" v-model="coin_address" 
-                            placeholder="Enter Your Coin  Address" >
+                            placeholder="Enter Your Wallet" >
                     </div>
                     <div class="d-flex justify-content-between mt-3">
                         <p class="mb-0">Minimum Limit</p>
@@ -211,7 +211,7 @@
 
                 <div class="input-group mt-2" v-if="coin_shortcode !== 'PM'">
                     <input type="text"   class="form-control" v-model="coin_address" 
-                        placeholder="Enter Your Coin  Address" required>
+                        placeholder="Enter Your Wallet" required>
                 </div>
                 <div class="d-flex justify-content-between mt-3">
                     <p class="mb-0">Minimum Limit</p>
@@ -426,7 +426,7 @@ import Api from '../views/Api'
                     admin_bank_name: this.bank_data.account_name,
                     admin_bank_number: this.bank_data.account_number,
                     admin_bank: this.bank_data.bank,
-                    coin_address: this.receivingAddress,
+                    coin_address: this.coin_address,
                     pm_account: this.pm_account
                 }
                 this.$store.commit('currentTrade', tradeData)
@@ -490,6 +490,7 @@ import Api from '../views/Api'
                         bank_transacted_count: this.bank_transacted_count,
                         campaign_bonus: this.campaign_bonus
                     }
+                    
                 this.buy_data = {formData}
                 this.$store.commit('buyData', this.buy_data)
             
@@ -524,7 +525,7 @@ import Api from '../views/Api'
                             trade_type: trade_type,
                             buy_payment_mode: this.buy_payment_mode,
                             pm_account: this.pm_account,
-                            coin_address: this.receivingAddress,
+                            coin_address: this.coin_address,
                             bank: this.bank_data.account_id,
                             my_account: this.my_account,
                             bank_transacted_count: this.bank_transacted_count,
@@ -540,7 +541,7 @@ import Api from '../views/Api'
                             trade_type: trade_type,
                             buy_payment_mode: this.buy_payment_mode,
                             pm_account: this.pm_account,
-                            coin_address: this.receivingAddress,
+                            coin_address: this.coin_address,
                             bank: this.bank_data.account_id,
                             campaign_bonus: this.campaign_bonus,
                             network: this.selected_network.network_name
