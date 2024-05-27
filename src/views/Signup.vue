@@ -35,17 +35,28 @@
                                             name="email" v-model="email">
                                     </div>
                                     <div class="mb-3">
-                                        <label>Mobile Number</label>
-                                        <input type="test" class="form-control" placeholder="Mobile Number"  v-model="mobile_number">
+                                        <label>Bank</label>
+                                        <select class="form-control" v-model="bank_details">
+                                            <option value="">Select</option>
+                                            <option v-for="bank in all_banks" :key="bank" :value="[{bank_code:bank.code, bank_name:bank.name}]">{{bank.name}}</option>
+                                        </select>
                                     </div>
                                     <div class="mb-3">
+                                        <label>Account Number</label>
+                                        <input type="text" class="form-control" placeholder="Mobile Number"  v-model="account_number">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Mobile Number</label>
+                                        <input type="text" class="form-control" placeholder="Mobile Number"  v-model="mobile_number">
+                                    </div>
+                                    <!-- <div class="mb-3">
                                         <label>First Name</label>
                                         <input type="text" class="form-control" placeholder="First Name" v-model="first_name">
                                     </div>
                                     <div class="mb-3">
                                         <label>Last Name</label>
                                         <input type="text" class="form-control" placeholder="Last Name" v-model="last_name">
-                                    </div>
+                                    </div> -->
                                     <div class="mb-3" v-show="$store.state.campaign.status == true">
                                         <label>Promo Code</label>
                                         <input type="text" class="form-control" placeholder="Promo Code" v-model="coupon_code">
@@ -98,7 +109,13 @@ import VuePassword from 'vue-password'
                 coupon_code: '',
                 buy_bonus_status: false,
                 sell_bonus_status: false,
-                bonus_status: false
+                bonus_status: false,
+                all_banks: '',
+                bank_details: [],
+                bank_code: '',
+                account_number: '',
+                account_name: '',
+                bank_name: '',
             }
         },
 
@@ -155,9 +172,57 @@ import VuePassword from 'vue-password'
                     })
                 }
             }, 
+            getAllBanks(){
+            Api.axios_instance.get('https://api.paystack.co/bank')
+                .then(response => {
+                   this.all_banks = response.data.data
+                })
+                .catch(error => {
+                    console.log(error.data);
+                })
+           },
+           async verifyAccount(){   
+            this.bank_code = this.bank_details[0].bank_code
+            this.bank_name = this.bank_details[0].bank_name
+            // let token = process.env.VUE_APP_NOT_SECRET_KEY
+            let token = 'sk_live_8897fa0d728dd8a313165ba6c18c3b67c1bc0fca'
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+            await axios.get('https://api.paystack.co/bank/resolve?account_number='+this.account_number+'&bank_code='+this.bank_code, {
+                }) 
+                .then(response => {
+                    this.account_name = response.data.data.account_name
+                    this.account_number = response.data.data.account_number
+                   })
+                .catch(() => {
+                    this.$toast.error({
+                    title:'Oops!',
+                    message:'Bank Details Incorrect'
+                    })
+                })
+                const bankData = {
+                    account_name: this.account_name,
+                    account_number: this.account_number,
+                    bank_code: this.bank_code,
+                    bank_name: this.bank_name
+                }
+            await Api.axios_instance.post(Api.baseUrl+'api/v1/add-bank', bankData) 
+                .then(response => {
+                    this.$toast.success({
+                    title:'Welldone!',
+                    message:'Bank Details Added'
+                    })
+                    this.account_name = ""
+                    this.account_number = ""
+                    } 
+                )
+                .catch(error => {
+                    console.log(error);
+                })
+           },
         },
 
         mounted() {
+            this.getAllBanks()
             this.$store.dispatch('Set_Campaign')
         },
     }

@@ -69,7 +69,8 @@ import VuePassword from 'vue-password'
                 email: '',
                 password: '',
                 errors: [],
-                loading: false
+                loading: false,
+
             }
         },
         methods: {
@@ -92,18 +93,20 @@ import VuePassword from 'vue-password'
                         title:'Oops!',
                         message:'Incorrect Email or Password'
                 })  
-                        // console.log(error.data);
-                        }
                     }
+                }
                 )  
                 .finally(() => {
                     this.loading = false
                 })          
             },
+
+          
         },
 
         mounted() {
             this.$store.dispatch('Set_Campaign')
+            
         },
     }
 </script>
