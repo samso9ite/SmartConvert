@@ -26,6 +26,15 @@
                 <td>Wallet </td>
                 <td ><span style="font-size: 20px !important;">{{tradeDetails.coin_address}}</span></td>
             </tr>
+            <tr v-if="tradeDetails.expiration_wallet">
+                <td>Timing Wallet </td>
+                <td ><span style="font-size: 20px !important;">{{tradeDetails.expiration_wallet}}</span></td>
+            </tr>
+            <tr v-if="tradeDetails.expiration_time">
+                <td>Expiration Time </td>
+                <td ><span style="font-size: 20px !important;">{{tradeDetails.expiration_time}}</span></td>
+            </tr>
+           
             <tr  v-if="tradeDetails.pm_account">
                 <td>PM Account </td>
                 <td><span style="font-size: 20px !important;">{{tradeDetails.pm_account}}</span></td>

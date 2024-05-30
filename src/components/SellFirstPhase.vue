@@ -123,6 +123,7 @@
                         <input type="text"   class="form-control" v-model="coin_amount" 
                             placeholder="Amount of Coin" @input="coinBasedCalculation(trade_type)" required>
                     </div>
+                  
                     <div class="d-flex justify-content-between mt-3">
                         <p class="mb-0">Minimum Limit</p>
                         <h4 class="mb-0">${{minimum_sell_limit}} </h4>
@@ -212,6 +213,17 @@
                 <div class="input-group mt-2" v-if="coin_shortcode !== 'PM'">
                     <input type="text"   class="form-control" v-model="coin_address" 
                         placeholder="Enter Your Wallet" required>
+                </div> <br />
+                <div  v-if="coin_shortcode !== 'PM'">
+                <label class="me-sm-2">Set Timer Wallet </label>
+                    <div class="input-group">
+                        <select class="form-control" v-model="timer_wallet"> 
+                            <option :value="false" >Disabled</option>
+                            <option  :value="true">Enabled</option>
+                        </select>
+                        <label class="input-group-text">expiration</label><input type="time" class="form-control" v-model="expiration_time"
+                            placeholder="Set Time" :disabled="!timer_wallet">
+                    </div>
                 </div>
                 <div class="d-flex justify-content-between mt-3">
                     <p class="mb-0">Minimum Limit</p>
@@ -296,7 +308,9 @@ import Api from '../views/Api'
                 networks: [],
                 selected_network: {},
                 addressArray: [],
-                receivingAddress: ''
+                receivingAddress: '',
+                timer_wallet: false,
+                expiration_time:''
             }
         },
 
@@ -427,8 +441,11 @@ import Api from '../views/Api'
                     admin_bank_number: this.bank_data.account_number,
                     admin_bank: this.bank_data.bank,
                     coin_address: this.coin_address,
+                    expiration_wallet: this.timer_wallet,
+                    expiration_time: this.expiration_time,
                     pm_account: this.pm_account
                 }
+                console.log(tradeData);
                 this.$store.commit('currentTrade', tradeData)
                 let formData = {}
                     if (trade_type === 'SELL'){
@@ -530,7 +547,9 @@ import Api from '../views/Api'
                             my_account: this.my_account,
                             bank_transacted_count: this.bank_transacted_count,
                             campaign_bonus: this.campaign_bonus,
-                            network: this.selected_network.network_name
+                            network: this.selected_network.network_name,
+                            expiration_time: this.expiration_time,
+                            expiration_wallet: this.timer_wallet
                         }
                     }else{
                         formData = {
@@ -544,9 +563,12 @@ import Api from '../views/Api'
                             coin_address: this.coin_address,
                             bank: this.bank_data.account_id,
                             campaign_bonus: this.campaign_bonus,
-                            network: this.selected_network.network_name
+                            network: this.selected_network.network_name,
+                            expiration_time: this.expiration_time,
+                            expiration_wallet: this.timer_wallet
                     }
                 }
+                console.log(formData);
                 this.buy_data = {formData}
                 this.$store.commit('buyData', this.buy_data)
                
