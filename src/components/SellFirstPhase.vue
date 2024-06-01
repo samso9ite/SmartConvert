@@ -474,7 +474,7 @@ import Api from '../views/Api'
                             this.receivingAddress =  this.addressArray[randomAddressSelection]
                             this.coin_address = this.receivingAddress
                         }
-                    }  
+                    }; 
                     if(this.trade_type == 'BUY'){
                         if(this.$store.state.profile_data.buy_bonus_status == true){
                             this.campaign_bonus = true
@@ -605,15 +605,41 @@ import Api from '../views/Api'
                     this.networks = res.data
                 })
             }else{
-                this.setCoinDetails()       
-                this.addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
+                this.setCoinDetails()  
+                if(this.coin_type[0].first_address != ""){
+                    this.addressArray.push(this.coin_type[0].first_address)
+                }
+                if(this.coin_type[0].second_address != ""){
+                    this.addressArray.push(this.coin_type[0].second_address)
+                }
+                if(this.coin_type[0].third_address != ""){
+                    this.addressArray.push(this.coin_type[0].third_address)
+                }
+                if(this.coin_type[0].fourth_address != ""){
+                    this.addressArray.push(this.coin_type[0].fourth_address)
+                }
+                if(this.coin_type[0].fifth_address != ""){
+                    this.addressArray.push(this.coin_type[0].fifth_address)
+                };     
+                // this.addressArray = [this.coin_type[0].first_address, this.coin_type[0].second_address, 
+                // this.coin_type[0].third_address, this.coin_type[0].fourth_address, this.coin_type[0].fifth_address]
                 let randomAddressSelection = Math.floor(Math.random() * addressArray.length) 
                 this.receivingAddress = addressArray[randomAddressSelection]
                 
             }
         },
         setNetworkWallet(){
-            this.addressArray = [this.selected_network.first_address, this.selected_network.second_address, this.selected_network.third_address]
+            if(this.selected_network.first_address != ""){
+                this.addressArray.push(this.selected_network.first_address)
+            }
+            if(this.selected_network.second_address != ""){
+                this.addressArray.push(this.selected_network.second_address)
+            }
+            if(this.selected_network.third_address != ""){
+                this.addressArray.push(this.selected_network.third_address)
+            }
+                
+            // this.addressArray = [this.selected_network.first_address, this.selected_network.second_address, this.selected_network.third_address]
             let randomAddressSelection = Math.floor(Math.random() * this.addressArray.length) 
             this.receivingAddress = this.addressArray[randomAddressSelection]
             this.setCoinDetails()
