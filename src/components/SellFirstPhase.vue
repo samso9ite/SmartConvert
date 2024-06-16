@@ -445,7 +445,7 @@ import Api from '../views/Api'
                     expiration_time: this.expiration_time,
                     pm_account: this.pm_account
                 }
-                console.log(tradeData);
+                // console.log(tradeData);
                 this.$store.commit('currentTrade', tradeData)
                 let formData = {}
                     if (trade_type === 'SELL'){
@@ -512,6 +512,7 @@ import Api from '../views/Api'
                 this.$store.commit('buyData', this.buy_data)
             
                 if(trade_type == 'SELL'){
+                    delete formData.expiration_time
                     await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                     .then(response => {
                         this.$emit('getTransactions')
@@ -568,11 +569,11 @@ import Api from '../views/Api'
                             expiration_wallet: this.timer_wallet
                     }
                 }
-                console.log(formData);
                 this.buy_data = {formData}
                 this.$store.commit('buyData', this.buy_data)
                
                 if(trade_type == 'SELL'){
+                    delete formData.expiration_time
                     await Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                     .then(response => {
                         this.$emit('getTransactions')
