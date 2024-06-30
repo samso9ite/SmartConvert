@@ -221,8 +221,8 @@
                             <option :value="false" >Disabled</option>
                             <option  :value="true">Enabled</option>
                         </select>
-                        <label class="input-group-text">expiration</label><input type="time" class="form-control" v-model="expiration_time"
-                            placeholder="Set Time" :disabled="!timer_wallet">
+                        <label class="input-group-text">Minutes</label><input type="number" class="form-control" v-model="expiration_time"
+                            placeholder="20 " :disabled="!timer_wallet">
                     </div>
                 </div>
                 <div class="d-flex justify-content-between mt-3">

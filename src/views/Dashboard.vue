@@ -344,6 +344,7 @@
                             <td>ASSET</td>
                             <td>AMOUNT</td>
                             <td>(₦)AMOUNT</td>
+                            <!-- <td>TIMER</td> -->
                             <td>COMMENT</td>
                           </tr>
                           <tr
@@ -447,7 +448,7 @@
                                 transaction.coin.coin_name != 'Perfect Money'
                               "
                             >
-                              {{ transaction.amount_received }}
+                              {{ transaction.paid_dollar_amount }} USD
                             </td>
                             <td
                               class="text-success"
@@ -456,7 +457,7 @@
                                 transaction.coin.coin_name != 'Perfect Money'
                               "
                             >
-                              {{ transaction.amount_received }}
+                              {{ transaction.paid_dollar_amount }}USD
                             </td>
                             <td
                               class="text-danger"
@@ -474,7 +475,7 @@
                                 transaction.coin.coin_name != 'Perfect Money'
                               "
                             >
-                              {{ transaction.coin_amount }}
+                              {{ transaction.dollar_amount }} USD
                             </td>
                             <td
                               class="text-danger"
@@ -483,7 +484,7 @@
                                 transaction.coin.coin_name != 'Perfect Money'
                               "
                             >
-                              {{ transaction.coin_amount }}
+                              {{ transaction.dollar_amount }} USD
                             </td>
                             <td
                               class="text-success"
@@ -492,7 +493,7 @@
                                 transaction.coin.coin_name != 'Perfect Money'
                               "
                             >
-                              {{ transaction.amount_received }}
+                              {{ transaction.paid_dollar_amount }} USD
                             </td>
                             <td
                               class="text-warning"
@@ -501,7 +502,7 @@
                                 transaction.coin.coin_name != 'Perfect Money'
                               "
                             >
-                              {{ transaction.coin_amount }}
+                              {{ transaction.dollar_amount }} USD
                             </td>
                             <td
                               v-else-if="
@@ -771,6 +772,31 @@ export default {
     closeCampaignMessage() {
       this.show = !this.show;
     },
+   
+    // startCountdown() {
+    //   if (!this.transactionTime || !this.expirationTime) return;
+
+    //   const transactionTimeInSeconds = new Date(this.transactionTime).getTime() / 1000;
+    //   const countdownDuration = this.expirationTime * 60;
+
+    //   this.timeRemaining = countdownDuration - (Date.now() / 1000 - transactionTimeInSeconds);
+
+    //   if (this.intervalId) {
+    //     clearInterval(this.intervalId);
+    //   }
+
+    //   this.intervalId = setInterval(() => {
+    //     if (this.timeRemaining > 0) {
+    //       this.timeRemaining = parseFloat((this.timeRemaining - 0.1).toFixed(1));
+    //     } else {
+    //       // Perform actions when countdown reaches zero
+    //       clearInterval(this.intervalId);
+    //       this.sendExpiryMail();
+    //     }
+    //   }, 100);
+    // },  
+   
+
   },
   mounted() {
     this.getUser();
@@ -782,6 +808,13 @@ export default {
     this.getCampaign();
     this.timer = setInterval(this.update, 30000);
   },
+  // computed: {
+  //     formattedTime() {
+  //       const minutes = Math.floor(this.timeRemaining / 60);
+  //       const seconds = Math.floor(this.timeRemaining % 60);
+  //       return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  //     },
+  //   },
   computed: {
     pending_transactions: function () {
       return this.transactions.filter(
