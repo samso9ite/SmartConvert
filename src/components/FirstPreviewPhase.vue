@@ -16,11 +16,11 @@
             </tr>
             <tr>
                 <td>Dollar Value </td>
-                <td>${{tradeDetails.dollar_amount}}</td>
+                <td>${{tradeDetails.dollar_amount + parseInt(tradeDetails.confirmation_fee)}} {{ "(Confirmation Fee Added)"}}</td>
             </tr>
             <tr>
                 <td>Naira Value </td>
-                <td><span style="font-size: 20px !important;">₦{{tradeDetails.naira_amount}}</span></td>
+                <td><span style="font-size: 20px !important;">₦{{(tradeDetails.confirmation_fee * tradeDetails.buy_rate)+tradeDetails.naira_amount}} <span style="font-size: 13px;">{{ "(Confirmation Fee Added)"}}</span></span></td>
             </tr>
             <tr v-if="tradeDetails.coin_address">
                 <td>Wallet </td>
@@ -38,6 +38,10 @@
             <tr  v-if="tradeDetails.pm_account">
                 <td>PM Account </td>
                 <td><span style="font-size: 20px !important;">{{tradeDetails.pm_account}}</span></td>
+            </tr>
+            <tr>
+                <td>Confirmation Fee</td>
+                <td>${{ tradeDetails.confirmation_fee }}</td>
             </tr>
             <tr>
                 <td> Bank</td>
@@ -75,6 +79,7 @@ export default({
         createTransaction(){
             this.$emit('secondPhase', 'BuyPreviewPhase')
             let formData = this.$store.state.buy_data.formData
+            console.log(formData);
             Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
                     this.$emit('getTransactions')

@@ -25,7 +25,9 @@ export default new Vuex.Store({
       coin_address: '',
       pm_account: '',
       expiration_wallet: '',
-      expiration_time: ''
+      expiration_time: '',
+      confirmation_fee: '',
+      buy_rate: 0
     },
     user :{
       username: '',
@@ -68,6 +70,7 @@ export default new Vuex.Store({
       }
     },
     currentTrade(state, payload){
+      console.log(payload);
       state.currentTrade.bank_account = payload.bank_account
       state.currentTrade.coin_amount = payload.coin_amount
       state.currentTrade.coin_name = payload.coin_name
@@ -81,7 +84,9 @@ export default new Vuex.Store({
       state.currentTrade.coin_address = payload.coin_address
       state.currentTrade.pm_account = payload.pm_account
       state.currentTrade.expiration_time = payload.expiration_time
-      state.currentTrade.expiration_wallet = payload.pm_account = payload.expiration_wallet
+      state.currentTrade.expiration_wallet = payload.expiration_wallet
+      state.currentTrade.confirmation_fee = payload.confirmation_fee
+      state.currentTrade.buy_rate = payload.buy_rate
 
     },
     setToken(state, payload){

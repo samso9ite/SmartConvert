@@ -526,8 +526,14 @@
                               ₦{{ transaction.paid_naira_amount }}
                             </td>
                             <td v-else>₦{{ transaction.naira_amount }}</td>
-                            <td @click="setTimerReference(transaction.transaction_reference)" v-if="(transaction.expiration_time == 0 && transaction_id !== transaction.transaction_reference)" style="color:red" onclick="">{{ "Expired" }}</td>
-                            <td v-else-if="(transaction.expiration_time == 0 && transaction_id == transaction.transaction_reference)"> <input type="number"  @change="updateTimer" v-model="new_timer_value"/></td>
+                            <td @click="setTimerReference(transaction.transaction_reference)" v-if="(transaction.expiration_time == 0 &&
+                              transaction_id !== transaction.transaction_reference && transaction.expiration_wallet == true)" 
+                              style="color:red" onclick="">{{ "Expired" }}
+                            </td>
+                            <td v-else-if="(transaction.expiration_time == 0 && transaction_id ==
+                              transaction.transaction_reference  && transaction.expiration_wallet == true)"> <input type="number" 
+                              @change="updateTimer" v-model="new_timer_value"/></td>
+                            <td v-else-if="(transaction.expiration_wallet == false)" >{{ "Not Timer Wallet" }}</td>
                             <td v-else style="color: green;">{{ "Address Active" }}</td>
                             <td>{{ transaction.comment }}</td>
                           </tr>

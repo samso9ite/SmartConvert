@@ -26,7 +26,8 @@
                             minimum_sell_limit:coin.minimum_sell_limit, minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code, 
                             sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status,first_address:coin.first_address,
                             second_address:coin.second_address, third_address:coin.third_address, fourth_address:coin.fourth_address, 
-                            fifth_address:coin.fifth_address, has_networks:coin.has_networks, coin_image:coin.image}]" v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
+                            fifth_address:coin.fifth_address, has_networks:coin.has_networks, coin_image:coin.image}]"
+                            v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
             </div>
@@ -93,6 +94,7 @@
                         <p class="mb-0">Minimum Limit</p>
                         <h4 class="mb-0">₦{{minimum_sell_limit}} </h4>
                     </div>
+                   
                 </div>
                 <div class="row mt-3">
                     <div class="col-lg-6">
@@ -128,6 +130,7 @@
                         <p class="mb-0">Minimum Limit</p>
                         <h4 class="mb-0">${{minimum_sell_limit}} </h4>
                     </div>
+                   
                     <div class="row mt-3">
                     <div class="col-lg-6" v-if="loading">
                         <button type="submit" @click="firstPhase(trade_not_active, trade_type)" class="btn btn-success btn-block buttonload" :disabled="loading" style="color:white"> Processing Request <i class="fa fa-circle-o-notch fa-spin" style="font-size:larger;"></i></button>
@@ -174,7 +177,8 @@
                         <option :value="[{coin_name:coin.coin_name, coin_id:coin.id, buy_rate:coin.buy_rate, 
                             sell_rate:coin.sell_rate, minimum_sell_limit:coin.minimum_sell_limit, 
                             minimum_buy_limit:coin.minimum_buy_limit, shortcode:coin.coin_short_code,
-                            sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status, coin_image:coin.image}]" 
+                            sell_active_status:coin.sell_active_status, buy_active_status:coin.buy_active_status, coin_image:coin.image,
+                            confirmation_fee:coin.confirmation_fee}]" 
                             v-for="coin in coins" :key="coin">{{coin.coin_name}}</option>
                     </select>
                 </div>
@@ -222,14 +226,17 @@
                             <option  :value="true">Enabled</option>
                         </select>
                         <label class="input-group-text">Minutes</label><input type="number" class="form-control" v-model="expiration_time"
-                            placeholder="20 " :disabled="!timer_wallet">
+                            placeholder="20" :disabled="!timer_wallet">
                     </div>
                 </div>
                 <div class="d-flex justify-content-between mt-3">
                     <p class="mb-0">Minimum Limit</p>
                     <h4 class="mb-0">${{minimum_buy_limit}} </h4>
                 </div>
-               
+                <div class="d-flex justify-content-between mt-3">
+                    <p class="mb-0">Confirmation Fee</p>
+                    <h4 class="mb-0">${{ confirmation_fee }}</h4>
+                </div>
                 <div class="row mt-3">
                     <div class="col-lg-6" v-if="loading">
                         <button type="submit" @click="firstPhase(trade_not_active, trade_type)" class="btn btn-success btn-block buttonload" :disabled="loading">Processing Request <i class="fa fa-circle-o-notch fa-spin"></i></button>
@@ -310,7 +317,8 @@ import Api from '../views/Api'
                 addressArray: [],
                 receivingAddress: '',
                 timer_wallet: false,
-                expiration_time:''
+                expiration_time:'',
+                confirmation_fee: ''
             }
         },
 
@@ -332,7 +340,7 @@ import Api from '../views/Api'
                     admin_bank: this.bank_data.bank,
                     coin_id: this.coin_id,
                     trade_type: 'SELL',
-                    coin_address: this.receivingAddress
+                    coin_address: this.receivingAddress,
                 }
                 this.$store.commit('currentTrade', tradeData)
                
@@ -443,7 +451,9 @@ import Api from '../views/Api'
                     coin_address: this.coin_address,
                     expiration_wallet: this.timer_wallet,
                     expiration_time: this.expiration_time,
-                    pm_account: this.pm_account
+                    pm_account: this.pm_account,
+                    confirmation_fee: this.confirmation_fee,
+                    buy_rate: this.coin_buy_rate
                 }
                 // console.log(tradeData);
                 this.$store.commit('currentTrade', tradeData)
@@ -661,6 +671,7 @@ import Api from '../views/Api'
                 this.coin_shortcode = this.coin_type[0].shortcode 
                 this.coin_id = this.coin_type[0].coin_id
                 this.coin_image = this.coin_type[0].coin_image
+                this.confirmation_fee = this.coin_type[0].confirmation_fee
                 await Api.axios_instance.get("https://min-api.cryptocompare.com/data/pricemulti?fsyms="+this.coin_shortcode+"&tsyms=USD&api_key=40c4cada7ddcb05ecedb554f444d3e51924ff6115d4ed983eb868feaf50b098d")
                 .then(response  => {
                     var results = response.data
