@@ -344,7 +344,7 @@
                             <td>ASSET</td>
                             <td>AMOUNT</td>
                             <td>(₦)AMOUNT</td>
-                            <!-- <td>TIMER</td> -->
+                            <td>TIMER </td>
                             <td>COMMENT</td>
                           </tr>
                           <tr
@@ -526,6 +526,9 @@
                               ₦{{ transaction.paid_naira_amount }}
                             </td>
                             <td v-else>₦{{ transaction.naira_amount }}</td>
+                            <td @click="setTimerReference(transaction.transaction_reference)" v-if="(transaction.expiration_time == 0 && transaction_id !== transaction.transaction_reference)" style="color:red" onclick="">{{ "Expired" }}</td>
+                            <td v-else-if="(transaction.expiration_time == 0 && transaction_id == transaction.transaction_reference)"> <input type="number"  @change="updateTimer" v-model="new_timer_value"/></td>
+                            <td v-else style="color: green;">{{ "Address Active" }}</td>
                             <td>{{ transaction.comment }}</td>
                           </tr>
                         </tbody>
@@ -569,6 +572,7 @@ export default {
   },
   data() {
     return {
+      transaction_id: '',
       first_name: sessionStorage.getItem("first_name"),
       transactions: [],
       total_transacted: "",
@@ -577,6 +581,7 @@ export default {
       amount_in_dollar: "",
       coin_amount: "",
       coin_type: "",
+      new_timer_value: '',
       trade_not_active: true,
       trade_not_in_progress: true,
       sell_transaction_in_progress: false,
@@ -622,6 +627,22 @@ export default {
     };
   },
   methods: {
+    
+    setTimerReference(id) {
+      this.transaction_id = id
+    },
+    
+    updateTimer(){
+      Api.axios_instance.patch(Api.baseUrl + `/api/v1/update-trade/${this.transaction_id}`, {expiration_time:this.new_timer_value})
+      .then(res => {
+        this.transaction_id = " "
+        this.getTransactions()
+        this.$toast.success({
+          title:'Success!',
+          message:'Timer Updated Successfully '
+        })
+      })
+    },
     async getUser() {
       await Api.axios_instance
         .get(Api.baseUrl + "api/v1/user_data")
@@ -663,6 +684,7 @@ export default {
         .then((response) => {
           this.transactions = response.data;
           this.transactions = this.transactions.reverse();
+          console.log(this.transactions);
           this.transaction_ref = this.transactions[0].transaction_reference;
           var transacted_amount = 0;
           this.transactions.forEach((transaction) => {
@@ -691,6 +713,7 @@ export default {
           this.solana = this.coins[7];
         });
     },
+
     getCampaign() {
       Api.axios_instance
         .get(Api.baseUrl + "api/v1/list-campaign")
@@ -773,29 +796,6 @@ export default {
       this.show = !this.show;
     },
    
-    // startCountdown() {
-    //   if (!this.transactionTime || !this.expirationTime) return;
-
-    //   const transactionTimeInSeconds = new Date(this.transactionTime).getTime() / 1000;
-    //   const countdownDuration = this.expirationTime * 60;
-
-    //   this.timeRemaining = countdownDuration - (Date.now() / 1000 - transactionTimeInSeconds);
-
-    //   if (this.intervalId) {
-    //     clearInterval(this.intervalId);
-    //   }
-
-    //   this.intervalId = setInterval(() => {
-    //     if (this.timeRemaining > 0) {
-    //       this.timeRemaining = parseFloat((this.timeRemaining - 0.1).toFixed(1));
-    //     } else {
-    //       // Perform actions when countdown reaches zero
-    //       clearInterval(this.intervalId);
-    //       this.sendExpiryMail();
-    //     }
-    //   }, 100);
-    // },  
-   
 
   },
   mounted() {
@@ -807,14 +807,9 @@ export default {
     this.update();
     this.getCampaign();
     this.timer = setInterval(this.update, 30000);
+    setInterval(this.getTransactions, 120000);
   },
-  // computed: {
-  //     formattedTime() {
-  //       const minutes = Math.floor(this.timeRemaining / 60);
-  //       const seconds = Math.floor(this.timeRemaining % 60);
-  //       return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  //     },
-  //   },
+
   computed: {
     pending_transactions: function () {
       return this.transactions.filter(
