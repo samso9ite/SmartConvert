@@ -233,7 +233,7 @@
                     <p class="mb-0">Minimum Limit</p>
                     <h4 class="mb-0">${{minimum_buy_limit}} </h4>
                 </div>
-                <div class="d-flex justify-content-between mt-3">
+                <div class="d-flex justify-content-between mt-3" v-if="confirmation_fee !== 0">
                     <p class="mb-0">Confirmation Fee</p>
                     <h4 class="mb-0">${{ confirmation_fee }}</h4>
                 </div>
@@ -317,8 +317,8 @@ import Api from '../views/Api'
                 addressArray: [],
                 receivingAddress: '',
                 timer_wallet: false,
-                expiration_time:'',
-                confirmation_fee: ''
+                expiration_time:0,
+                confirmation_fee: 0
             }
         },
 
@@ -539,6 +539,18 @@ import Api from '../views/Api'
                 }
                 }
                 else{
+                    let total_naira_amount ;
+                    let total_dollar_amount
+                    if(this.confirmation_fee !== 0){
+                        total_naira_amount = (parseFloat(this.confirmation_fee) * this.coin_buy_rate)+parseFloat(this.naira_amount) 
+                        total_dollar_amount= parseFloat(this.dollar_amount)+parseFloat(this.confirmation_fee)
+                    }else{
+                        total_naira_amount = parseFloat(this.naira_amount)   
+                        total_dollar_amount = parseFloat(this.dollar_amount)
+                    }
+                
+                    console.log(total_dollar_amount);
+                    console.log(total_naira_amount);
                     if(this.my_account == true){
                         if(this.bank_transacted_count >= 6){
                             console.log("");
@@ -546,8 +558,8 @@ import Api from '../views/Api'
                             this.bank_transacted_count++
                         }
                         formData = {
-                            dollar_amount: parseFloat(this.dollar_amount),
-                            naira_amount: parseFloat(this.naira_amount),
+                            dollar_amount: total_dollar_amount,
+                            naira_amount: total_naira_amount,
                             coin_amount: parseFloat(this.coin_amount),
                             coin: this.coin_id,
                             trade_type: trade_type,
@@ -564,8 +576,8 @@ import Api from '../views/Api'
                         }
                     }else{
                         formData = {
-                            dollar_amount: parseFloat(this.dollar_amount),
-                            naira_amount: parseFloat(this.naira_amount),
+                            dollar_amount: total_dollar_amount,
+                            naira_amount: total_naira_amount,
                             coin_amount: parseFloat(this.coin_amount),
                             coin: this.coin_id,
                             trade_type: trade_type,
@@ -671,7 +683,11 @@ import Api from '../views/Api'
                 this.coin_shortcode = this.coin_type[0].shortcode 
                 this.coin_id = this.coin_type[0].coin_id
                 this.coin_image = this.coin_type[0].coin_image
-                this.confirmation_fee = this.coin_type[0].confirmation_fee
+                if(this.coin_type[0].confirmation_fee == null) {
+                    this.confirmation_fee = 0
+                } else{
+                    this.confirmation_fee = this.coin_type[0].confirmation_fee
+                }
                 await Api.axios_instance.get("https://min-api.cryptocompare.com/data/pricemulti?fsyms="+this.coin_shortcode+"&tsyms=USD&api_key=40c4cada7ddcb05ecedb554f444d3e51924ff6115d4ed983eb868feaf50b098d")
                 .then(response  => {
                     var results = response.data

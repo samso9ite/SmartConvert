@@ -529,10 +529,13 @@
                             <td @click="setTimerReference(transaction.transaction_reference)" v-if="(transaction.expiration_time == 0 &&
                               transaction_id !== transaction.transaction_reference && transaction.expiration_wallet == true)" 
                               style="color:red" onclick="">{{ "Expired" }}
+                             
                             </td>
                             <td v-else-if="(transaction.expiration_time == 0 && transaction_id ==
                               transaction.transaction_reference  && transaction.expiration_wallet == true)"> <input type="number" 
-                              @change="updateTimer" v-model="new_timer_value"/></td>
+                              @change="updateTimer" v-model="new_timer_value"/>
+                              <p @click="updateTimer">Close</p>
+                            </td>
                             <td v-else-if="(transaction.expiration_wallet == false)" >{{ "Not Timer Wallet" }}</td>
                             <td v-else style="color: green;">{{ "Address Active" }}</td>
                             <td>{{ transaction.comment }}</td>
@@ -637,17 +640,22 @@ export default {
     setTimerReference(id) {
       this.transaction_id = id
     },
-    
     updateTimer(){
-      Api.axios_instance.patch(Api.baseUrl + `/api/v1/update-trade/${this.transaction_id}`, {expiration_time:this.new_timer_value})
-      .then(res => {
-        this.transaction_id = " "
-        this.getTransactions()
-        this.$toast.success({
-          title:'Success!',
-          message:'Timer Updated Successfully '
+      if (this.new_timer_value == ''){
+        this.transaction_id = ""
+        this.new_timer_value = ''
+      }else{
+        Api.axios_instance.patch(Api.baseUrl + `/api/v1/update-trade/${this.transaction_id}`, {expiration_time:this.new_timer_value})
+        .then(res => {
+          this.transaction_id = " "
+          this.getTransactions()
+          this.$toast.success({
+            title:'Success!',
+            message:'Timer Updated Successfully '
+          })
         })
-      })
+      }
+     
     },
     async getUser() {
       await Api.axios_instance

@@ -20,11 +20,19 @@
             </tr>
             <tr>
                 <td>Dollar Value </td>
-                <td>${{dollar_amount}}</td>
+                <td v-if="tradeDetails.confirmation_fee !== 0">${{parseFloat(dollar_amount) + parseFloat(tradeDetails.confirmation_fee)}}</td>
+                <td v-else>{{ dollar_amount }}</td>
             </tr>
             <tr>
                 <td>Naira Value </td>
-                <td><span style="font-size: 20px !important;">₦{{naira_amount}}</span></td>
+                <td>
+                    <span style="font-size: 20px !important;" v-if="tradeDetails.confirmation_fee !== 0">₦{{(parseFloat(tradeDetails.confirmation_fee) * 
+                        parseFloat(tradeDetails.buy_rate))+parseFloat(tradeDetails.naira_amount)}}
+                    </span>
+                    <span v-else>
+                        {{ tradeDetails.naira_amount }}
+                    </span>
+                </td>
             </tr>
             <tr>
                 <td>Account Number</td>
@@ -38,6 +46,7 @@
                 <td>Bank</td>
                 <td>{{ bankDetails.admin_bank }}</td>
             </tr>
+            
             </tbody>
             </table>
             <button type="submit" @click="successPhase()" class="btn btn-success btn-block">Click After Payment</button>
@@ -58,6 +67,9 @@ export default({
 
     computed: {
         bankDetails: function(){
+            return this.$store.state.currentTrade
+        },
+        tradeDetails: function(){
             return this.$store.state.currentTrade
         }
     },

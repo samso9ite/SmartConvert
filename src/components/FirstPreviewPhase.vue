@@ -16,11 +16,13 @@
             </tr>
             <tr>
                 <td>Dollar Value </td>
-                <td>${{tradeDetails.dollar_amount + parseInt(tradeDetails.confirmation_fee)}} {{ "(Confirmation Fee Added)"}}</td>
+                <td  v-if="tradeDetails.confirmation_fee !== 0">${{tradeDetails.dollar_amount + parseInt(tradeDetails.confirmation_fee)}} {{ "(Confirmation Fee Added)"}}</td>
+                <td v-else> {{ tradeDetails.dollar_amount }}</td>
             </tr>
             <tr>
                 <td>Naira Value </td>
-                <td><span style="font-size: 20px !important;">₦{{(tradeDetails.confirmation_fee * tradeDetails.buy_rate)+tradeDetails.naira_amount}} <span style="font-size: 13px;">{{ "(Confirmation Fee Added)"}}</span></span></td>
+                <td  v-if="tradeDetails.confirmation_fee !== 0"><span style="font-size: 20px !important;">₦{{(tradeDetails.confirmation_fee * tradeDetails.buy_rate)+tradeDetails.naira_amount}} <span style="font-size: 13px;">{{ "(Confirmation Fee Added)"}}</span></span></td>
+                <td v-else>{{ tradeDetails.naira_amount }}</td>
             </tr>
             <tr v-if="tradeDetails.coin_address">
                 <td>Wallet </td>
@@ -39,7 +41,7 @@
                 <td>PM Account </td>
                 <td><span style="font-size: 20px !important;">{{tradeDetails.pm_account}}</span></td>
             </tr>
-            <tr>
+            <tr  v-if="tradeDetails.confirmation_fee !== 0">
                 <td>Confirmation Fee</td>
                 <td>${{ tradeDetails.confirmation_fee }}</td>
             </tr>
@@ -76,10 +78,11 @@ export default({
         successPhase(){
             this.$emit('successPhase', this.buy_Phase)
         },
+       
         createTransaction(){
             this.$emit('secondPhase', 'BuyPreviewPhase')
             let formData = this.$store.state.buy_data.formData
-            console.log(formData);
+            
             Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
                     this.$emit('getTransactions')
