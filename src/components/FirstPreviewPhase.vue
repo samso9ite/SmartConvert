@@ -82,7 +82,7 @@ export default({
         createTransaction(){
             this.$emit('secondPhase', 'BuyPreviewPhase')
             let formData = this.$store.state.buy_data.formData
-            
+            console.log(formData);
             Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
                     this.$emit('getTransactions')

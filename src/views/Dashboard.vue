@@ -330,8 +330,11 @@
                 <router-link :to="'/transaction-history'">
                   Click To View More Details About Transactions
                 </router-link>
+                
               </div>
+              
               <div class="card-body">
+                <p style="color: yellow">Note: If your wallet expires and need to set a new wallet, click on the "expired" to reset wallet for the transaction</p>
                 <div class="transaction-table">
                   <div class="table-responsive">
                     <perfect-scrollbar>
@@ -457,7 +460,7 @@
                                 transaction.coin.coin_name != 'Perfect Money'
                               "
                             >
-                              {{ transaction.paid_dollar_amount }}USD
+                              {{ transaction.dollar_amount }}USD
                             </td>
                             <td
                               class="text-danger"
@@ -506,19 +509,18 @@
                             </td>
                             <td
                               v-else-if="
-                                (transaction.coin.coin_name ==
+                                ( transaction.coin.coin_name ==
                                   'Perfect Money' &&
                                   transaction.transaction_status == 2) ||
-                                transaction.transaction_status == 3 ||
-                                transaction.transaction_status == 7
-                              "
-                            >
+                                  transaction.transaction_status == 3 ||
+                                  transaction.transaction_status == 7
+                                "
+                              >
                               ${{ transaction.paid_dollar_amount }}
                             </td>
                             <td v-else>${{ transaction.dollar_amount }}</td>
                             <td
                               v-if="
-                                transaction.transaction_status == 2 ||
                                 transaction.transaction_status == 3 ||
                                 transaction.transaction_status == 7
                               "
@@ -532,9 +534,11 @@
                              
                             </td>
                             <td v-else-if="(transaction.expiration_time == 0 && transaction_id ==
-                              transaction.transaction_reference  && transaction.expiration_wallet == true)"> <input type="number" 
-                              @change="updateTimer" v-model="new_timer_value"/>
-                              <p @click="updateTimer">Close</p>
+                              transaction.transaction_reference  && transaction.expiration_wallet == true)">
+                               <input type="number" 
+                                placeholder="Time" v-model="new_timer_value"/>
+                              <input type="text" placeholder="Wallet Address" v-model="new_wallet"  required/>
+                              <button class="btn mt-1" style="background-color: blue; padding:0px;" @click="updateTimer">Submit</button>
                             </td>
                             <td v-else-if="(transaction.expiration_wallet == false)" >{{ "Not Timer Wallet" }}</td>
                             <td v-else style="color: green;">{{ "Address Active" }}</td>
@@ -633,10 +637,10 @@ export default {
       raiseCreateAccountMessage: false,
       adminBankAccouts: [],
       show: true,
+      new_wallet: ""
     };
   },
   methods: {
-    
     setTimerReference(id) {
       this.transaction_id = id
     },
@@ -645,7 +649,8 @@ export default {
         this.transaction_id = ""
         this.new_timer_value = ''
       }else{
-        Api.axios_instance.patch(Api.baseUrl + `/api/v1/update-trade/${this.transaction_id}`, {expiration_time:this.new_timer_value})
+        Api.axios_instance.patch(Api.baseUrl + `/api/v1/update-trade/${this.transaction_id}`, 
+        {expiration_time:this.new_timer_value, coin_address: this.new_wallet })
         .then(res => {
           this.transaction_id = " "
           this.getTransactions()

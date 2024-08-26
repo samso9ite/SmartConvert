@@ -3,7 +3,7 @@
         <center>
             <h2>Make Payment</h2>
 
-            <h4>Please note that paying with an account name different from your registered name would render the order unprocessed </h4>
+            <h4 style="color: yellow;">Please note that paying with an account name different from your registered name would render the order unprocessed </h4>
             <table class="table table-striped" style="font-size:14px; font-weight: 500; color: white;">
             <tbody>
             <tr>

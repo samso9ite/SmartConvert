@@ -541,16 +541,15 @@ import Api from '../views/Api'
                 else{
                     let total_naira_amount ;
                     let total_dollar_amount
-                    if(this.confirmation_fee !== 0){
-                        total_naira_amount = (parseFloat(this.confirmation_fee) * this.coin_buy_rate)+parseFloat(this.naira_amount) 
-                        total_dollar_amount= parseFloat(this.dollar_amount)+parseFloat(this.confirmation_fee)
-                    }else{
-                        total_naira_amount = parseFloat(this.naira_amount)   
-                        total_dollar_amount = parseFloat(this.dollar_amount)
-                    }
-                
-                    console.log(total_dollar_amount);
-                    console.log(total_naira_amount);
+                    // if(this.confirmation_fee !== 0){
+                    //     // total_naira_amount = (parseFloat(this.confirmation_fee) * this.coin_buy_rate)+parseFloat(this.naira_amount) 
+                    //     // total_dollar_amount= parseFloat(this.dollar_amount)+parseFloat(this.confirmation_fee)
+                    // }else{
+                    //     total_naira_amount = parseFloat(this.naira_amount)   
+                    //     total_dollar_amount = parseFloat(this.dollar_amount)
+                    // }
+                    total_naira_amount = parseFloat(this.naira_amount)   
+                    total_dollar_amount = parseFloat(this.dollar_amount)
                     if(this.my_account == true){
                         if(this.bank_transacted_count >= 6){
                             console.log("");
