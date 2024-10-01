@@ -22,11 +22,11 @@
             <tr>
                 <td>Naira Value </td>
                 <td  v-if="tradeDetails.confirmation_fee !== 0"><span style="font-size: 20px !important;">₦{{(tradeDetails.confirmation_fee * tradeDetails.buy_rate)+tradeDetails.naira_amount}} <span style="font-size: 13px;">{{ "(Confirmation Fee Added)"}}</span></span></td>
-                <td v-else>{{ tradeDetails.naira_amount }}</td>
+                <td v-else>{{ tradeDetails.naira_amount}}</td>
             </tr>
             <tr v-if="tradeDetails.coin_address">
-                <td>Wallet </td>
-                <td ><span style="font-size: 20px !important;">{{tradeDetails.coin_address}}</span></td>
+                <td> Wallet </td>
+                <td> <span style="font-size: 13.5px !important"> {{tradeDetails.coin_address}} </span> </td>
             </tr>
             <tr v-if="tradeDetails.expiration_wallet">
                 <td>Timing Wallet </td>
@@ -34,7 +34,7 @@
             </tr>
             <tr v-if="tradeDetails.expiration_time">
                 <td>Expiration Time </td>
-                <td ><span style="font-size: 20px !important;">{{tradeDetails.expiration_time}}</span></td>
+                <td> <span style="font-size: 20px !important"> {{tradeDetails.expiration_time}} minute(s) </span> </td>
             </tr>
            
             <tr  v-if="tradeDetails.pm_account">
@@ -82,7 +82,6 @@ export default({
         createTransaction(){
             this.$emit('secondPhase', 'BuyPreviewPhase')
             let formData = this.$store.state.buy_data.formData
-            console.log(formData);
             Api.axios_instance.post(Api.baseUrl+'api/v1/create-transaction/', formData)
                 .then(response => {
                     this.$emit('getTransactions')
@@ -104,7 +103,6 @@ export default({
         },
         cancelTrade(){
             location.reload()
-        
         }
       
     },
